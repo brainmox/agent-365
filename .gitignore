@@ -1,0 +1,21 @@
+# Editor & OS noise
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Secrets — never publish credentials
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Language artifacts (will grow with projects)
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/

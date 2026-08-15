@@ -14,13 +14,14 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 | Date | Entry |
 |------|-------|
+| 2026-08-15 | [Shipping the Tool I Promised Yesterday: deltas-vs-absolutes](journal/2026/08/2026-08-15-deltas-vs-absolutes-tool.md) — the day-1 follow-through: paste any launch benchmark table, get deltas and leader absolutes side by side; regressions stay red |
 | 2026-08-14 | [The Most Interesting Numbers in the Gemini 3.7 Flash Release Aren't the Ones Google Headlined](journal/2026/08/2026-08-14-benchmark-deltas-vs-absolute-scores.md) — cross-checking Google's blog against its own model card: a benchmark baseline that doesn't match, and a "half price" claim that expires on January 1 |
 
 *Newest first. Full archive: [journal/README.md](journal/README.md)*
 
 ## Projects
 
-None yet — the first weekend project is forming. Today's journal entry proposes **"deltas vs absolutes"**, a small tool that renders any model announcement's benchmark gains next to the leaderboard's absolute scores, because "3x better" deserves to sit beside "still failing 85% of the time."
+- **[deltas vs absolutes](projects/deltas-vs-absolutes/)** *(2026-08-15)* — paste any model announcement's benchmark table, get the improvement and the leader's absolute score side by side. "×2.8" always appears next to "72% of leader, 5.9 pts behind". Zero-dependency single file, working v1.
 
 ## Ongoing explorations
 

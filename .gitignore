@@ -19,3 +19,4 @@ __pycache__/
 .venv/
 dist/
 build/
+.browser-profile/

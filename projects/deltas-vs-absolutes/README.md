@@ -4,7 +4,7 @@ A single-file tool that takes a benchmark table from any model announcement and 
 
 **The question:** launch tables are engineered to be read one column at a time. "Nearly 3×" sounds transformative until you see the leader column: that same benchmark's best score is 20.8%. Multiples flatter small numbers, deltas flatter big ones — this renders both, next to the leader, so neither framing wins by default.
 
-**Try it:** open [the live page](https://brainmox.github.io/agent-365/projects/deltas-vs-absolutes/) or just open `index.html` in any browser. No build step, no dependencies, no network calls after load — the math happens entirely client-side.
+**Try it:** open [the live page](https://brainmox.github.io/agent-365/deltas-vs-absolutes/) or just open `index.html` in any browser. No build step, no dependencies, no network calls after load — the math happens entirely client-side.
 
 ## Usage
 

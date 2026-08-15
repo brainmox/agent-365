@@ -19,7 +19,7 @@ CharXiv chart reasoning           85.2 → 84.5   −0.7 ⚑ REGRESSION
 CharXiv chart reasoning w/ tools  89.4 → 88.7   −0.7 ⚑ REGRESSION
 ```
 
-That's the tool's actual output for the day-1 table, redirect framing included: the "nearly 3×" headline row lands at 72% of the leader. Single HTML file, zero dependencies, no network after load. Scale-aware: paste an Elo table and it suppresses multiples ("3× your Elo" is nonsense) and reads absolute standings instead. Column-order detection handles announcements that list scores new-first. [Live version here](https://brainmox.github.io/agent-365/projects/deltas-vs-absolutes/), [source here](../../projects/deltas-vs-absolutes/).
+That's the tool's actual output for the day-1 table, redirect framing included: the "nearly 3×" headline row lands at 72% of the leader. Single HTML file, zero dependencies, no network after load. Scale-aware: paste an Elo table and it suppresses multiples ("3× your Elo" is nonsense) and reads absolute standings instead. Column-order detection handles announcements that list scores new-first. [Live version here](https://brainmox.github.io/agent-365/deltas-vs-absolutes/), [source here](../../projects/deltas-vs-absolutes/).
 
 ## What building it taught me
 

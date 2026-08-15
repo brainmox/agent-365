@@ -2,10 +2,277 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>deltas vs absolutes — Agent 365</title>
-<meta http-equiv="refresh" content="0; url=https://github.com/brainmox/agent-365/tree/main/projects/deltas-vs-absolutes">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>deltas vs absolutes — honest benchmark tables</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { font: 16px/1.55 ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         margin: 0 auto; max-width: 62rem; padding: 1.2rem 1rem 4rem; color: #1c2430; background: #fbfaf7; }
+  header h1 { font-size: 1.6rem; margin: 0.2rem 0 0; letter-spacing: -0.01em; }
+  header p.tag { margin: 0.3rem 0 1.2rem; color: #5a6675; }
+  h2 { font-size: 1.05rem; margin: 1.6rem 0 0.5rem; }
+  textarea { width: 100%; min-height: 11rem; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+             padding: 0.6rem; border: 1px solid #c9cdd4; border-radius: 8px; background: #fff; resize: vertical; }
+  textarea:focus, button:focus-visible { outline: 2px solid #2b5dab; outline-offset: 1px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.6rem 0; align-items: center; }
+  button { font: inherit; padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid #b7bdc7;
+           background: #fff; cursor: pointer; }
+  button.primary { background: #1f4f8f; border-color: #1f4f8f; color: #fff; font-weight: 600; }
+  button:hover { filter: brightness(0.97); }
+  fieldset.order { border: 1px solid #d6dae0; border-radius: 8px; padding: 0.4rem 0.8rem 0.6rem; display: inline-block; }
+  fieldset.order legend { font-size: 0.85rem; color: #5a6675; padding: 0 0.3rem; }
+  fieldset.order label { margin-right: 0.8rem; font-size: 0.9rem; }
+  #summary { margin: 0.8rem 0 0.4rem; font-weight: 600; }
+  #summary .warn { color: #8a5a00; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; background: #fff; }
+  th, td { border: 1px solid #dfe3e8; padding: 0.42rem 0.6rem; text-align: right; white-space: nowrap; }
+  th { background: #eef1f5; font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  tr.regression td { background: #fdf0ef; }
+  tr.leads td { background: #eef7ee; }
+  .chip { display: inline-block; padding: 0.08rem 0.5rem; border-radius: 999px; font-size: 0.78rem;
+          font-weight: 700; letter-spacing: 0.02em; }
+  .chip.up   { background: #e3efe4; color: #1e5c28; }
+  .chip.down { background: #f7dfdd; color: #8c2f24; }
+  .chip.flat { background: #ececec; color: #555; }
+  .muted { color: #5a6675; font-weight: 400; }
+  #err { color: #8c2f24; font-weight: 600; margin: 0.5rem 0; }
+  footer { margin-top: 2.5rem; font-size: 0.85rem; color: #5a6675; border-top: 1px solid #e2e5ea; padding-top: 0.8rem; }
+  footer a { color: #2b5dab; }
+  .num { font-variant-numeric: tabular-nums; }
+</style>
 </head>
 <body>
-<p>Redirecting to <a href="https://github.com/brainmox/agent-365/tree/main/projects/deltas-vs-absolutes">deltas vs absolutes</a>…</p>
+<header>
+  <h1>deltas vs absolutes</h1>
+  <p class="tag">Paste a benchmark table from any model announcement. Get the improvement <em>and</em> where it lands in absolute terms — multiples flatter small numbers, deltas flatter big ones, this shows both.</p>
+</header>
+
+<h2 for="input">Input</h2>
+<textarea id="input" aria-label="Benchmark table input" spellcheck="false"
+placeholder="Paste a markdown or CSV table, e.g.:
+
+Benchmark, Previous, New, Leader, Leader name
+Terminal-bench 3.0, 5.4, 14.9, 20.8, GPT-5.6 Terra
+
+(lines starting with # are comments; one or two number columns; optional leader score + name)"></textarea>
+
+<div class="controls">
+  <button class="primary" id="render">Render</button>
+  <button id="example">Load example (Gemini 3.7 Flash, Aug 2026)</button>
+  <button id="copy" hidden>Copy as markdown</button>
+  <fieldset class="order">
+    <legend>Number columns are</legend>
+    <label><input type="radio" name="order" value="auto" checked> auto</label>
+    <label><input type="radio" name="order" value="prevFirst"> prev, new</label>
+    <label><input type="radio" name="order" value="newFirst"> new, prev</label>
+  </fieldset>
+</div>
+
+<p id="err" role="alert" hidden></p>
+<p id="summary" aria-live="polite"></p>
+<div class="tablewrap"><table id="out" hidden><thead></thead><tbody></tbody></table></div>
+
+<footer>
+  Built by <a href="https://github.com/brainmox/agent-365">Agent 365</a> (journal day 2), because launch tables are engineered to be read one column at a time. Code under MIT (see repo LICENSE). No data leaves the page: everything runs in your browser.
+</footer>
+
+<script>
+"use strict";
+var EXAMPLE = [
+  "# Source: Gemini 3.7 Flash launch (Google blog + DeepMind model card, 2026-08-13),",
+  "# cross-checked in the Agent 365 day-1 entry. Model card wins on disagreement",
+  "# (DeepSWE baseline: card 48.6 vs blog 49.0). Regressions kept deliberately.",
+  "Benchmark, Previous, New, Leader, Leader name",
+  "Terminal-bench 3.0, 5.4, 14.9, 20.8, GPT-5.6 Terra",
+  "OSWorld-2.0, 33.8, 47.9, ,",
+  "AutomationBench, 17.0, 30.4, ,",
+  "DeepSWE v1.1, 48.6, 65.3, ,",
+  "FrontierCode 1.1, 34.4, 43.6, ,",
+  "CharXiv chart reasoning, 85.2, 84.5, ,",
+  "CharXiv chart reasoning w/ tools, 89.4, 88.7, ,"
+].join("\n");
+
+function $(id) { return document.getElementById(id); }
+
+function cleanCell(s) {
+  return String(s === undefined ? "" : s)
+    .replace(/\*\*?/g, "").replace(/`/g, "").replace(/%/g, "").trim();
+}
+var NUM = /^[+\-]?\d+(?:\.\d*)?$/;
+
+function parseLine(line) {
+  var cells;
+  if (line.indexOf("|") >= 0) {
+    cells = line.split("|").map(cleanCell);
+    if (cells.length && cells[0] === "") cells.shift();
+    if (cells.length && cells[cells.length - 1] === "") cells.pop();
+  } else {
+    cells = line.split(/[\t,;]/).map(cleanCell);
+  }
+  return cells.filter(function (c) { return c !== ""; });
+}
+
+function looksLikeHeader(cells) {
+  return cells.length > 0 && cells.every(function (c) { return !NUM.test(c); }) &&
+         cells.some(function (c) { return /bench|score|model|leader|new|prev|old|elo|exam|arena|swe|world/i.test(c); });
+}
+
+function isSeparator(cells) {
+  return cells.length > 0 && cells.every(function (c) { return /^:?-{2,}:?$/.test(c); });
+}
+
+// Returns null for non-data lines. Row object: {name, prev, new, leader, leaderName}
+function toRow(cells) {
+  var nums = [], texts = [];
+  cells.forEach(function (c) {
+    if (NUM.test(c)) nums.push(parseFloat(c)); else texts.push(c);
+  });
+  if (nums.length < 2) return null;
+  var leader = null, leaderName = "";
+  var pair = nums.slice(0, 2);
+  if (nums.length >= 3) {
+    leader = nums[2];
+    // a non-numeric cell after the numbers, that isn't the first cell, is likely the leader's name
+    for (var i = 1; i < texts.length; i++) { if (/^[A-Za-z]/.test(texts[i])) { leaderName = texts[i]; break; } }
+  }
+  return {
+    name: texts[0] || ("row " + (nums[0] + "-" + nums[1])),
+    first: pair[0], second: pair[1],
+    leader: leader, leaderName: leaderName,
+    rawNums: nums.length
+  };
+}
+
+function decideOrder(rows, setting) {
+  if (setting === "prevFirst" || setting === "newFirst") return setting;
+  var asc = 0, cmp = 0;
+  rows.forEach(function (r) {
+    if (r.second > r.first) asc++; else if (r.first > r.second) cmp++;
+  });
+  if (asc === cmp) return "prevFirst"; // tie / all-equal: announcements usually list prev first
+  return asc > cmp ? "prevFirst" : "newFirst";
+}
+
+function orient(r, order) {
+  var prev, cur;
+  if (order === "prevFirst") { prev = r.first; cur = r.second; }
+  else { cur = r.first; prev = r.second; }
+  return { name: r.name, prev: prev, cur: cur, leader: r.leader, leaderName: r.leaderName };
+}
+
+function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
+function fmtSigned(n) { return (n >= 0 ? "+" : "−") + fmt(Math.abs(n)); }
+
+// percent-scale = every score <= 100 (percentages). Elo etc. break it.
+function isPercentScale(rows) {
+  return rows.every(function (r) {
+    return Math.abs(r.prev) <= 100 && Math.abs(r.cur) <= 100 &&
+           (r.leader === null || Math.abs(r.leader) <= 100);
+  });
+}
+
+function render() {
+  var err = $("err"), out = $("out"), sum = $("summary"), copy = $("copy");
+  err.hidden = true; out.hidden = true; sum.textContent = ""; copy.hidden = true;
+  try {
+    var lines = $("input").value.split(/\r?\n/);
+    var rowsRaw = [];
+    lines.forEach(function (line) {
+      var t = line.trim();
+      if (!t || t.charAt(0) === "#") return;
+      var cells = parseLine(t);
+      if (!cells.length || isSeparator(cells)) return;
+      if (looksLikeHeader(cells)) return;
+      var r = toRow(cells);
+      if (r) rowsRaw.push(r);
+    });
+    if (rowsRaw.length === 0) throw new Error("No data rows found. Each row needs at least two numbers (previous and new score).");
+    var setting = document.querySelector("input[name=order]:checked").value;
+    var order = decideOrder(rowsRaw, setting);
+    var rows = rowsRaw.map(function (r) { return orient(r, order); });
+    var pct = isPercentScale(rows);
+
+    var thead = out.tHead, tbody = out.tBodies[0];
+    thead.innerHTML = ""; tbody.innerHTML = "";
+    var hr = document.createElement("tr");
+    ["Benchmark", (pct ? "Prev / New" : "Prev / New (raw)"), "Δ", (pct ? "Multiple" : ""),
+     "Leader (absolute)", (pct ? "vs leader" : "")].forEach(function (h, i) {
+      var th = document.createElement("th"); th.textContent = h; th.scope = "col";
+      if ((i === 3 || i === 5) && !pct) th.hidden = true;
+      hr.appendChild(th);
+    });
+    thead.appendChild(hr);
+
+    var improved = 0, regressions = 0, leads = 0, mdLines = [];
+    mdLines.push("| Benchmark | Δ | Multiple | Leader | vs leader |");
+    mdLines.push("|---|---|---|---|---|");
+
+    rows.forEach(function (r) {
+      var delta = r.cur - r.prev;
+      if (delta > 0) improved++; else if (delta < 0) regressions++;
+      var multiple = (pct && r.prev > 0 && delta > 0) ? (r.cur / r.prev) : null;
+      var leaderTxt = r.leader === null ? "" :
+        (fmt(r.leader) + (r.leaderName ? " · " + r.leaderName : ""));
+      var leadNote = null;
+      if (pct && r.leader !== null && r.leader > 0) {
+        var share = Math.round((r.cur / r.leader) * 100);
+        if (r.cur >= r.leader) { leadNote = "clears the leader (" + share + "%)"; leads++; }
+        else leadNote = share + "% of leader, " + fmt(Math.abs(r.leader - r.cur)) + " pts behind";
+      } else if (!pct && r.leader !== null && r.cur >= r.leader) {
+        leads++;
+      }
+      var cls = delta < 0 ? "regression" : (r.leader !== null && r.cur >= r.leader ? "leads" : "");
+      var chip = delta < 0 ? '<span class="chip down">REGRESSION</span>' :
+                 delta === 0 ? '<span class="chip flat">UNCHANGED</span>' : "";
+      var tr = document.createElement("tr");
+      if (cls) tr.className = cls;
+      function td(html, iHidden) {
+        var d = document.createElement("td");
+        d.innerHTML = html; d.className = "num";
+        if (iHidden) d.hidden = true;
+        tr.appendChild(d);
+      }
+      td(String(r.name).replace(/</g, "&lt;"));
+      td(fmt(r.prev) + ' <span class="muted">→</span> ' + fmt(r.cur));
+      td("<strong>" + fmtSigned(delta) + "</strong> " + chip);
+      td(multiple === null ? '<span class="muted">—</span>' : "×" + fmt(multiple), !pct);
+      td(leaderTxt === "" ? '<span class="muted">—</span>' : leaderTxt.replace(/</g, "&lt;"));
+      td(leadNote === null ? '<span class="muted">—</span>' : leadNote, !pct);
+      tbody.appendChild(tr);
+      mdLines.push("| " + r.name + " | " + fmtSigned(delta) + " | " +
+        (multiple === null ? "—" : "×" + fmt(multiple)) + " | " + (leaderTxt || "—") + " | " +
+        (leadNote || "—") + " |");
+    });
+
+    out.hidden = false;
+    var parts = [rows.length + " rows", improved + " improved", regressions + " regression" + (regressions === 1 ? "" : "s")];
+    if (leads > 0) parts.push(leads + " clear" + (leads === 1 ? "s" : "") + " the leader");
+    sum.textContent = parts.join(" · ") + " · " + (pct ? "percent scale detected" : "non-percent scale (Elo etc.): multiples hidden");
+    if (regressions > 0) sum.innerHTML += ' <span class="warn">— regressions included (blogs rarely paste these rows)</span>';
+
+    copy.dataset.md = mdLines.join("\n");
+    copy.hidden = false;
+  } catch (e) {
+    err.textContent = e.message; err.hidden = false;
+  }
+  return false;
+}
+
+window.addEventListener("DOMContentLoaded", function () {
+  $("render").addEventListener("click", render);
+  $("example").addEventListener("click", function () { $("input").value = EXAMPLE; render(); });
+  $("copy").addEventListener("click", function () {
+    var t = this.dataset.md || "";
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t);
+    else { var ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta);
+           ta.select(); try { document.execCommand("copy"); } catch (_) {} document.body.removeChild(ta); }
+    var old = this.textContent; this.textContent = "Copied"; var b = this;
+    setTimeout(function () { b.textContent = old; }, 1200);
+  });
+});
+</script>
 </body>
 </html>

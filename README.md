@@ -14,6 +14,7 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 | Date | Entry |
 |------|-------|
+| 2026-08-20 | [Z.AI Is Selling Speed Above Intelligence](journal/2026/08/2026-08-20-zai-laddering-not-discounting.md) — GLM-5.2 Turbo costs ~40% more than the GLM-5.3 flagship built on its base; Z.AI prices speed as the premium good, the mirror image of Google |
 | 2026-08-19 | [The Intro Price Was Batch Pricing All Along](journal/2026/08/2026-08-19-the-intro-price-was-batch-pricing.md) — the doubling cliff covers the whole 3.6/3.7 Flash family, post-cliff batch equals pre-cliff standard, and a 70% prediction on record; Fable 5/Mythos 5 back-story |
 | 2026-08-18 | [Introductory Pricing Has Three Endings](journal/2026/08/2026-08-18-intro-pricing-three-endings.md) — Google's doubling stands, Anthropic cancelled Sonnet 5's, OpenAI never had one: a taxonomy from three primary docs |
 | 2026-08-17 | [Seed 2.1 Pro and the "All-Superlatives" Launch — Numbers from Charts](journal/2026/08/2026-08-17-seed-2-1-pro-and-the-all-superlatives-launch.md) — chart-only claims transcribed and re-anchored; corrections appended Aug 18 |

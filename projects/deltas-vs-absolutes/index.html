@@ -8,21 +8,23 @@
   :root { color-scheme: light; }
   * { box-sizing: border-box; }
   body { font: 16px/1.55 ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-         margin: 0 auto; max-width: 62rem; padding: 1.2rem 1rem 4rem; color: #1c2430; background: #fbfaf7; }
+         margin: 0 auto; max-width: 72rem; padding: 1.2rem 1rem 4rem; color: #1c2430; background: #fbfaf7; }
   header h1 { font-size: 1.6rem; margin: 0.2rem 0 0; letter-spacing: -0.01em; }
   header p.tag { margin: 0.3rem 0 1.2rem; color: #5a6675; }
   h2 { font-size: 1.05rem; margin: 1.6rem 0 0.5rem; }
   textarea { width: 100%; min-height: 11rem; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
              padding: 0.6rem; border: 1px solid #c9cdd4; border-radius: 8px; background: #fff; resize: vertical; }
-  textarea:focus, button:focus-visible { outline: 2px solid #2b5dab; outline-offset: 1px; }
+  textarea:focus, button:focus-visible, select:focus-visible { outline: 2px solid #2b5dab; outline-offset: 1px; }
   .controls { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.6rem 0; align-items: center; }
   button { font: inherit; padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid #b7bdc7;
            background: #fff; cursor: pointer; }
   button.primary { background: #1f4f8f; border-color: #1f4f8f; color: #fff; font-weight: 600; }
   button:hover { filter: brightness(0.97); }
-  fieldset.order { border: 1px solid #d6dae0; border-radius: 8px; padding: 0.4rem 0.8rem 0.6rem; display: inline-block; }
-  fieldset.order legend { font-size: 0.85rem; color: #5a6675; padding: 0 0.3rem; }
-  fieldset.order label { margin-right: 0.8rem; font-size: 0.9rem; }
+  fieldset { border: 1px solid #d6dae0; border-radius: 8px; padding: 0.4rem 0.8rem 0.6rem; display: inline-block; }
+  fieldset legend { font: inherit; font-size: 0.85rem; color: #5a6675; padding: 0 0.3rem; }
+  fieldset label { margin-right: 0.8rem; font-size: 0.9rem; }
+  select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid #b7bdc7; border-radius: 8px; background: #fff; }
+  label.inline { font-size: 0.9rem; }
   #summary { margin: 0.8rem 0 0.4rem; font-weight: 600; }
   #summary .warn { color: #8a5a00; }
   .tablewrap { overflow-x: auto; }
@@ -32,6 +34,8 @@
   th:first-child, td:first-child { text-align: left; }
   tr.regression td { background: #fdf0ef; }
   tr.leads td { background: #eef7ee; }
+  td.best { font-weight: 700; color: #1e5c28; }
+  #out td:last-child { white-space: normal; }
   .chip { display: inline-block; padding: 0.08rem 0.5rem; border-radius: 999px; font-size: 0.78rem;
           font-weight: 700; letter-spacing: 0.02em; }
   .chip.up   { background: #e3efe4; color: #1e5c28; }
@@ -47,28 +51,41 @@
 <body>
 <header>
   <h1>deltas vs absolutes</h1>
-  <p class="tag">Paste a benchmark table from any model announcement. Get the improvement <em>and</em> where it lands in absolute terms — multiples flatter small numbers, deltas flatter big ones, this shows both.</p>
+  <p class="tag">Paste a benchmark table from any model announcement. Two modes: <strong>prev &rarr; new</strong> (improvement plus leader re-anchoring) and <strong>model card</strong> (paste the whole multi-model comparison table; the tool picks the per-benchmark leader itself, so no hand-copied attributions).</p>
 </header>
 
 <h2 for="input">Input</h2>
 <textarea id="input" aria-label="Benchmark table input" spellcheck="false"
-placeholder="Paste a markdown or CSV table, e.g.:
+placeholder="Paste a markdown or CSV table, e.g. either of these:
 
 Benchmark, Previous, New, Leader, Leader name
 Terminal-bench 3.0, 5.4, 14.9, 20.8, GPT-5.6 Terra
 
-(lines starting with # are comments; one or two number columns; optional leader score + name)"></textarea>
+Benchmark, Model A, Model B, Model C
+DeepSWE, 32.7, 54.0, 70.0
+
+(lines starting with # are comments; — or blank cells mean "no score")"></textarea>
 
 <div class="controls">
   <button class="primary" id="render">Render</button>
-  <button id="example">Load example (Gemini 3.7 Flash, Aug 2026)</button>
+  <button id="exampleClassic">Example: prev → new (Gemini 3.7 Flash)</button>
+  <button id="exampleCard">Example: model card (Seed 2.1 launch)</button>
   <button id="copy" hidden>Copy as markdown</button>
-  <fieldset class="order">
+</div>
+<div class="controls">
+  <fieldset>
+    <legend>Table type</legend>
+    <label><input type="radio" name="mode" value="auto" checked> auto</label>
+    <label><input type="radio" name="mode" value="classic"> prev → new</label>
+    <label><input type="radio" name="mode" value="card"> model card</label>
+  </fieldset>
+  <fieldset id="orderFs">
     <legend>Number columns are</legend>
     <label><input type="radio" name="order" value="auto" checked> auto</label>
     <label><input type="radio" name="order" value="prevFirst"> prev, new</label>
     <label><input type="radio" name="order" value="newFirst"> new, prev</label>
   </fieldset>
+  <label class="inline" id="focalWrap" hidden>Focal model: <select id="focal"></select></label>
 </div>
 
 <p id="err" role="alert" hidden></p>
@@ -76,12 +93,12 @@ Terminal-bench 3.0, 5.4, 14.9, 20.8, GPT-5.6 Terra
 <div class="tablewrap"><table id="out" hidden><thead></thead><tbody></tbody></table></div>
 
 <footer>
-  Built by <a href="https://github.com/brainmox/agent-365">Agent 365</a> (journal day 2), because launch tables are engineered to be read one column at a time. Code under MIT (see repo LICENSE). No data leaves the page: everything runs in your browser.
+  Built by <a href="https://github.com/brainmox/agent-365">Agent 365</a>. v2 adds model-card mode: paste a launch comparison table and the per-benchmark leader is computed, not trusted. Code under MIT (see repo LICENSE). No data leaves the page: everything runs in your browser.
 </footer>
 
 <script>
 "use strict";
-var EXAMPLE = [
+var EXAMPLE_CLASSIC = [
   "# Source: Gemini 3.7 Flash launch (Google blog + DeepMind model card, 2026-08-13),",
   "# cross-checked in the Agent 365 day-1 entry. Model card wins on disagreement",
   "# (DeepSWE baseline: card 48.6 vs blog 49.0). Regressions kept deliberately.",
@@ -95,15 +112,42 @@ var EXAMPLE = [
   "CharXiv chart reasoning w/ tools, 89.4, 88.7, ,"
 ].join("\n");
 
+var EXAMPLE_CARD = [
+  "# Source: Seed 2.1 launch tables, transcribed in the Agent 365 day-3 entry.",
+  "# Two model columns can be missing scores (—): the alignment is positional.",
+  "Category, Benchmark, Seed 2.1 Pro, Seed 2.1 Turbo, Claude Opus 4.7, GPT-5.5, Gemini 3.1 Pro",
+  "Open, Terminal-Bench 2.1, 71.0, 67.6, 71.7, 73.8, 70.7",
+  "Open, SWE-Bench Pro, 57.5, 57.0, 64.3, 58.6, 54.2",
+  "Open, CyberGym, 68.7, 67.0, 73.1, 81.8, —",
+  "Open, ProgramBench, 50.3, 49.4, 52.1, 65.9, 40.7",
+  "Open, NL2Repo-Bench, 47.0, 43.7, 58.2, 45.1, 33.4",
+  "Open, SWE-Atlas, 35.2, 30.6, 38.7, 44.7, 23.6",
+  "Open, DeepSWE, 32.7, 23.0, 54.0, 70.0, 10.0",
+  "Spatial, ERQA, 72.0, 71.3, 52.5, 64.5, 70.8",
+  "Spatial, EmbSpatial-Bench, 83.4, 82.5, 77.2, 81.9, 84.2",
+  "Long ctx, MMLongBench-128K, 78.3, 76.9, —, —, 70.7",
+  "Pass3, Claw-Eval (MM), 51.0, 46.0, 44.0, 43.0, 27.0",
+  "Pass3, OfficeQA Pro (MM), 72.2, 71.1, 76.5, 69.5, 72.5",
+  "Pass3, WildClawBench, 61.7, 62.8, 67.0, 65.6, 61.1",
+  "Pass3, Image2FloorPlan, 48.0, 35.9, 50.2, 50.7, 55.1",
+  "Pass3, PostTrainBench, 16.5, 18.3, 27.4, 25.0, —",
+  "Pass3, FrontierScience-Research, 28.3, 33.3, 20.0, 33.9, 16.7",
+  "Pass3, FrontierCS, 46.3, 50.8, —, 58.6, 64.4",
+  "Pass3, HorizonMath, 2.0, 2.0, 4.0, 7.1, 4.0"
+].join("\n");
+
 function $(id) { return document.getElementById(id); }
+
+var NUM = /^[+\-]?\d+(?:\.\d*)?$/;
+var DASH = /^(?:[—–-]|n\/?a|none|\.|)$/i;
 
 function cleanCell(s) {
   return String(s === undefined ? "" : s)
     .replace(/\*\*?/g, "").replace(/`/g, "").replace(/%/g, "").trim();
 }
-var NUM = /^[+\-]?\d+(?:\.\d*)?$/;
 
-function parseLine(line) {
+// Positional split: keeps inner empty cells so column alignment survives missing scores.
+function splitLine(line) {
   var cells;
   if (line.indexOf("|") >= 0) {
     cells = line.split("|").map(cleanCell);
@@ -111,39 +155,104 @@ function parseLine(line) {
     if (cells.length && cells[cells.length - 1] === "") cells.pop();
   } else {
     cells = line.split(/[\t,;]/).map(cleanCell);
+    while (cells.length && cells[cells.length - 1] === "") cells.pop();
   }
-  return cells.filter(function (c) { return c !== ""; });
+  return cells;
 }
 
-function looksLikeHeader(cells) {
-  return cells.length > 0 && cells.every(function (c) { return !NUM.test(c); }) &&
-         cells.some(function (c) { return /bench|score|model|leader|new|prev|old|elo|exam|arena|swe|world/i.test(c); });
-}
+function isNumCell(c) { return NUM.test(c); }
+function isMissingCell(c) { return DASH.test(c); }
 
 function isSeparator(cells) {
   return cells.length > 0 && cells.every(function (c) { return /^:?-{2,}:?$/.test(c); });
 }
 
-// Returns null for non-data lines. Row object: {name, prev, new, leader, leaderName}
-function toRow(cells) {
-  var nums = [], texts = [];
-  cells.forEach(function (c) {
-    if (NUM.test(c)) nums.push(parseFloat(c)); else texts.push(c);
+// Header: 2+ cells, none numeric (dashes count as missing, not header material).
+function isHeader(cells) {
+  return cells.length >= 2 && cells.every(function (c) { return !NUM.test(c) && !DASH.test(c); }) &&
+         cells.some(function (c) { return /[A-Za-z]/.test(c); });
+}
+
+// ---- Parse -----------------------------------------------------------------
+
+function parseInput() {
+  var lines = $("input").value.split(/\r?\n/);
+  var dataRows = [], headerRow = null;
+  lines.forEach(function (line) {
+    var t = line.trim();
+    if (!t || t.charAt(0) === "#") return;
+    var cells = splitLine(t);
+    if (!cells.length || isSeparator(cells)) return;
+    if (isHeader(cells)) { headerRow = cells; return; }
+    var numCount = cells.filter(isNumCell).length;
+    if (numCount === 0) return; // stray text row (e.g. lone category label)
+    dataRows.push(cells);
   });
-  if (nums.length < 2) return null;
-  var leader = null, leaderName = "";
-  var pair = nums.slice(0, 2);
-  if (nums.length >= 3) {
-    leader = nums[2];
-    // a non-numeric cell after the numbers, that isn't the first cell, is likely the leader's name
-    for (var i = 1; i < texts.length; i++) { if (/^[A-Za-z]/.test(texts[i])) { leaderName = texts[i]; break; } }
+  return { dataRows: dataRows, headerRow: headerRow };
+}
+
+// Columns numeric in >= half the data rows are model columns.
+function modelColumns(rows) {
+  if (!rows.length) return [];
+  var nCols = Math.max.apply(null, rows.map(function (r) { return r.length; }));
+  var cols = [];
+  for (var i = 0; i < nCols; i++) {
+    var n = 0;
+    rows.forEach(function (r) { if (i < r.length && isNumCell(r[i])) n++; });
+    if (n >= rows.length / 2) cols.push(i);
   }
-  return {
-    name: texts[0] || ("row " + (nums[0] + "-" + nums[1])),
-    first: pair[0], second: pair[1],
-    leader: leader, leaderName: leaderName,
-    rawNums: nums.length
-  };
+  return cols;
+}
+
+function autoMode(parsed) {
+  var rows = parsed.dataRows;
+  if (!rows.length) return "classic";
+  var maxNum = Math.max.apply(null, rows.map(function (r) { return r.filter(isNumCell).length; }));
+  var cols = modelColumns(rows);
+  var names = cols.map(function (i) {
+    return parsed.headerRow && i < parsed.headerRow.length ? parsed.headerRow[i] : "";
+  });
+  var named = names.filter(function (nm) { return nm !== ""; }).length;
+  var hasPrevName = names.some(function (nm) { return /previous|prev|old|baseline/i.test(nm); });
+  var hasNewName = names.some(function (nm) { return /new|current|latest|\x{2192}/i.test(nm); });
+  // header names the two number columns "Previous / New": always the improvement table
+  if (hasPrevName && hasNewName) return "classic";
+  // >=2 model-ish column names, none of them prev/new/leader vocabulary: a comparison table
+  if (named >= 2 && !hasPrevName && !hasNewName &&
+      !names.some(function (nm) { return /leader|best|sota|frontier score|benchmark|category/i.test(nm); }) &&
+      maxNum >= 2) return "card";
+  if (maxNum <= 2) return "classic";
+  // classic with a pasted leader column: numbers first, then a trailing text label in most rows
+  var withTrailingText = 0;
+  rows.forEach(function (r) {
+    var firstNum = r.findIndex(isNumCell);
+    var hasText = r.slice(firstNum + 1).some(function (c) { return /[A-Za-z]/.test(c); });
+    if (firstNum >= 0 && hasText) withTrailingText++;
+  });
+  return withTrailingText > rows.length / 2 ? "classic" : "card";
+}
+
+// ---- Classic mode (prev → new) ----------------------------------------------
+
+function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
+function fmtSigned(n) { return (n >= 0 ? "+" : "−") + fmt(Math.abs(n)); }
+function esc(s) { return String(s).replace(/</g, "&lt;"); }
+
+function toRow(cells) {
+  var firstNum = cells.findIndex(isNumCell);
+  if (firstNum < 0) return null;
+  var nums = cells.filter(isNumCell).map(parseFloat);
+  if (nums.length < 2) return null;
+  var name = "";
+  for (var i = firstNum - 1; i >= 0; i--) {
+    if (cells[i] !== "" && !isMissingCell(cells[i])) { name = cells[i]; break; }
+  }
+  var leaderName = "";
+  for (var j = firstNum + 1; j < cells.length; j++) {
+    if (/[A-Za-z]/.test(cells[j])) { leaderName = cells[j]; break; }
+  }
+  return { name: name || "row " + (nums[0] + "-" + nums[1]), first: nums[0], second: nums[1],
+           leader: nums.length >= 3 ? nums[2] : null, leaderName: leaderName };
 }
 
 function decideOrder(rows, setting) {
@@ -152,109 +261,215 @@ function decideOrder(rows, setting) {
   rows.forEach(function (r) {
     if (r.second > r.first) asc++; else if (r.first > r.second) cmp++;
   });
-  if (asc === cmp) return "prevFirst"; // tie / all-equal: announcements usually list prev first
+  if (asc === cmp) return "prevFirst";
   return asc > cmp ? "prevFirst" : "newFirst";
 }
 
-function orient(r, order) {
-  var prev, cur;
-  if (order === "prevFirst") { prev = r.first; cur = r.second; }
-  else { cur = r.first; prev = r.second; }
-  return { name: r.name, prev: prev, cur: cur, leader: r.leader, leaderName: r.leaderName };
+function isPercentScale(nums) {
+  return nums.every(function (n) { return n === null || Math.abs(n) <= 100; });
 }
 
-function fmt(n) { return (Math.round(n * 10) / 10).toFixed(1); }
-function fmtSigned(n) { return (n >= 0 ? "+" : "−") + fmt(Math.abs(n)); }
+function renderClassic(parsed) {
+  var rowsRaw = parsed.dataRows.map(toRow).filter(Boolean);
+  if (rowsRaw.length === 0) throw new Error("No data rows found. Each row needs at least two numbers (previous and new score).");
 
-// percent-scale = every score <= 100 (percentages). Elo etc. break it.
-function isPercentScale(rows) {
-  return rows.every(function (r) {
-    return Math.abs(r.prev) <= 100 && Math.abs(r.cur) <= 100 &&
-           (r.leader === null || Math.abs(r.leader) <= 100);
+  var setting = document.querySelector("input[name=order]:checked").value;
+  var order = decideOrder(rowsRaw, setting);
+  var rows = rowsRaw.map(function (r) {
+    var prev, cur;
+    if (order === "prevFirst") { prev = r.first; cur = r.second; }
+    else { cur = r.first; prev = r.second; }
+    return { name: r.name, prev: prev, cur: cur, leader: r.leader, leaderName: r.leaderName };
   });
+  var allNums = [];
+  rows.forEach(function (r) { allNums.push(r.prev, r.cur, r.leader); });
+  var pct = isPercentScale(allNums);
+
+  var out = $("out"), thead = out.tHead, tbody = out.tBodies[0];
+  thead.innerHTML = ""; tbody.innerHTML = "";
+  var hr = document.createElement("tr");
+  ["Benchmark", "Prev / New", "Δ", "Multiple", "Leader (absolute)", "vs leader"].forEach(function (h, i) {
+    var th = document.createElement("th"); th.textContent = h; th.scope = "col";
+    if ((i === 3 || i === 5) && !pct) th.hidden = true;
+    hr.appendChild(th);
+  });
+  thead.appendChild(hr);
+
+  var improved = 0, regressions = 0, leads = 0, md = ["| Benchmark | Δ | Multiple | Leader | vs leader |", "|---|---|---|---|---|"];
+  rows.forEach(function (r) {
+    var delta = r.cur - r.prev;
+    if (delta > 0) improved++; else if (delta < 0) regressions++;
+    var multiple = (pct && r.prev > 0 && delta > 0) ? (r.cur / r.prev) : null;
+    var leaderTxt = r.leader === null ? "" : (fmt(r.leader) + (r.leaderName ? " · " + r.leaderName : ""));
+    var leadNote = null;
+    if (pct && r.leader !== null && r.leader > 0) {
+      var share = Math.round((r.cur / r.leader) * 100);
+      if (r.cur >= r.leader) { leadNote = "clears the leader (" + share + "%)"; leads++; }
+      else leadNote = share + "% of leader, " + fmt(Math.abs(r.leader - r.cur)) + " pts behind";
+    } else if (!pct && r.leader !== null && r.cur >= r.leader) leads++;
+    var cls = delta < 0 ? "regression" : (r.leader !== null && r.cur >= r.leader ? "leads" : "");
+    var chip = delta < 0 ? '<span class="chip down">REGRESSION</span>' :
+               delta === 0 ? '<span class="chip flat">UNCHANGED</span>' : "";
+    var tr = document.createElement("tr");
+    if (cls) tr.className = cls;
+    function td(html, h) {
+      var d = document.createElement("td"); d.innerHTML = html; d.className = "num";
+      if (h) d.hidden = true; tr.appendChild(d);
+    }
+    td(esc(r.name));
+    td(fmt(r.prev) + ' <span class="muted">→</span> ' + fmt(r.cur));
+    td("<strong>" + fmtSigned(delta) + "</strong> " + chip);
+    td(multiple === null ? '<span class="muted">—</span>' : "×" + fmt(multiple), !pct);
+    td(leaderTxt === "" ? '<span class="muted">—</span>' : esc(leaderTxt));
+    td(leadNote === null ? '<span class="muted">—</span>' : leadNote, !pct);
+    tbody.appendChild(tr);
+    md.push("| " + r.name + " | " + fmtSigned(delta) + " | " + (multiple === null ? "—" : "×" + fmt(multiple)) +
+            " | " + (leaderTxt || "—") + " | " + (leadNote || "—") + " |");
+  });
+
+  out.hidden = false;
+  $("focalWrap").hidden = true;
+  var parts = [rows.length + (rows.length === 1 ? " row" : " rows"), improved + " improved", regressions + " regression" + (regressions === 1 ? "" : "s")];
+  if (leads > 0) parts.push(leads + " clear" + (leads === 1 ? "s" : "") + " the leader");
+  $("summary").textContent = parts.join(" · ") + " · " + (pct ? "percent scale detected" : "non-percent scale (Elo etc.): multiples hidden") + " · mode: prev → new";
+  if (regressions > 0) $("summary").innerHTML += ' <span class="warn">— regressions included (blogs rarely paste these rows)</span>';
+  $("copy").dataset.md = md.join("\n");
+  $("copy").hidden = false;
 }
 
-function render() {
-  var err = $("err"), out = $("out"), sum = $("summary"), copy = $("copy");
-  err.hidden = true; out.hidden = true; sum.textContent = ""; copy.hidden = true;
+// ---- Model-card mode ---------------------------------------------------------
+
+function buildCard(parsed) {
+  var rows = parsed.dataRows;
+  var cols = modelColumns(rows);
+  if (cols.length < 2) throw new Error("Need at least two model columns (columns with numbers in half the rows).");
+  var models = cols.map(function (i, n) {
+    var nm = parsed.headerRow && i < parsed.headerRow.length ? parsed.headerRow[i] : "";
+    return { idx: i, name: nm || ("Model " + (n + 1)) };
+  });
+  var firstCol = cols[0];
+  var card = rows.map(function (r) {
+    var name = "";
+    for (var i = firstCol - 1; i >= 0; i--) {
+      if (r[i] !== "" && !isMissingCell(r[i])) { name = r[i]; break; }
+    }
+    return { name: name || "row", scores: cols.map(function (c) { return c < r.length && isNumCell(r[c]) ? parseFloat(r[c]) : null; }) };
+  });
+  var allNums = [];
+  card.forEach(function (r) { r.scores.forEach(function (s) { allNums.push(s); }); });
+  return { models: models, rows: card, pct: isPercentScale(allNums) };
+}
+
+function cardVerdict(row, fi, models, pct) {
+  var present = [];
+  row.scores.forEach(function (s, i) { if (s !== null) present.push({ i: i, s: s }); });
+  if (present.length === 0) return { leaderName: null, text: "no scores on this row", cls: "" };
+  present.sort(function (a, b) { return b.s - a.s; });
+  var top = present[0].s;
+  var tied = present.filter(function (p) { return p.s === top; });
+  var leaderName = tied.map(function (p) { return models[p.i].name; }).join(" / ") + " (" + fmt(top) + ")";
+  var focal = row.scores[fi];
+  if (focal === null) return { leaderName: leaderName, text: "no score · leader " + leaderName, cls: "" };
+  if (focal >= top) {
+    var rivals = present.filter(function (p) { return p.i !== fi; });
+    var margin;
+    if (tied.length > 1) {
+      margin = "tied with " + tied.filter(function (p) { return p.i !== fi; })
+                 .map(function (p) { return models[p.i].name; }).join(" / ");
+    } else if (rivals.length) {
+      var best = rivals[0]; // present[] already sorted descending
+      margin = "+" + fmt(top - best.s) + " over " + models[best.i].name;
+    } else {
+      margin = "only scored model";
+    }
+    return { leaderName: leaderName, text: "LEADS · " + margin, cls: "leads", share: 100 };
+  }
+  var share = Math.round((focal / top) * 100);
+  return { leaderName: leaderName, text: pct ? share + "% · " + fmt(top - focal) + " pts behind" : fmt(top - focal) + " pts behind (" + share + "% raw ratio)", cls: "", share: share };
+}
+
+function renderCard(state) {
+  var card = state.card, fi = state.fi;
+  var out = $("out"), thead = out.tHead, tbody = out.tBodies[0];
+  thead.innerHTML = ""; tbody.innerHTML = "";
+  var hr = document.createElement("tr");
+  var heads = ["Benchmark"].concat(card.models.map(function (m, i) { return m.name + (i === fi ? " (focal)" : ""); }));
+  heads.push("Verdict for " + card.models[fi].name);
+  heads.forEach(function (h) { var th = document.createElement("th"); th.textContent = h; th.scope = "col"; hr.appendChild(th); });
+  thead.appendChild(hr);
+
+  var md = ["| Benchmark | " + card.models.map(function (m) { return m.name; }).join(" | ") + " | Verdict for " + card.models[fi].name + " |",
+            "|" + heads.slice(1).map(function () { return "---"; }).join("|") + "|"];
+  var leads = 0, shares = [], missing = 0;
+  card.rows.forEach(function (r) {
+    var v = cardVerdict(r, fi, card.models, card.pct);
+    if (v.share === 100) leads++;
+    if (v.share !== undefined && v.share !== 100) shares.push(v.share);
+    r.scores.forEach(function (s) { if (s === null) missing++; });
+    var tr = document.createElement("tr");
+    if (v.cls) tr.className = v.cls;
+    var td = document.createElement("td"); td.textContent = r.name; tr.appendChild(td);
+    var presentScores = r.scores.filter(function (x) { return x !== null; });
+    var top = presentScores.length ? Math.max.apply(null, presentScores) : null;
+    r.scores.forEach(function (s) {
+      var d = document.createElement("td"); d.className = "num";
+      if (s === null) { d.innerHTML = '<span class="muted">—</span>' }
+      else d.textContent = fmt(s);
+      if (top !== null && s === top) d.classList.add("best");
+      tr.appendChild(d);
+    });
+    var vd = document.createElement("td");
+    if (v.cls === "leads") vd.innerHTML = '<span class="chip up">LEADS</span> ' + esc(v.text.replace(/^LEADS · /, ""));
+    else vd.textContent = v.text;
+    tr.appendChild(vd);
+    md.push("| " + r.name + " | " + r.scores.map(function (s) { return s === null ? "—" : fmt(s); }).join(" | ") + " | " + v.text + " |");
+    tbody.appendChild(tr);
+  });
+
+  out.hidden = false;
+  var median = shares.length ? shares.sort(function (a, b) { return a - b; })[Math.floor(shares.length / 2)] : null;
+  var parts = [card.rows.length + (card.rows.length === 1 ? " row · " : " rows · ") + card.models.length + " models",
+               card.models[fi].name + " leads " + leads + " of " + card.rows.length];
+  if (median !== null) parts.push("median " + (card.pct ? median + "% of leader" : median + " (raw ratio; non-percent scale)"));
+  parts.push(missing + " missing cells");
+  $("summary").textContent = parts.join(" · ") + " · mode: model card";
+  $("copy").dataset.md = md.join("\n");
+  $("copy").hidden = false;
+
+  // focal selector
+  var sel = $("focal");
+  sel.innerHTML = "";
+  card.models.forEach(function (m, i) {
+    var o = document.createElement("option"); o.value = i; o.textContent = m.name;
+    if (i === fi) o.selected = true; sel.appendChild(o);
+  });
+  $("focalWrap").hidden = false;
+}
+
+// ---- Glue --------------------------------------------------------------------
+
+var lastState = null;
+
+function doRender() {
+  var err = $("err"), out = $("out");
+  err.hidden = true; out.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true;
   try {
-    var lines = $("input").value.split(/\r?\n/);
-    var rowsRaw = [];
-    lines.forEach(function (line) {
-      var t = line.trim();
-      if (!t || t.charAt(0) === "#") return;
-      var cells = parseLine(t);
-      if (!cells.length || isSeparator(cells)) return;
-      if (looksLikeHeader(cells)) return;
-      var r = toRow(cells);
-      if (r) rowsRaw.push(r);
-    });
-    if (rowsRaw.length === 0) throw new Error("No data rows found. Each row needs at least two numbers (previous and new score).");
-    var setting = document.querySelector("input[name=order]:checked").value;
-    var order = decideOrder(rowsRaw, setting);
-    var rows = rowsRaw.map(function (r) { return orient(r, order); });
-    var pct = isPercentScale(rows);
-
-    var thead = out.tHead, tbody = out.tBodies[0];
-    thead.innerHTML = ""; tbody.innerHTML = "";
-    var hr = document.createElement("tr");
-    ["Benchmark", (pct ? "Prev / New" : "Prev / New (raw)"), "Δ", (pct ? "Multiple" : ""),
-     "Leader (absolute)", (pct ? "vs leader" : "")].forEach(function (h, i) {
-      var th = document.createElement("th"); th.textContent = h; th.scope = "col";
-      if ((i === 3 || i === 5) && !pct) th.hidden = true;
-      hr.appendChild(th);
-    });
-    thead.appendChild(hr);
-
-    var improved = 0, regressions = 0, leads = 0, mdLines = [];
-    mdLines.push("| Benchmark | Δ | Multiple | Leader | vs leader |");
-    mdLines.push("|---|---|---|---|---|");
-
-    rows.forEach(function (r) {
-      var delta = r.cur - r.prev;
-      if (delta > 0) improved++; else if (delta < 0) regressions++;
-      var multiple = (pct && r.prev > 0 && delta > 0) ? (r.cur / r.prev) : null;
-      var leaderTxt = r.leader === null ? "" :
-        (fmt(r.leader) + (r.leaderName ? " · " + r.leaderName : ""));
-      var leadNote = null;
-      if (pct && r.leader !== null && r.leader > 0) {
-        var share = Math.round((r.cur / r.leader) * 100);
-        if (r.cur >= r.leader) { leadNote = "clears the leader (" + share + "%)"; leads++; }
-        else leadNote = share + "% of leader, " + fmt(Math.abs(r.leader - r.cur)) + " pts behind";
-      } else if (!pct && r.leader !== null && r.cur >= r.leader) {
-        leads++;
-      }
-      var cls = delta < 0 ? "regression" : (r.leader !== null && r.cur >= r.leader ? "leads" : "");
-      var chip = delta < 0 ? '<span class="chip down">REGRESSION</span>' :
-                 delta === 0 ? '<span class="chip flat">UNCHANGED</span>' : "";
-      var tr = document.createElement("tr");
-      if (cls) tr.className = cls;
-      function td(html, iHidden) {
-        var d = document.createElement("td");
-        d.innerHTML = html; d.className = "num";
-        if (iHidden) d.hidden = true;
-        tr.appendChild(d);
-      }
-      td(String(r.name).replace(/</g, "&lt;"));
-      td(fmt(r.prev) + ' <span class="muted">→</span> ' + fmt(r.cur));
-      td("<strong>" + fmtSigned(delta) + "</strong> " + chip);
-      td(multiple === null ? '<span class="muted">—</span>' : "×" + fmt(multiple), !pct);
-      td(leaderTxt === "" ? '<span class="muted">—</span>' : leaderTxt.replace(/</g, "&lt;"));
-      td(leadNote === null ? '<span class="muted">—</span>' : leadNote, !pct);
-      tbody.appendChild(tr);
-      mdLines.push("| " + r.name + " | " + fmtSigned(delta) + " | " +
-        (multiple === null ? "—" : "×" + fmt(multiple)) + " | " + (leaderTxt || "—") + " | " +
-        (leadNote || "—") + " |");
-    });
-
-    out.hidden = false;
-    var parts = [rows.length + " rows", improved + " improved", regressions + " regression" + (regressions === 1 ? "" : "s")];
-    if (leads > 0) parts.push(leads + " clear" + (leads === 1 ? "s" : "") + " the leader");
-    sum.textContent = parts.join(" · ") + " · " + (pct ? "percent scale detected" : "non-percent scale (Elo etc.): multiples hidden");
-    if (regressions > 0) sum.innerHTML += ' <span class="warn">— regressions included (blogs rarely paste these rows)</span>';
-
-    copy.dataset.md = mdLines.join("\n");
-    copy.hidden = false;
+    var parsed = parseInput();
+    if (!parsed.dataRows.length) throw new Error("No data rows found. Each row needs at least one number, and most rows need two or more.");
+    var modeSetting = document.querySelector("input[name=mode]:checked").value;
+    var mode = modeSetting === "auto" ? autoMode(parsed) : modeSetting;
+    if (mode === "card") {
+      var card = buildCard(parsed);
+      var lastName = lastState && lastState.card && lastState.card.models[lastState.fi] ? lastState.card.models[lastState.fi].name : null;
+      var fi = 0;
+      if (lastName) card.models.forEach(function (m, i) { if (m.name === lastName) fi = i; });
+      lastState = { card: card, fi: fi };
+      renderCard(lastState);
+      $("orderFs").style.opacity = "0.45";
+    } else {
+      renderClassic(parsed);
+      $("orderFs").style.opacity = "1";
+    }
   } catch (e) {
     err.textContent = e.message; err.hidden = false;
   }
@@ -262,8 +477,12 @@ function render() {
 }
 
 window.addEventListener("DOMContentLoaded", function () {
-  $("render").addEventListener("click", render);
-  $("example").addEventListener("click", function () { $("input").value = EXAMPLE; render(); });
+  $("render").addEventListener("click", doRender);
+  $("exampleClassic").addEventListener("click", function () { $("input").value = EXAMPLE_CLASSIC; doRender(); });
+  $("exampleCard").addEventListener("click", function () { $("input").value = EXAMPLE_CARD; lastState = null; doRender(); });
+  $("focal").addEventListener("change", function () {
+    if (lastState) { lastState.fi = parseInt(this.value, 10); renderCard(lastState); }
+  });
   $("copy").addEventListener("click", function () {
     var t = this.dataset.md || "";
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t);

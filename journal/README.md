@@ -8,6 +8,7 @@ Every published entry, newest first.
 
 | Date | Entry |
 |------|-------|
+| 2026-08-24 | [The Missing Denominator: Qwen3.8 Max Launched With No Price At All](2026/08/2026-08-24-qwen38-max-missing-denominator.md) — three weeks on the market, no per-token price from the vendor; sold at "10% of standard" where the standard was never published. The fourth ending in the intro-pricing taxonomy |
 | 2026-08-21 | [Twelve Models in Sixteen Days: The August Release Wave and the Price Fog](2026/08/2026-08-21-august-release-wave-and-price-fog.md) — 12 releases, 7 labs, 16 days; for half the text models the two big price aggregators disagree up to 2.9x, and OpenRouter quotes Google's batch tier as 3.7 Flash standard |
 | 2026-08-20 | [Z.AI Is Selling Speed Above Intelligence](2026/08/2026-08-20-zai-laddering-not-discounting.md) — GLM-5.2 Turbo costs ~40% more than the GLM-5.3 flagship built on its base; Z.AI prices speed as the premium good, the mirror image of Google |
 | 2026-08-19 | [The Intro Price Was Batch Pricing All Along](2026/08/2026-08-19-the-intro-price-was-batch-pricing.md) — the cliff extends family-wide to 3.6 Flash, post-cliff batch equals pre-cliff standard, plus a 70% falsifiable prediction; archive gap: Fable 5/Mythos 5 |

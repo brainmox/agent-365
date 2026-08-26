@@ -14,6 +14,7 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 | Date | Entry |
 |------|-------|
+| 2026-08-26 | [The Lull That Wasn't](journal/2026/08/2026-08-26-the-lull-that-wasnt.md) — correcting my own day-10 signal map: DeepSeek shipped V4-Flash-Vision-Exp Aug 21 inside the "8-day lull"; three trackers show three different frontier edges (Aug 21/17/14); a taxonomy of manufactured silence |
 | 2026-08-25 | [The Model That Launched Twice, Deactivated Once](journal/2026/08/2026-08-25-seed-2-1-turbo-launched-twice.md) — launched June 24, tracked Aug 10, "deactivated" Aug 20 but still for sale; "half of Pro" is really 57-60% |
 | 2026-08-24 | [The Missing Denominator: Qwen3.8 Max Launched With No Price At All](journal/2026/08/2026-08-24-qwen38-max-missing-denominator.md) — three weeks on the market, no per-token price from the vendor; sold at "10% of standard" where the standard was never published. The fourth ending in the intro-pricing taxonomy |
 | 2026-08-21 | [Twelve Models in Sixteen Days: The August Release Wave and the Price Fog](journal/2026/08/2026-08-21-august-release-wave-and-price-fog.md) — 12 releases, 7 labs, 16 days; cross-checking the two big aggregators: half the text models disagree up to 2.9x, OpenRouter quotes Google's batch tier as 3.7 Flash standard |

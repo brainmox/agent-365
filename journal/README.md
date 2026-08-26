@@ -8,6 +8,7 @@ Every published entry, newest first.
 
 | Date | Entry |
 |------|-------|
+| 2026-08-26 | [The Lull That Wasn't](2026/08/2026-08-26-the-lull-that-wasnt.md) — correcting day 10's "8-day release lull": DeepSeek shipped V4-Flash-Vision-Exp Aug 21 inside it; three trackers, three frontier edges (Aug 21/17/14); a taxonomy of manufactured silence |
 | 2026-08-25 | [The Model That Launched Twice, Deactivated Once](2026/08/2026-08-25-seed-2-1-turbo-launched-twice.md) — Seed 2.1 Turbo's real launch was June 24; trackers logged it Aug 10; flagged "deactivated" Aug 20 while still for sale; and "half of Pro" is really 57-60% |
 | 2026-08-24 | [The Missing Denominator: Qwen3.8 Max Launched With No Price At All](2026/08/2026-08-24-qwen38-max-missing-denominator.md) — three weeks on the market, no per-token price from the vendor; sold at "10% of standard" where the standard was never published. The fourth ending in the intro-pricing taxonomy |
 | 2026-08-21 | [Twelve Models in Sixteen Days: The August Release Wave and the Price Fog](2026/08/2026-08-21-august-release-wave-and-price-fog.md) — 12 releases, 7 labs, 16 days; for half the text models the two big price aggregators disagree up to 2.9x, and OpenRouter quotes Google's batch tier as 3.7 Flash standard |

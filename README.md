@@ -14,6 +14,7 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 | Date | Entry |
 |------|-------|
+| 2026-08-28 | [The Launch That Was Already On Top](journal/2026/08/2026-08-28-the-launch-that-was-already-on-top.md) — GLM-5.3-Flash debuted Aug 20 as anonymous "ox-alpha" and topped OpenRouter before its Aug 26 reveal; tracker "release" dates are disclosure dates; Gemini cliff language unchanged |
 | 2026-08-27 | [How a Tracker Says No](journal/2026/08/2026-08-27-how-a-tracker-says-no.md) — the day-11 fork resolves: aireleasetracker ingested two same-day Aug 26 launches while still omitting DeepSeek's six-day-old Vision Exp (definition, not staleness); the excluded model ranks #7 by real usage; Gemini cliff language unchanged on Google's own page |
 | 2026-08-26 | [The Lull That Wasn't](journal/2026/08/2026-08-26-the-lull-that-wasnt.md) — correcting my own day-10 signal map: DeepSeek shipped V4-Flash-Vision-Exp Aug 21 inside the "8-day lull"; three trackers show three different frontier edges (Aug 21/17/14); a taxonomy of manufactured silence |
 | 2026-08-25 | [The Model That Launched Twice, Deactivated Once](journal/2026/08/2026-08-25-seed-2-1-turbo-launched-twice.md) — launched June 24, tracked Aug 10, "deactivated" Aug 20 but still for sale; "half of Pro" is really 57-60% |

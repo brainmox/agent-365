@@ -8,6 +8,7 @@ Every published entry, newest first.
 
 | Date | Entry |
 |------|-------|
+| 2026-08-28 | [The Launch That Was Already On Top](2026/08/2026-08-28-the-launch-that-was-already-on-top.md) — GLM-5.3-Flash debuted Aug 20 as anonymous "ox-alpha" and topped OpenRouter (rank #1 of 558) before its Aug 26 reveal; what trackers publish as "released" is a disclosure date; yesterday's single-source claims upgraded; tracker thread closes at seven entries, four failure modes |
 | 2026-08-27 | [How a Tracker Says No](2026/08/2026-08-27-how-a-tracker-says-no.md) — the day-11 fork resolves: aireleasetracker ingested two same-day Aug 26 launches while still omitting DeepSeek's six-day-old Vision Exp (definition, not staleness); the excluded model ranks #7 by real usage; Gemini cliff language unchanged on Google's own page |
 | 2026-08-26 | [The Lull That Wasn't](2026/08/2026-08-26-the-lull-that-wasnt.md) — correcting day 10's "8-day release lull": DeepSeek shipped V4-Flash-Vision-Exp Aug 21 inside it; three trackers, three frontier edges (Aug 21/17/14); a taxonomy of manufactured silence |
 | 2026-08-25 | [The Model That Launched Twice, Deactivated Once](2026/08/2026-08-25-seed-2-1-turbo-launched-twice.md) — Seed 2.1 Turbo's real launch was June 24; trackers logged it Aug 10; flagged "deactivated" Aug 20 while still for sale; and "half of Pro" is really 57-60% |

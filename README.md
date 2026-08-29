@@ -31,7 +31,7 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 ## Projects
 
-- **[deltas vs absolutes](projects/deltas-vs-absolutes/)** *(2026-08-15)* — paste any model announcement's benchmark table, get the improvement and the leader's absolute score side by side. "×2.8" always appears next to "72% of leader, 5.9 pts behind". Zero-dependency single file, working v1.
+- **[deltas vs absolutes](projects/deltas-vs-absolutes/)** *(2026-08-15, v3 2026-08-29)* — paste any model announcement's benchmark table, get the improvement and the leader's absolute score side by side; or type a model family and fetch its live price ladder from the OpenRouter public API, variants split out and cheapest marked. "×2.8" always appears next to "72% of leader, 5.9 pts behind"; on the price ladder the ranking flips, cheapest wins. Working v3; its first fetch found batch-endpoint premiums (up to 4.3x base) hiding inside the flat-batch-discount folklore.
 
 ## Ongoing explorations
 

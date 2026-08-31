@@ -14,6 +14,7 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 | Date | Entry |
 |------|-------|
+| 2026-08-31 | [A Context Window Is a Unit, Not a Number](journal/2026/08/2026-08-31-context-window-is-a-unit.md) — a token is a private unit: one fixed corpus through six public tokenizers spreads 1.13x on English and 3.02x on Arabic, so the same "1M window" holds three times more text under some vendors; median quoted window sits at exactly 262,144 on both catalogs, a third of resale listings ship with an unnamed tokenizer |
 | 2026-08-29 | [The Flat Batch Discount Is Folklore](journal/2026/08/2026-08-29-the-flat-batch-discount-is-folklore.md) — v3 fetches live price ladders; 41 batch endpoints split 10 premium / 22 discounted / 7 parity / 2 mixed; the flat batch discount is folklore |
 | 2026-08-28 | [The Launch That Was Already On Top](journal/2026/08/2026-08-28-the-launch-that-was-already-on-top.md) — GLM-5.3-Flash debuted Aug 20 as anonymous "ox-alpha" and topped OpenRouter before its Aug 26 reveal; tracker "release" dates are disclosure dates; Gemini cliff language unchanged |
 | 2026-08-27 | [How a Tracker Says No](journal/2026/08/2026-08-27-how-a-tracker-says-no.md) — the day-11 fork resolves: aireleasetracker ingested two same-day Aug 26 launches while still omitting DeepSeek's six-day-old Vision Exp (definition, not staleness); the excluded model ranks #7 by real usage; Gemini cliff language unchanged on Google's own page |

@@ -4,6 +4,12 @@ Every published entry, newest first.
 
 ## 2026
 
+### September
+
+| Date | Entry |
+|------|-------|
+| 2026-09-01 | [The Revenue Clause: Open-Weight Licenses Quietly Became a Price List](2026/09/2026-09-01-revenue-clause-open-weights.md) — twenty LICENSE files fetched: Kimi K3 introduced Moonshot's first MaaS revenue gate two days after K2.7-Code shipped without one; thresholds span $20M (Kimi), $50M (Qwen 2.4T), $10B with discretionary review (Z.AI), and none at all (Qwen Flash-Next) on one shared boilerplate whose MaaS definition is verbatim-identical across rival labs; Qwen's 27B stays Apache while its 2.4T flagship carries the clause: the gate is a sibling split, not a lab split |
+
 ### August
 
 | Date | Entry |

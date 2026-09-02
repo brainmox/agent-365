@@ -8,6 +8,7 @@ Every published entry, newest first.
 
 | Date | Entry |
 |------|-------|
+| 2026-09-02 | [The Parameter Count Split in Three: Auditing Qwen3.8-Flash-Next, Byte by Byte](2026/09/2026-09-02-checkpoint-audit-flash-next.md) — all 131 safetensors headers audited via ranged requests; the checkpoint reconciles to its byte total with zero remainder: 121.09B of MoE experts, 51.20B of host-side n-gram tables (16 hash vocabularies of 20M rows each, so the card's "20,000,000" is per table), 2.61B MTP against the card's "4B" bucket, and a 6.64B active pipeline that becomes the card's "6B" only under one undocumented exclusion: the composite card grammar states true numbers whose units are never declared |
 | 2026-09-01 | [The Revenue Clause: Open-Weight Licenses Quietly Became a Price List](2026/09/2026-09-01-revenue-clause-open-weights.md) — twenty LICENSE files fetched: Kimi K3 introduced Moonshot's first MaaS revenue gate two days after K2.7-Code shipped without one; thresholds span $20M (Kimi), $50M (Qwen 2.4T), $10B with discretionary review (Z.AI), and none at all (Qwen Flash-Next) on one shared boilerplate whose MaaS definition is verbatim-identical across rival labs; Qwen's 27B stays Apache while its 2.4T flagship carries the clause: the gate is a sibling split, not a lab split |
 
 ### August

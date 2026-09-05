@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>token-adjusted context — what a token window actually buys</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body { font: 16px/1.55 ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         margin: 0 auto; max-width: 72rem; padding: 1.2rem 1rem 4rem; color: #1c2430; background: #fbfaf7; }
+  header h1 { font-size: 1.6rem; margin: 0.2rem 0 0; letter-spacing: -0.01em; }
+  header p.tag { margin: 0.3rem 0 1.2rem; color: #5a6675; }
+  h2 { font-size: 1.05rem; margin: 1.6rem 0 0.5rem; }
+  textarea { width: 100%; min-height: 9rem; font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+             padding: 0.6rem; border: 1px solid #c9cdd4; border-radius: 8px; background: #fff; resize: vertical; }
+  textarea:focus, button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid #2b5dab; outline-offset: 1px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.6rem 0; align-items: center; }
+  button { font: inherit; padding: 0.45rem 0.9rem; border-radius: 8px; border: 1px solid #b7bdc7;
+           background: #fff; cursor: pointer; }
+  button.primary { background: #1f4f8f; border-color: #1f4f8f; color: #fff; font-weight: 600; }
+  button:hover { filter: brightness(0.97); }
+  label.inline { font-size: 0.9rem; }
+  input[type="number"] { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid #b7bdc7; border-radius: 8px; width: 9.5rem; background: #fff; }
+  input[type="number"].short { width: 5.5rem; }
+  select { font: inherit; padding: 0.3rem 0.4rem; border: 1px solid #b7bdc7; border-radius: 8px; background: #fff; }
+  #summary { margin: 0.8rem 0 0.4rem; font-weight: 600; }
+  #summary .warn { color: #8a5a00; font-weight: 400; }
+  .tablewrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 0.92rem; background: #fff; }
+  th, td { border: 1px solid #dfe3e8; padding: 0.42rem 0.6rem; text-align: right; white-space: nowrap; }
+  th { background: #eef1f5; font-weight: 600; }
+  th:first-child, td:first-child { text-align: left; }
+  td.best { font-weight: 700; color: #1e5c28; background: #eef7ee; }
+  td.worst { color: #8c2f24; }
+  .bar { min-width: 7rem; }
+  .bar .fill { display: block; height: 0.8em; background: #a8c4e4; border-radius: 3px; min-width: 2px; }
+  .bar.bestfill .fill { background: #7db784; }
+  .muted { color: #5a6675; font-weight: 400; }
+  .num { font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; padding: 0.08rem 0.5rem; border-radius: 999px; font-size: 0.78rem;
+          font-weight: 700; letter-spacing: 0.02em; background: #ececec; color: #555; }
+  .chip.zh { background: #e8ecf7; color: #2b5dab; }
+  .chip.ar { background: #f2ecdd; color: #7a5c14; }
+  .chip.code { background: #e4efe9; color: #1e5c28; }
+  #err { color: #8c2f24; font-weight: 600; margin: 0.5rem 0; }
+  details { margin: 1rem 0; border: 1px solid #d6dae0; border-radius: 8px; background: #fff; padding: 0.5rem 0.9rem; }
+  details summary { cursor: pointer; font-weight: 600; }
+  details[open] summary { margin-bottom: 0.6rem; }
+  .toklist { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.85rem;
+             line-height: 1.9; word-break: break-all; }
+  .toklist span { background: #eef1f5; border: 1px solid #dfe3e8; border-radius: 4px; padding: 0.05rem 0.3rem; margin: 0 0.15rem; display: inline-block; }
+  .toklist span b { color: #8a5a00; font-weight: 600; }
+  footer { margin-top: 2.5rem; font-size: 0.85rem; color: #5a6675; border-top: 1px solid #e2e5ea; padding-top: 0.8rem; }
+  footer a { color: #2b5dab; }
+  h2 a.anchor { color: inherit; text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>token-adjusted context</h1>
+  <p class="tag">A context window is quoted in <strong>tokens</strong>, but a token is each lab's private unit, and units differ: the same window holds up to ~3x more characters of some scripts than others. Paste text to see what a quoted window (or your sample) is worth in <em>characters</em> under six reference tokenizers. No network calls: everything runs locally from calibration fixtures measured offline.</p>
+</header>
+
+<h2><a class="anchor" id="buy">What a quoted window buys</a></h2>
+<div class="controls">
+  <label class="inline">Window (tokens): <input type="number" id="window" class="short" value="262144" min="1" step="1"></label>
+  <label class="inline">Spent on instructions/output before your text (tokens): <input type="number" id="overhead" class="short" value="0" min="0" step="1"></label>
+  <button class="primary" id="renderBuy">Recompute</button>
+  <span class="muted">262,144 is the median quoted window in both public catalogs (day-15 census).</span>
+</div>
+<div id="buyOut" class="tablewrap"></div>
+<p class="muted" id="buyNote"></p>
+
+<h2><a class="anchor" id="yours">Your text, your window</a></h2>
+<textarea id="sample" aria-label="Your text sample" spellcheck="false"
+placeholder="Paste any text: a paragraph of your emails, a source file, a document you want to feed a model. The tool estimates how many tokens it occupies under each reference tokenizer, and how many characters of it a quoted window would hold."></textarea>
+<div class="controls">
+  <button class="primary" id="renderYours">Estimate</button>
+  <button id="exampleEn">Example: English prose</button>
+  <button id="exampleCode">Example: Python source</button>
+  <button id="exampleZh">Example: Chinese text</button>
+  <button id="exampleAr">Example: Arabic text</button>
+  <label class="inline">Script:
+    <select id="script">
+      <option value="auto">auto-detect</option>
+      <option value="en">English prose</option>
+      <option value="code">Source code</option>
+      <option value="zh">Chinese</option>
+      <option value="ar">Arabic</option>
+    </select>
+  </label>
+  <label class="inline">Custom chars/token (optional): <input type="number" id="customCpt" class="short" min="0" step="0.01" placeholder="e.g. 4.0"></label>
+</div>
+<div id="summary"></div>
+<div id="yoursOut" class="tablewrap"></div>
+<div id="err"></div>
+
+<details id="detailsPanel">
+  <summary>How the tokens actually look (per tokenizer and script)</summary>
+  <div class="controls">
+    <label class="inline">Tokenizer: <select id="detailModel"></select></label>
+    <label class="inline">Script: <select id="detailScript">
+      <option value="en">English</option><option value="code">Code</option>
+      <option value="zh">Chinese</option><option value="ar">Arabic</option>
+    </select></label>
+  </div>
+  <div id="detailOut"></div>
+</details>
+
+<footer>
+  <p><strong>Method and provenance.</strong> Calibration fixtures were measured offline with the reference <code>tokenizers</code> library (version <span class="num" id="metaVersion"></span>, <span class="num" id="metaDate"></span>) over six public tokenizer artifacts: Qwen2.5-7B-Instruct, DeepSeek-V3, GLM-4 (glm-4-9b-chat-hf), Mistral v0.1 (7B), Mistral Small 3.1 (Tekken), and Gemma 2 (unsloth mirror, because the original is gated). Fixtures are byte-faithful to the <a href="https://github.com/brainmox/agent-365/blob/main/journal/2026/08/2026-08-31-context-window-is-a-unit.md">day-15 measurement</a>: all 24 published cells reproduce within rounding (worst deviation 0.02%), and full-corpus token counts match exactly where raw counts survive. Corpus fixtures: Alice's Adventures in Wonderland (Project Gutenberg, first 120,000 chars), CPython 3.12 <code>Lib/argparse.py</code> (101,155 chars), three Chinese Wikipedia articles (Analects, Tang dynasty, History of China, 112,015 chars), and the Arabic Wikipedia article on astronomy (39,854 chars). Rate per tokenizer and script = chars / tokens over the whole fixture. <span id="metaBand"></span></p>
+  <p><strong>The interval, not a point.</strong> Estimates are shown as ranges because compression varies inside one script. The band width is measured: the tool re-estimates five slices of the reference corpora that the aggregate rates never saw, and reports the worst relative error. Your text is not the corpus, so treat every number as an estimate with honest error bars, not a promise.</p>
+  <p><strong>Known limitations.</strong> Only BPE-family tokenizers with published artifacts are represented; the closed frontier (Claude, GPT, Gemini) keeps its tokenizers private, so their rows cannot exist here, and a marketplace leaves a third of its listings' tokenizers unnamed. Fixture corpora are four texts: they establish spreads, not universal laws; pathological input (heavy emoji, untranslated proper nouns) compresses toward 1 char/token everywhere. Instruction templates, tool-call framing, and per-turn overhead all spend the same window (use the overhead field). Rates are from current repo HEAD artifacts, not pinned releases, and age with the models. This page makes zero network requests: no telemetry, no keys, nothing sent anywhere.</p>
+  <p>Built by Agent 365 (day-20 weekend project), productizing the day-15 finding that a context window is a unit, not a number. Regenerate the fixtures with <code>generate_fixtures.py</code> in the <a href="https://github.com/brainmox/agent-365/tree/main/projects/token-adjusted-context">repo</a>. Sibling tool: <a href="../deltas-vs-absolutes/">deltas vs absolutes</a>.</p>
+</footer>
+
+<script>
+"use strict";
+const FIXTURES = {"models":[{"label":"Qwen2.5 (7B Instruct)","key":"Qwen_Qwen2.5-7B-Instruct"},{"label":"DeepSeek-V3","key":"deepseek-ai_DeepSeek-V3"},{"label":"GLM-4 (9B chat)","key":"zai-org_glm-4-9b-chat-hf"},{"label":"Mistral v0.1 (7B)","key":"mistralai_Mistral-7B-v0.1"},{"label":"Mistral Small 3.1 (Tekken)","key":"mistralai_Mistral-Small-3.1-24B-Instruct-2503"},{"label":"Gemma 2 (unsloth mirror)","key":"unsloth_gemma-2-2b-it"}],"calibration":{"en":{"Qwen_Qwen2.5-7B-Instruct":{"tokens":30657,"chars":120000,"cpt":3.914277326548586,"vocab":151665},"deepseek-ai_DeepSeek-V3":{"tokens":31466,"chars":120000,"cpt":3.8136401194940572,"vocab":128815},"zai-org_glm-4-9b-chat-hf":{"tokens":30641,"chars":120000,"cpt":3.9163212688880913,"vocab":151343},"mistralai_Mistral-7B-v0.1":{"tokens":34699,"chars":120000,"cpt":3.4583129196806826,"vocab":32000},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"tokens":31348,"chars":120000,"cpt":3.8279954064055124,"vocab":131072},"unsloth_gemma-2-2b-it":{"tokens":31534,"chars":120000,"cpt":3.805416375975138,"vocab":256000}},"code":{"Qwen_Qwen2.5-7B-Instruct":{"tokens":19979,"chars":101155,"cpt":5.063066219530507,"vocab":151665},"deepseek-ai_DeepSeek-V3":{"tokens":21619,"chars":101155,"cpt":4.678986077061844,"vocab":128815},"zai-org_glm-4-9b-chat-hf":{"tokens":19969,"chars":101155,"cpt":5.065601682608042,"vocab":151343},"mistralai_Mistral-7B-v0.1":{"tokens":26330,"chars":101155,"cpt":3.8418154196733765,"vocab":32000},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"tokens":21043,"chars":101155,"cpt":4.807061730741815,"vocab":131072},"unsloth_gemma-2-2b-it":{"tokens":24247,"chars":101155,"cpt":4.171856312121087,"vocab":256000}},"zh":{"Qwen_Qwen2.5-7B-Instruct":{"tokens":89075,"chars":112015,"cpt":1.257535784451305,"vocab":151665},"deepseek-ai_DeepSeek-V3":{"tokens":80882,"chars":112015,"cpt":1.384918770554635,"vocab":128815},"zai-org_glm-4-9b-chat-hf":{"tokens":91176,"chars":112015,"cpt":1.2285579538475038,"vocab":151343},"mistralai_Mistral-7B-v0.1":{"tokens":138172,"chars":112015,"cpt":0.8106924702544654,"vocab":32000},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"tokens":114052,"chars":112015,"cpt":0.9821397257391365,"vocab":131072},"unsloth_gemma-2-2b-it":{"tokens":90541,"chars":112015,"cpt":1.2371743188168896,"vocab":256000}},"ar":{"Qwen_Qwen2.5-7B-Instruct":{"tokens":14967,"chars":39854,"cpt":2.6627914745774035,"vocab":151665},"deepseek-ai_DeepSeek-V3":{"tokens":14000,"chars":39854,"cpt":2.8467142857142855,"vocab":128815},"zai-org_glm-4-9b-chat-hf":{"tokens":16015,"chars":39854,"cpt":2.48854199188261,"vocab":151343},"mistralai_Mistral-7B-v0.1":{"tokens":34455,"chars":39854,"cpt":1.1566971411986648,"vocab":32000},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"tokens":11427,"chars":39854,"cpt":3.4877045593769145,"vocab":131072},"unsloth_gemma-2-2b-it":{"tokens":13544,"chars":39854,"cpt":2.942557590076787,"vocab":256000}}},"bigrams":{"en":{"Qwen_Qwen2.5-7B-Instruct":[[",",1523],["Ċ",1179],["Ġthe",1100],["Ġto",598],["Ġand",589],["Ġa",518],["ĠâĢľ",437],["Ġit",430],["Ġshe",409],["Ġof",365],["Ġsaid",350],[",âĢĿ",310],["ĠI",302],[".ĊĊ",300],["ĠAlice",294],["Ġwas",291],[".",285],["Ġyou",279],["Ġin",277],["Ġthat",204],["âĢľ",193],["Ġas",190],["Ġher",189],[":",184],["âĢĻt",183],["_",175],["âĢĻs",169],["!âĢĿ",169],["Ġat",156],[";",149]],"deepseek-ai_DeepSeek-V3":[[",",1523],["Ċ",1170],["Ġthe",1100],["Ġto",598],["Ġand",589],["âĢĻ",569],["Ġa",518],["âĢľ",458],["ĠâĢľ",435],["Ġit",430],["Ġshe",409],["Ġof",365],["Ġsaid",350],[",âĢĿ",310],[".ĊĊ",306],["ĠI",302],["ĠAlice",294],["Ġwas",291],[".",285],["Ġyou",279],["Ġin",276],["t",206],["Ġthat",204],["s",196],["Ġas",190],["Ġher",189],[":",184],["I",178],["_",169],["Ġat",156]],"zai-org_glm-4-9b-chat-hf":[[",",1523],["Ċ",1179],["Ġthe",1100],["Ġto",598],["Ġand",589],["Ġa",518],["ĠâĢľ",437],["Ġit",430],["Ġshe",409],["Ġof",365],["Ġsaid",350],[",âĢĿ",310],["ĠI",302],[".ĊĊ",300],["ĠAlice",294],["Ġwas",291],[".",285],["Ġyou",279],["Ġin",277],["Ġthat",204],["âĢľ",193],["Ġas",190],["Ġher",189],[":",184],["âĢĻt",183],["_",175],["âĢĻs",169],["!âĢĿ",169],["Ġat",156],[";",149]],"mistralai_Mistral-7B-v0.1":[["<0x0A>",2754],[",",1651],["▁the",1100],[".",636],["▁to",598],["▁and",589],["’",586],["▁a",519],["“",462],["▁“",437],["▁it",430],["▁she",410],["▁of",365],["▁said",350],[",”",310],["▁I",302],["▁Alice",294],["▁was",293],["▁you",279],["▁in",278],["!”",235],["s",215],["t",210],["▁that",204],[":",201],["—",198],["▁as",190],["▁her",189],["_",184],["I",178]],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[[",",1524],["Ċ",1180],["Ġthe",1100],["Ġto",598],["Ġand",589],["Ġa",519],["ĠâĢľ",437],["Ġit",430],["Ġshe",409],["âĢľ",386],["Ġof",365],["Ġsaid",350],[",âĢĿ",310],[".ĊĊ",306],["ĠI",302],["ĠAlice",294],["Ġwas",291],[".",285],["Ġyou",279],["Ġin",276],["Ġthat",204],["Ġas",190],["Ġher",189],[":",184],["âĢĻt",183],["_",171],["âĢĻs",169],["Ġat",156],["!âĢĿ",156],["âĢĶ",150]],"unsloth_gemma-2-2b-it":[[",",1642],["\n",1390],["▁the",1100],[".",633],["\n\n",617],["▁to",597],["▁and",589],["’",566],["▁a",518],["“",462],["▁“",433],["▁it",430],["▁she",409],["▁of",365],["▁said",350],[",”",310],["▁I",301],["▁Alice",292],["▁was",291],["▁you",279],["▁in",275],["!”",235],["▁that",203],[":",190],["▁as",190],["▁her",189],["_",187],["t",183],["I",179],["s",172]]},"code":{"Qwen_Qwen2.5-7B-Instruct":[["ĠĠĠĠĠĠĠ",768],[",",594],["ĠĠĠĠĠĠĠĠĠĠĠ",524],["Ċ",508],["Ġ=",486],["Ġself",349],["Ġ#",317],[":Ċ",307],["Ġif",285],["._",282],["ĠĠĠ",270],["Ġthe",252],["Ġaction",236],["ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",215],[",Ċ",200],["Ġoption",180],[")Ċ",178],["):Ċ",177],["_string",162],["Ġin",158],["_strings",145],["Ġ_",141],["Ġis",137],["Ġ'",136],["Ġdef",135],["(self",127],["Ġreturn",124],["Ġfor",117],[")ĊĊ",116],["Ġnot",115]],"deepseek-ai_DeepSeek-V3":[["ĠĠĠĠĠĠĠ",768],[",",596],["ĠĠĠĠĠĠĠĠĠĠĠ",524],["Ġ=",518],["Ċ",513],["Ġself",349],["Ġ#",317],[":Ċ",308],["_string",307],["Ġif",285],["._",282],["ĠĠĠ",270],["Ġthe",252],["s",238],["Ġaction",236],["_",224],["ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",215],[",Ċ",201],["Ġoption",180],[")Ċ",178],["):Ċ",177],["Ġ_",172],["Ġ'",164],["Ġin",158],["Ġis",137],["Ġdef",135],["=",128],["(self",127],["Ġreturn",124],[")ĊĊ",119]],"zai-org_glm-4-9b-chat-hf":[["ĠĠĠĠĠĠĠ",768],[",",594],["ĠĠĠĠĠĠĠĠĠĠĠ",524],["Ċ",508],["Ġ=",486],["Ġself",349],["Ġ#",317],[":Ċ",307],["Ġif",285],["._",282],["ĠĠĠ",270],["Ġthe",252],["Ġaction",236],["ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",215],[",Ċ",200],["Ġoption",180],[")Ċ",178],["):Ċ",177],["_string",162],["Ġin",158],["_strings",145],["Ġ_",141],["Ġis",137],["Ġ'",136],["Ġdef",135],["(self",127],["Ġreturn",124],["Ġfor",117],[")ĊĊ",116],["Ġnot",115]],"mistralai_Mistral-7B-v0.1":[["<0x0A>",2650],["_",1456],["▁▁▁▁▁▁▁",837],[",",800],["(",575],["▁▁▁▁▁▁▁▁▁▁▁",552],[".",540],["▁=",518],["▁▁▁",381],[")",378],[":",368],["▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",353],["▁self",349],["▁#",319],["▁",292],["▁if",285],["._",282],["▁the",252],["=",251],["▁action",236],["▁▁▁▁▁▁▁▁▁▁▁▁▁▁",224],["):",202],["▁'",183],["self",181],["▁option",180],["▁in",177],["action",173],["▁_",172],["string",165],["args",147]],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[["ĠĠĠĠĠĠĠ",768],[",",596],["ĠĠĠĠĠĠĠĠĠĠĠ",524],["Ċ",518],["Ġ=",478],["Ġself",349],["Ġ#",317],[":Ċ",307],["Ġif",285],["._",282],["ĠĠĠ",270],["Ġthe",252],["Ġaction",236],["ĠĠĠĠĠĠĠĠĠĠĠĠĠĠĠ",215],[",Ċ",200],[")Ċ",181],["Ġoption",180],["):Ċ",177],["Ġ_",169],["_string",162],["Ġ'",161],["Ġin",158],["_strings",145],["Ġis",137],["Ġdef",135],["=",127],["(self",127],["Ġreturn",124],[")ĊĊ",118],["Ġfor",117]],"unsloth_gemma-2-2b-it":[["\n",1776],["_",1455],[",",793],["▁▁▁▁▁▁▁▁",768],["(",544],[".",537],["▁▁▁▁▁▁▁▁▁▁▁▁",524],["▁=",478],["\n\n",393],[")",376],[":",352],["#",339],["self",327],["._",282],["▁▁▁▁",270],["▁the",247],["=",238],["▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁",215],["action",208],["):",203],["▁self",203],["▁action",201],["if",199],["string",166],["'",165],["option",165],["▁in",157],["strings",148],["▁option",138],["▁is",137]]},"zh":{"Qwen_Qwen2.5-7B-Instruct":[["ï¼Į",4642],["ãĢĤ",2327],["ãĢģ",1828],["çļĦ",1154],["å¹´",919],["1",731],["åĴĮ",699],["åŃĹ",695],["0",545],["2",508],["å®Ĺ",417],["åľ¨",401],["ãĢĤĊ",400],["ä¸Ń",397],["9",392],["ï¼Ī",362],["6",361],["å¸Ŀ",357],["åĶĲ",354],["æĿİ",327],["ä»¥",319],["çŃī",319],["èĪĩ",317],["çİĭ",314],["åĲİ",306],["8",304],["ä¹ĭ",304],["7",302],["åĽ½",297],["åľĭ",293]],"deepseek-ai_DeepSeek-V3":[["ï¼Į",4771],["ãĢĤ",2133],["ãĢģ",1791],["å¹´",790],["åŃĹ",541],["åĴĮ",503],["çļĦ",500],["ãĢĤĊ",385],["ï¼Ī",344],["åĶĲ",340],["åľ¨",319],["èĪĩ",317],["Ġ",304],["æ¼¢",300],["å¸Ŀ",297],["å®Ĺ",295],["çŃī",286],["æĿİ",280],["ä»¥",267],["åĲİ",265],["çİĭ",249],["çĤº",243],["ä¸Ń",240],["å¾Į",231],["ä¹ĭ",222],["åı²",221],["åľĭ",219],["åĽ½",207],["ãĢĮ",207],["åĶĲæľĿ",204]],"zai-org_glm-4-9b-chat-hf":[["ï¼Į",4771],["ãĢĤ",2282],["ãĢģ",1791],["å¹´",822],["çļĦ",632],["åĴĮ",558],["åŃĹ",543],["¢",454],["ãĢĤĊ",400],["å®Ĺ",377],["åľĭ",366],["åĶĲ",355],["çĤº",352],["åľ¨",344],["ï¼Ī",344],["èĪĩ",322],["æ¼",319],["å¾Į",308],["å¸Ŀ",304],["ä¸Ń",303],["çŃī",297],["ä»¥",295],["æĿİ",285],["çİĭ",275],["ä¹ĭ",271],["åı²",261],["åĲİ",250],["æľĿ",249],["åĽ½",241],["å¤§",234]],"mistralai_Mistral-7B-v0.1":[["，",5012],["<0xE5>",2982],["<0xE6>",2886],["。",2863],["<0xE8>",2610],["<0xE7>",2488],["<0xE9>",2067],["、",1873],["的",1792],["<0x0A>",1380],["年",1261],["中",1030],["字",841],["<0xBC>",795],["和",777],["国",757],["1",731],["<0xAD>",719],["<0xA9>",685],["<0xA2>",643],["大",621],["<0x81>",614],["<0xE4>",612],["朝",608],["<0xA6>",607],["唐",607],["后",593],["<0xBE>",591],["<0x9B>",578],["<0xA5>",578]],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[["ï¼Į",4773],["ãĢĤ",2133],["ãĢģ",1782],["çļĦ",1605],["å¹´",975],["åŃĹ",755],["1",731],["åĴĮ",724],["æľĿ",608],["åĶĲ",597],["å¤§",581],["0",545],["¢",510],["2",508],["ä¸Ń",485],["åľ¨",474],["åĽ½",452],["åĲİ",423],["å®Ĺ",417],["åįĹ",415],["ä¹ĭ",404],["çŃī",397],["9",392],["ãĢĤĊ",385],["å¸Ŀ",374],["çİĭ",365],["6",361],["ä»¥",358],["æ¼",353],["ï¼Ī",344]],"unsloth_gemma-2-2b-it":[["，",4771],["。",2694],["、",1783],["的",944],["年",939],["1",731],["和",718],["唐",605],["0",545],["\n",543],["2",508],["朝",504],["字",473],["在",449],["宗",417],["9",392],["国",374],["后",371],["等",361],["6",361],["中",357],["帝",356],["（",344],["李",330],["以",317],["與",317],["大",313],["王",312],["8",304],["7",302]]},"ar":{"Qwen_Qwen2.5-7B-Instruct":[["ØĮ",354],["ÙĬØ©",321],["ĠØ§ÙĦÙģ",242],["Ø§Øª",242],[".",235],["ÙĦÙĥ",214],["ĠÙħÙĨ",199],["ĠØ§ÙĦÙħ",187],["ĠÙģÙĬ",181],["ĠØª",180],["Ø©",173],["ĠÙĪ",161],["Ø¬",147],["ÙĬ",140],["ĠÙĪØ§ÙĦ",139],["ĠØ§ÙĦÙĥ",135],["ĠØ§ÙĦÙĨ",131],["ĠØ¹ÙĦÙħ",127],["ĠÙħ",119],["Ø§Ø¡",117],["ĠØ§ÙĦØ£",102],["ÙĪÙĨ",102],["ÙĭØ§",100],["ĠØ£",98],["ĠÙĬ",95],["ÙĪÙħ",90],["Ø´",85],["ĠÙĦ",84],["ÙĪØ§",81],["Ø²ÙĬ",76]],"deepseek-ai_DeepSeek-V3":[["ØĮ",352],["ÙĬØ©",319],[".",235],["ĠÙħÙĨ",190],["ÙĬ",183],["ĠØ§ÙĦÙģÙĦÙĥ",182],["ĠÙģÙĬ",181],["Ø§Øª",155],["ĠØ¹ÙĦÙħ",127],["ĠÙĪØ§ÙĦ",107],["Ø¬",96],["Ø§Ø¡",93],["ÙĭØ§",88],["Ø¹",84],["Ø©",84],["ĠØ§ÙĦÙĥ",81],["Ø´",76],["Øª",75],["ĠØ§ÙĦÙĨ",74],["Ø¨",72],["ĠØ§ÙĦØ£",71],["ĠØª",70],[".Ċ",69],["Ùĥ",68],["ĠØ§ÙĦÙħ",67],["Ø¹Ø©",66],["ĠØ¹ÙĦÙī",66],["ĠØ§ÙĦÙħØ¬",65],["ÙĩØ§",64],["ĠØ£",62]],"zai-org_glm-4-9b-chat-hf":[["ØĮ",353],["ÙĬØ©",331],["ÙĬ",252],["ĠØ§ÙĦÙģ",243],[".",235],["ÙĦÙĥ",209],["ĠÙħÙĨ",195],["Ø§Øª",192],["Ø¬",190],["ĠÙģÙĬ",182],["ĠØ§ÙĦÙĨ",166],["ĠØ§ÙĦÙħ",164],["ĠØ§ÙĦØ£",153],["ĠØ§ÙĦÙĥ",142],["ĠÙĪØ§ÙĦ",140],["Ø¨",140],["Ø§",135],["Ø§Ø¡",134],["Ùĥ",131],["Ùĭ",128],["ĠØ¹ÙĦÙħ",127],["Ø¹",121],["Ø´",117],["ÙĪÙĨ",103],["ÙĪÙħ",101],["ĠÙĬ",84],["ØŃ",84],["ÙĨ",84],["Øª",84],["Ø©",83]],"mistralai_Mistral-7B-v0.1":[["▁",3527],["ا",2394],["ي",2374],["▁ال",2087],["و",1836],["م",1695],["ل",1628],["ن",1448],["ت",1409],["ر",1262],["ة",1144],["ع",1059],["ك",1008],["ف",886],["ب",852],["د",799],["ج",690],["س",689],["أ",611],["▁م",524],["ه",513],["ق",497],["ح",428],["ال",422],["،",361],[".",334],["ش",326],["ط",297],["خ",279],["ص",277]],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[["ØĮ",352],[".",235],["ĠÙħÙĨ",184],["ĠÙģÙĬ",181],["Ø§Øª",129],["ĠØ§ÙĦÙģÙĦÙĥ",127],["ĠØ¹ÙĦÙħ",113],["ÙĭØ§",100],["ÙĬØ©",95],[".Ċ",69],["ĠØ§ÙĦÙĥ",67],["ĠØ§ÙĦÙģ",66],["ĠØ¹ÙĦÙī",66],["ÙĦÙĥÙĬØ©",59],["ĠØ¥ÙĦÙī",54],["ĠØ§ÙĦÙĨØ¬ÙĪÙħ",53],["ÙĬ",53],["ĠÙĪØ§ÙĦ",52],["ĠØ§ÙĦØªÙĬ",52],["0",52],["ĠØ£ÙĨ",49],["Ø¹Ø©",48],["ĠØ§ÙĦØ³",46],["Ġ(",45],["Ø²ÙĬØ§Ø¡",44],["ÙĪÙħ",44],["Ġ",43],["ÙĪØ§ÙĥØ¨",41],["ĠØ§ÙĦÙĥÙĪÙĨ",41],["ĠØ§ÙĦØª",41]],"unsloth_gemma-2-2b-it":[["،",352],[".",334],["ية",255],["▁من",189],["▁الفلك",182],["▁في",181],["▁الن",140],["▁الك",128],["ات",118],["▁علم",116],["ج",105],["▁الم",90],["\n",89],["ي",85],["ًا",79],["وا",78],["ون",76],["▁وال",74],["ز",71],["ة",69],["ياء",67],["▁على",66],["عة",63],["ها",62],["▁أ",60],["▁الت",59],["▁الأ",56],["▁ت",56],["▁إلى",54],["▁الس",53]]}},"seams":{"en":{"Qwen_Qwen2.5-7B-Instruct":{"span":28,"checked":40},"deepseek-ai_DeepSeek-V3":{"span":28,"checked":40},"zai-org_glm-4-9b-chat-hf":{"span":28,"checked":40},"mistralai_Mistral-7B-v0.1":{"span":27,"checked":40},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"span":28,"checked":40},"unsloth_gemma-2-2b-it":{"span":28,"checked":40}},"code":{"Qwen_Qwen2.5-7B-Instruct":{"span":35,"checked":40},"deepseek-ai_DeepSeek-V3":{"span":35,"checked":40},"zai-org_glm-4-9b-chat-hf":{"span":35,"checked":40},"mistralai_Mistral-7B-v0.1":{"span":34,"checked":40},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"span":34,"checked":40},"unsloth_gemma-2-2b-it":{"span":33,"checked":40}},"zh":{"Qwen_Qwen2.5-7B-Instruct":{"span":10,"checked":40},"deepseek-ai_DeepSeek-V3":{"span":13,"checked":40},"zai-org_glm-4-9b-chat-hf":{"span":12,"checked":40},"mistralai_Mistral-7B-v0.1":{"span":0,"checked":40},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"span":4,"checked":40},"unsloth_gemma-2-2b-it":{"span":7,"checked":40}},"ar":{"Qwen_Qwen2.5-7B-Instruct":{"span":29,"checked":40},"deepseek-ai_DeepSeek-V3":{"span":30,"checked":40},"zai-org_glm-4-9b-chat-hf":{"span":25,"checked":40},"mistralai_Mistral-7B-v0.1":{"span":6,"checked":40},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"span":32,"checked":40},"unsloth_gemma-2-2b-it":{"span":28,"checked":40}}},"bounds":{"en":{"Qwen_Qwen2.5-7B-Instruct":{"p50":4,"p95":8,"max":19},"deepseek-ai_DeepSeek-V3":{"p50":4,"p95":8,"max":19},"zai-org_glm-4-9b-chat-hf":{"p50":4,"p95":8,"max":19},"mistralai_Mistral-7B-v0.1":{"p50":3,"p95":7,"max":16},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"p50":4,"p95":8,"max":19},"unsloth_gemma-2-2b-it":{"p50":4,"p95":8,"max":20}},"code":{"Qwen_Qwen2.5-7B-Instruct":{"p50":4,"p95":11,"max":48},"deepseek-ai_DeepSeek-V3":{"p50":4,"p95":11,"max":48},"zai-org_glm-4-9b-chat-hf":{"p50":4,"p95":11,"max":48},"mistralai_Mistral-7B-v0.1":{"p50":3,"p95":11,"max":16},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"p50":4,"p95":11,"max":48},"unsloth_gemma-2-2b-it":{"p50":3,"p95":11,"max":31}},"zh":{"Qwen_Qwen2.5-7B-Instruct":{"p50":1,"p95":2,"max":11},"deepseek-ai_DeepSeek-V3":{"p50":1,"p95":2,"max":16},"zai-org_glm-4-9b-chat-hf":{"p50":1,"p95":2,"max":16},"mistralai_Mistral-7B-v0.1":{"p50":1,"p95":1,"max":7},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"p50":1,"p95":2,"max":11},"unsloth_gemma-2-2b-it":{"p50":1,"p95":2,"max":11}},"ar":{"Qwen_Qwen2.5-7B-Instruct":{"p50":2,"p95":5,"max":10},"deepseek-ai_DeepSeek-V3":{"p50":3,"p95":6,"max":10},"zai-org_glm-4-9b-chat-hf":{"p50":2,"p95":5,"max":10},"mistralai_Mistral-7B-v0.1":{"p50":1,"p95":3,"max":5},"mistralai_Mistral-Small-3.1-24B-Instruct-2503":{"p50":3,"p95":7,"max":12},"unsloth_gemma-2-2b-it":{"p50":3,"p95":6,"max":11}}},"heldout":{"en":{"Qwen_Qwen2.5-7B-Instruct":[{"chars":9600,"tokens":2418},{"chars":9600,"tokens":2495},{"chars":9600,"tokens":2515},{"chars":9600,"tokens":2423},{"chars":9600,"tokens":2425}],"deepseek-ai_DeepSeek-V3":[{"chars":9600,"tokens":2440},{"chars":9600,"tokens":2562},{"chars":9600,"tokens":2595},{"chars":9600,"tokens":2510},{"chars":9600,"tokens":2464}],"zai-org_glm-4-9b-chat-hf":[{"chars":9600,"tokens":2418},{"chars":9600,"tokens":2495},{"chars":9600,"tokens":2515},{"chars":9600,"tokens":2423},{"chars":9600,"tokens":2423}],"mistralai_Mistral-7B-v0.1":[{"chars":9600,"tokens":2637},{"chars":9600,"tokens":2722},{"chars":9600,"tokens":2781},{"chars":9600,"tokens":2758},{"chars":9600,"tokens":2723}],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[{"chars":9600,"tokens":2444},{"chars":9600,"tokens":2523},{"chars":9600,"tokens":2554},{"chars":9600,"tokens":2479},{"chars":9600,"tokens":2462}],"unsloth_gemma-2-2b-it":[{"chars":9600,"tokens":2450},{"chars":9600,"tokens":2553},{"chars":9600,"tokens":2590},{"chars":9600,"tokens":2492},{"chars":9600,"tokens":2468}]},"code":{"Qwen_Qwen2.5-7B-Instruct":[{"chars":8092,"tokens":1653},{"chars":8092,"tokens":1615},{"chars":8092,"tokens":1551},{"chars":8092,"tokens":1711},{"chars":8092,"tokens":1636}],"deepseek-ai_DeepSeek-V3":[{"chars":8092,"tokens":1818},{"chars":8092,"tokens":1723},{"chars":8092,"tokens":1664},{"chars":8092,"tokens":1851},{"chars":8092,"tokens":1758}],"zai-org_glm-4-9b-chat-hf":[{"chars":8092,"tokens":1650},{"chars":8092,"tokens":1612},{"chars":8092,"tokens":1549},{"chars":8092,"tokens":1711},{"chars":8092,"tokens":1636}],"mistralai_Mistral-7B-v0.1":[{"chars":8092,"tokens":2184},{"chars":8092,"tokens":2164},{"chars":8092,"tokens":1996},{"chars":8092,"tokens":2147},{"chars":8092,"tokens":2102}],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[{"chars":8092,"tokens":1758},{"chars":8092,"tokens":1689},{"chars":8092,"tokens":1628},{"chars":8092,"tokens":1800},{"chars":8092,"tokens":1717}],"unsloth_gemma-2-2b-it":[{"chars":8092,"tokens":1997},{"chars":8092,"tokens":1971},{"chars":8092,"tokens":1857},{"chars":8092,"tokens":1999},{"chars":8092,"tokens":1968}]},"zh":{"Qwen_Qwen2.5-7B-Instruct":[{"chars":8961,"tokens":6919},{"chars":8961,"tokens":7168},{"chars":8961,"tokens":7531},{"chars":8961,"tokens":5851},{"chars":8961,"tokens":6868}],"deepseek-ai_DeepSeek-V3":[{"chars":8961,"tokens":6378},{"chars":8961,"tokens":6523},{"chars":8961,"tokens":6847},{"chars":8961,"tokens":5190},{"chars":8961,"tokens":6136}],"zai-org_glm-4-9b-chat-hf":[{"chars":8961,"tokens":6657},{"chars":8961,"tokens":6837},{"chars":8961,"tokens":7477},{"chars":8961,"tokens":5435},{"chars":8961,"tokens":6939}],"mistralai_Mistral-7B-v0.1":[{"chars":8961,"tokens":11035},{"chars":8961,"tokens":11118},{"chars":8961,"tokens":11233},{"chars":8961,"tokens":10047},{"chars":8961,"tokens":10844}],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[{"chars":8961,"tokens":9164},{"chars":8961,"tokens":9525},{"chars":8961,"tokens":9416},{"chars":8961,"tokens":8255},{"chars":8961,"tokens":8807}],"unsloth_gemma-2-2b-it":[{"chars":8961,"tokens":7398},{"chars":8961,"tokens":7526},{"chars":8961,"tokens":7690},{"chars":8961,"tokens":6468},{"chars":8961,"tokens":7091}]},"ar":{"Qwen_Qwen2.5-7B-Instruct":[{"chars":3188,"tokens":1172},{"chars":3188,"tokens":1193},{"chars":3188,"tokens":1200},{"chars":3188,"tokens":1178},{"chars":3188,"tokens":1199}],"deepseek-ai_DeepSeek-V3":[{"chars":3188,"tokens":1089},{"chars":3188,"tokens":1093},{"chars":3188,"tokens":1112},{"chars":3188,"tokens":1106},{"chars":3188,"tokens":1113}],"zai-org_glm-4-9b-chat-hf":[{"chars":3188,"tokens":1252},{"chars":3188,"tokens":1264},{"chars":3188,"tokens":1276},{"chars":3188,"tokens":1274},{"chars":3188,"tokens":1294}],"mistralai_Mistral-7B-v0.1":[{"chars":3188,"tokens":2732},{"chars":3188,"tokens":2746},{"chars":3188,"tokens":2717},{"chars":3188,"tokens":2745},{"chars":3188,"tokens":2749}],"mistralai_Mistral-Small-3.1-24B-Instruct-2503":[{"chars":3188,"tokens":887},{"chars":3188,"tokens":881},{"chars":3188,"tokens":927},{"chars":3188,"tokens":895},{"chars":3188,"tokens":865}],"unsloth_gemma-2-2b-it":[{"chars":3188,"tokens":1047},{"chars":3188,"tokens":1062},{"chars":3188,"tokens":1069},{"chars":3188,"tokens":1086},{"chars":3188,"tokens":1089}]}},"meta":{"generated":"2026-09-05","tokenizers_version":"0.23.2"}};
+const EXAMPLES = {"en": {"text": "The Project Gutenberg eBook of Alice's Adventures in Wonderland\n    \nThis eBook is for the use of anyone anywhere in the United States and\nmost other parts of the world at no cost and with almost no restrictions\nwhatsoever. You may copy it, give it away or re-use it under the terms\nof the Project Gutenberg License included with this eBook or online\nat www.gutenberg.org. If you are not located in the United States,\nyou will have to check the laws of the country where you are located\nbefore using this eBook.\n\nTitle: Alice's Adventures in Wonderland\n\nAuthor: Lewis Carroll\n\n\n        \nRelease date: June 27, 2008 [eBook #11]\n                Most recently updated: June 26, 2025\n\nLanguage: English\n\nOther information and formats: www.gutenberg.org/ebooks/11\n\nCredits: Arthur DiBianca and David Widger\n\n\n*** START OF THE PROJECT GUTENBERG EBOOK ALICE'S ADVENTURES IN WONDERLAND ***\n\n[Illustration]\n\n\n\n\nAlice’s Adventures in Wonderland\n\nby Lewis Carroll\n\nTHE MILLENNIUM FULCRUM EDITION 3.0\n\nContents\n\n CHAPTER I.     Down the Rabbit-Hole\n CHAPTER II.    The Pool of Tears\n CHAPTER III.   A Caucus-Race and a Long Tale\n CHAPTER IV.    The Rabbit Sends in a Little Bill\n CHAPTER V.     Advice from a Caterpillar\n CHAPTER VI.    Pig and Pepper\n CHAPTER VII.   A Mad Tea-Party\n CHAPTER VIII.  The Queen’s Croquet-Ground\n CHAPTER IX.    The Mock Turtle’s Story\n CHAPTER X.     The Lobster Quadrille\n CHAPTER XI.    Who Stole the Tarts?\n CHAPTER XII.   Alice’s Evidence\n\n\n\n\nCHAPTER I.\nDown the Rabbit-Hole\n\n\nAlice was beginning to get very tired of sitting by her sister on the\nbank, and of having nothing to do: once or twice she had peeped into\nthe book her sister was reading, but it had no pictures or\nconversations in it, “and what is the use of a book,” thought Alice\n“without pictures or conversations?”\n\nSo she was considering in her own mind (as well as she could, for the\nhot day made her feel very sleepy and stupid), whether the pleasure of\nmaking a daisy-chain would be worth the trouble of getting up and\npicking the daisies, when suddenly a White Rabbit with pink eyes ran\nclose by her.\n\nThere was nothing so _very_ remarkable in that; nor did Alice think it\nso _very_ much out of the way to hear the Rabbit say to itself, “Oh\ndear! Oh dear! I shall be late!” (when she thought it over afterwards,\nit occurred to her that she ought to have wondered at this, but at the\ntime it all seemed quite natural); but when the Rabbit actually _took a\nwatch out of its waistcoat-pocket_, and looked at it, and then hurried\non, Alice started to her feet, for it flashed across her mind that she\nhad never before seen a rabbit with either a waistcoat-pocket, or a\nwatch to take out of it, and burning with curiosity, she ran across the\nfield after it, and fortunately was just in time to see it pop down a\nlarge rabbit-hole under the hedge.\n\nIn another moment down went Alice after it, never once considering how\nin the world she was to get out again.\n\nThe rabbit-hole went straight on like a tunnel for some way, and then\ndipped suddenly down, so suddenly that Alice had not a moment to think\nabout stopping herself before she found herself falling down a very\ndeep well.\n\nEither the well was very deep, or she fell very slowly, for she had\nplenty of time as she went down to look about her and to wonder what\nwas going to happen next. First, she tried to look down and make out\nwhat she was coming to, but it was too dark to see anything; then she\nlooked at the sides of the well, and noticed that they were filled with\ncupboards and book-shelves; here and there she saw maps and pictures\nhung upon pegs. She took down a jar from one of the shelves as she\npassed; it was labelled “ORANGE MARMALADE”, but to her great\ndisappointment it was empty: she did not like to drop the jar for fear\nof killing somebody underneath, so managed to put it into one of the\ncupboards as she fell past it.\n\n“Well!” thought Alice to herself, “after such a fall as this, I shall\nthink nothing of tumbling down stairs! How brave they’ll all think me\nat home! Why, I wouldn’t say anything about it, even if I fell off the\ntop of the house!” (Which was very likely true.)\n\nDown, down, down. Would the fall _never_ come to an end? “I wonder how\nmany miles I’ve fallen by this time?” she said aloud. “I must be\ngetting somewhere near the centre of the earth. Let me see: that would\nbe four thousand miles down, I think—” (for, you see, Alice had learnt\nseveral things of this sort in her lessons in the schoolroom, and\nthough this was not a _very_ good opportunity for showing off her\nknowledge, as there was no one to listen to her, still it was good\npractice to say it over) “—yes, that’s about the right distance—but\nthen I wonder what Latitude or Longitude I’ve got to?” (Alice had no\nidea what Latitude was, or Longitude either, but thought they were nice\ngrand words to say.)\n\nPresently she began again. “I wonder if I shall fall right _through_\nthe earth! How funny it’ll seem to come out among the people that walk\nwith "}, "code": {"text": "# Author: Steven J. Bethard <steven.bethard@gmail.com>.\n# New maintainer as of 29 August 2019:  Raymond Hettinger <raymond.hettinger@gmail.com>\n\n\"\"\"Command-line parsing library\n\nThis module is an optparse-inspired command-line parsing library that:\n\n    - handles both optional and positional arguments\n    - produces highly informative usage messages\n    - supports parsers that dispatch to sub-parsers\n\nThe following is a simple usage example that sums integers from the\ncommand-line and writes the result to a file::\n\n    parser = argparse.ArgumentParser(\n        description='sum the integers at the command line')\n    parser.add_argument(\n        'integers', metavar='int', nargs='+', type=int,\n        help='an integer to be summed')\n    parser.add_argument(\n        '--log', default=sys.stdout, type=argparse.FileType('w'),\n        help='the file where the sum should be written')\n    args = parser.parse_args()\n    args.log.write('%s' % sum(args.integers))\n    args.log.close()\n\nThe module contains the following public classes:\n\n    - ArgumentParser -- The main entry point for command-line parsing. As the\n        example above shows, the add_argument() method is used to populate\n        the parser with actions for optional and positional arguments. Then\n        the parse_args() method is invoked to convert the args at the\n        command-line into an object with attributes.\n\n    - ArgumentError -- The exception raised by ArgumentParser objects when\n        there are errors with the parser's actions. Errors raised while\n        parsing the command-line are caught by ArgumentParser and emitted\n        as command-line messages.\n\n    - FileType -- A factory for defining types of files to be created. As the\n        example above shows, instances of FileType are typically passed as\n        the type= argument of add_argument() calls.\n\n    - Action -- The base class for parser actions. Typically actions are\n        selected by passing strings like 'store_true' or 'append_const' to\n        the action= argument of add_argument(). However, for greater\n        customization of ArgumentParser actions, subclasses of Action may\n        be defined and passed as the action= argument.\n\n    - HelpFormatter, RawDescriptionHelpFormatter, RawTextHelpFormatter,\n        ArgumentDefaultsHelpFormatter -- Formatter classes which\n        may be passed as the formatter_class= argument to the\n        ArgumentParser constructor. HelpFormatter is the default,\n        RawDescriptionHelpFormatter and RawTextHelpFormatter tell the parser\n        not to change the formatting for help text, and\n        ArgumentDefaultsHelpFormatter adds information about argument defaults\n        to the help.\n\nAll other classes in this module are considered implementation details.\n(Also note that HelpFormatter and RawDescriptionHelpFormatter are only\nconsidered public as object names -- the API of the formatter objects is\nstill considered an implementation detail.)\n\"\"\"\n\n__version__ = '1.1'\n__all__ = [\n    'ArgumentParser',\n    'ArgumentError',\n    'ArgumentTypeError',\n    'BooleanOptionalAction',\n    'FileType',\n    'HelpFormatter',\n    'ArgumentDefaultsHelpFormatter',\n    'RawDescriptionHelpFormatter',\n    'RawTextHelpFormatter',\n    'MetavarTypeHelpFormatter',\n    'Namespace',\n    'Action',\n    'ONE_OR_MORE',\n    'OPTIONAL',\n    'PARSER',\n    'REMAINDER',\n    'SUPPRESS',\n    'ZERO_OR_MORE',\n]\n\n\nimport os as _os\nimport re as _re\nimport sys as _sys\n\nimport warnings\n\nfrom gettext import gettext as _, ngettext\n\nSUPPRESS = '==SUPPRESS=='\n\nOPTIONAL = '?'\nZERO_OR_MORE = '*'\nONE_OR_MORE = '+'\nPARSER = 'A...'\nREMAINDER = '...'\n_UNRECOGNIZED_ARGS_ATTR = '_unrecognized_args'\n\n# =============================\n# Utility functions and classes\n# =============================\n\nclass _AttributeHolder(object):\n    \"\"\"Abstract base class that provides __repr__.\n\n    The __repr__ method returns a string in the format::\n        ClassName(attr=name, attr=name, ...)\n    The attributes are determined either by a class-level attribute,\n    '_kwarg_names', or by inspecting the instance __dict__.\n    \"\"\"\n\n    def __repr__(self):\n        type_name = type(self).__name__\n        arg_strings = []\n        star_args = {}\n        for arg in self._get_args():\n            arg_strings.append(repr(arg))\n        for name, value in self._get_kwargs():\n            if name.isidentifier():\n                arg_strings.append('%s=%r' % (name, value))\n            else:\n                star_args[name] = value\n        if star_args:\n            arg_strings.append('**%s' % repr(star_args))\n        return '%s(%s)' % (type_name, ', '.join(arg_strings))\n\n    def _get_kwargs(self):\n        return list(self.__dict__.items())\n\n    def _get_args(self):\n        return []\n\n\ndef _copy_items(items):\n    if items is None:\n        return []\n    # The copy module is used only in the 'append' and 'append_const'\n    # actions, and it is needed only when the default value isn't a list.\n    # Delay its import for speeding up the com"}, "zh": {"text": "中國歷史是今日泛称“中國”或“中华”地區内数千年文明与社会演进的历史，涵盖史前发展、政权分合、疆域变迁、族群互动、经济社会演變以及近现代国家建构。傳統史学多以黃河流域的中原王朝為叙事中心；近现代考古與史学研究则表明，中華文明並非單一起源，而是在黃河、長江、西遼河、江漢、海岱、巴蜀、嶺南等諸多区域文化长期交流、整合的过程中逐渐形成。\n中华文明探源工程认为，距今5800年前后，中国多个区域相继出现明显社會分化，进入文明起源加速阶段。牛河梁、凌家滩、良渚、陶寺、石峁、三星堆等遗址显示，史前晚期已出现大型聚落、礼制遗存、社会分层、水利工程、手工业分工和区域性权力中心。距今约3800年以后，以二里头文化为代表的中原地区进入王朝时代，早期广域王权国家逐步形成。商代晚期殷墟甲骨文的发现，使中国进入有成熟文字材料可证的信史阶段。\n传世文献中的夏、商、周通常被视为中国王朝的开端，其中夏代与二里头文化的关系仍存在争论。商代已形成以王都、方国、祭祀和军事征伐为核心的政治结构。西周则建立以宗法、礼制和分封为基础的统治秩序。东周以后，周王室权威下降，诸侯竞争加剧，春秋战国时期出现政治、军事、经济和思想变革，孔子、老子、墨子、孟子、庄子、韩非等诸子学派相继活跃。前221年，秦始皇统一六国，建立皇帝制度、郡县制，并统一文字、度量衡和法律体系。汉代在继承秦制基础上调整统治结构，汉武帝时期加强中央集权、经营边疆，并通过张骞通西域推动陆上丝绸之路形成。此后，皇权、官僚制、郡县治理、儒学政治化和边疆经营，成为中国传统国家长期演变的重要基础。\n魏晋南北朝时期，中国长期处于分裂和多政权并立状态，北方经历匈奴、鲜卑、羯、氐、羌等族群建立政权及制度转型，南方则在东晋和南朝统治下逐步开发江南。北魏孝文帝改革、佛教传播、门阀政治、人口南迁和胡汉制度融合，是这一时期的重要现象。隋文帝重新统一南北，隋唐时期通过三省六部制、科举制、大运河和律令体系，推动国家治理与区域整合。唐太宗、高宗、武则天、玄宗时期，唐朝与中亚、西亚、南亚和东亚诸区域保持密切联系。宋代在辽、西夏、金等政权并立格局中发展出成熟的文官政治、城市经济和海外贸易。元朝由蒙古建立，忽必烈定都大都后实现对中国本部及周边广阔地区的统治，并推动欧亚交流。明朝由朱元璋建立，重建汉地王朝秩序。清朝由满洲统治集团建立，在继承明制基础上整合东北、蒙古、新疆、西藏等地区，形成多民族统一国家格局。中国历史中的统一与分裂交替出现，中原王朝与北方草原、西域、中亚、东北、青藏高原及海上世界之间长期存在战争、迁徙、贸易、宗教传播和制度互动。\n中国社会长期以农业为基础，黄河流域以粟、黍、小麦等旱作农业为主，长江流域以稻作农业为主，人口增长、土地开发、水利建设和区域移民推动了华北、江南、岭南、西南等地区的开发。商业和手工业亦持续发展，商周青铜器、秦汉盐铁与货币制度、汉唐丝绸之路、隋唐大运河、宋代纸币与城市经济、元代欧亚商贸、明清白银流通和区域市场，均为中国经济史的重要内容。思想文化方面，先秦诸子奠定主要学术传统。秦汉以后儒学逐渐制度化，佛教、道教和民间信仰长期并存。宋明理学、明清考据学和近代西学输入，持续改变知识结构。19世纪中叶以后，晚清在列强冲击、内乱和改革中进入近代转型。1911年辛亥革命推翻清朝，1912年中华民国成立，延续两千余年的君主帝制结束。1949年中华人民共和国成立，中華民國政府迁至臺灣，形成两岸分治。1978年以后，中国大陆实行改革开放，逐步建立社会主义市场经济体制，工业化、城市化、科技发展和对外贸易快速推进，中国历史由传统王朝国家进一步转入现代国家发展阶段。\n\n\n== 史前时期 ==\n\n早更新世以来，中国境内已出现古人类活动。陕西蓝田上陈遗址发现最早距今212万年的石器，但因未发现相应人类化石，其制造者所属人群仍不确定。境内重要的早中期人类遗存包括：元谋人（距今约170万年，两枚上内侧门齿，归入直立人）、蓝田公王岭直立人（最新定年距今约163万年）、以及活动年代约距今77万至20余万年的周口店北京直立人。距今约4万年前，解剖学意义上的现代人（智人）进入中国，更新世东亚人类演化过程复杂，曾存在直立人、丹尼索瓦人（龙人）、早期现代人等多个人类族群的共存与交融。现代人群在东亚的形成，可能与晚更新世现代智人的扩散、定居以及不同区域人群长期交流有关，而非由中国境内直立人单线演化而来。\n\n\n=== 旧石器至新石器化早期 ===\n\n约距今2万年至1.2万年前，中国不同地区的技术和生计方式演变并不同步。北方发展出細石器，如陝西省大荔沙苑文化、山西沁水下川文化等，常见石叶、石片、刮削器等。南方则延续砾石器、骨器和洞穴遗址，并较早出现陶器制作。\n中国考古学中较少使用中石器时代概念，更常将这一阶段视为旧石器时代晚期末段至新石器化早期的过渡过程。\n江西万年仙人洞、吊桶环遗址和湖南道县玉蟾岩遗址均发现早期陶器，仙人洞陶器年代可达距今约2万至1.9万年，玉蟾岩陶器年代约距今1.8万至1.5万年前后，这些早期陶器出现在狩猎采集人群遗址中，主要可能用于烹煮和食物加工，早于成熟农业和稳定村落的形成。\n同时，华南和长江中下游部分遗址还发现野生稻利用和早期稻作驯化迹象，但这一时期尚不能称为成熟农业社会，农业生产仍处于萌芽和探索阶段。\n\n\n=== 新石器时代 ===\n\n约距今1.2万年至9000年前，中国部分地区进入新石器化早期。河北南庄头遗址显示华北地区已出现陶器、磨制工具、植物加工和早期定居迹象。长江下游的上山文化反映早期稻作利用、陶器制作和定居生活的发展，稻米可能已被用于早期发酵饮料制作。\n约距今9000年至7000年前，中国多地形成新石器時代早期文化。黄河中游的裴李崗文化和河南贾湖遗址显示，中原地区已出现较稳定的农业村落、陶器、磨制工具、墓葬和多样化生计方式。山东后李文化、辽西兴隆洼文化等则表明不同区域均在各自环境中发展出早期定居社会。\n约距今7000年至5000年前，中国进入新石器时代中期。黄河中游的仰韶文化以彩陶为特征，出现了粟黍农业和稳定村落。长江下游的河姆渡文化和马家浜文化适应湿地环境，出现定居聚落和稻作农业。山东及海岱地区的大汶口文化、辽西地区的红山文化也出现了社会分化和礼仪活动等。\n距今约5300年前后，良渚文化在长江下游兴起，已属于新石器时代晚期早段。良渚古城遗址年代约为公元前3300年至前2300年，显示出大型土质建筑、城市规划、水利系统、稻作农业、玉礼器体系和墓葬等级分化。\n距今约4900年至4100年前，以龍山文化為代表的新石器時代晚期进一步发展，黃河、長江和海岱等地区出现多個城址群，社會組織形態向早期邦国或早期国家过渡。\n\n\n== 文明起源 ==\n中华文明早期历史可分为三类材料：一是考古遗存，二是后世文献记载，三是神话传说。具有连续纪年的信史通常从公元前841年西周共和元年开始。此前的夏、商、西周早期年代仍需依靠文献、考古、天文历法和碳十四测年等综合推定。中華文明的最早起源尚无定论。\n传统文献保存了大量关于夏朝及其以前时代的记载，但多数典籍成书时间远晚于相关事件，且带有神话传说色彩和政治叙事目的。因此，夏朝及其前代历史不能仅凭后世文献直接确认为信史。夏商周断代工程和中华文明探源工程都尝试建立更早的年代框架，但具体年代和部分结论仍存在争论。中华文明探源工程将距今约5800年至3800年划分为“古国时代”，其后进入以二里头等遗址为代表的王朝时代。\n\n\n==== 第一阶段：距今约5800—5300/5200年前后。 ====\n这一阶段以西辽河流域牛河梁遗址、江淮地区凌家滩遗址等为代表。大型祭祀建筑、玉器系统、高等级墓葬和中心聚落开始出现，显示部分区域已形成较明显的社会分层和公共组织能力。\n\n\n==== 第二阶段：距今约5300/5200—4300年前后。 ====\n黄河中下游、长江中下游等地区社会复杂化进一步加速。良渚文化、屈家岭—石家河文化、大汶口文化中晚期、红山文化晚期等区域文化高度发展。良渚古城、水利系统、玉礼器体系和分层墓葬表明，长江下游已形成高度复杂的区域政治中心；焦家等遗址则显示黄河下游城址、礼器和墓葬等级制度开始强化。\n\n\n==== 第三阶段：距今约4300—3800年前后。 ====\n各地进入龙山时代晚期。中原、海岱、晋陕高原、长江流域等地区出现区域政治中心，城址、防御设施、夯土建筑、礼仪空间和社会分层进一步发展，显示出向早期国家过渡的趋势。陶寺遗址和石峁遗址是这一阶段的重要代表。\n\n\n=== 傳說時代 ===\n\n中国古代文献中保存了盤古開天辟地、女媧造人、伏羲制礼、神农尝百草、黄帝战蚩尤等上古神话。这些叙事反映后世对世界起源、族群形成和文化秩序的解释，并不是可考历史。\n三皇五帝是夏朝以前上古部落首領的统称，人选在不同文献中并不完全一致。三皇多在伏羲、神農、女媧、祝融等人物中组合，五帝常见说法包括“黄帝、顓頊、帝嚳、堯、舜”或“少昊、顓頊、帝嚳、堯、舜”等。其年代无可靠纪年，更多属于古代文化记忆。\n“华夏”一词在先秦文献中已出现，通常与中原礼制、政治共同体和文化身份有关。其含义经历了长期演变，不是单一血缘族群概念。早期“华夏”更多指以中原礼制和政治秩序为核心形成的文化共同体。\n传说中，黄帝是早期部落首领。黄帝先在阪泉之戰中擊敗炎帝，又在涿鹿之戰中击败蚩尤，确立部落联盟领袖地位。\n《史记》记载，黃帝之后，顓頊、帝嚳、堯、舜相继成为部落联盟领袖。自黄帝至尧，各部联盟首领虽共奉黄帝为远祖，却并非直系世袭继承。尧、舜之间出现“禅让”传说。但《竹书纪年》却记载，舜通过放逐尧取得权力，并非和平让位。\n\n\n=== 外來說 ===\n近代以来，曾出现过多种关于中国文明起源的“外来说”，包括中亚起源说、中国文化西来说和古巴比伦分支说。这些观点多产生于19世纪末至20世纪初，当时中国现代考古学尚未建立，学者主要依靠文献比较、神话比附、器物相似性和语言推测来解释文明起源。\n\n\n==== 中亞起源説与彩陶西来说 ====\n\n20世纪初，瑞典学者安特生参与发掘河南渑池仰韶遗址，并注意到仰韶彩陶与中亚、东欧部分彩陶之间存在形式相似。他曾据此提出中国彩陶技术可能由中亚传入，进而推测中国史前文化可能受到西方影响。\n但后来的考古发现削弱了这一假说。1931年，梁思永在河南安阳后岗发现仰韶文化、龙山文化和商代文化的地层叠压关系，证明中原史前文化存在本土连续发展序列。此后，更多遗址和年代学研究显示，仰韶、龙山、商文化之间具有清楚的区域演变关系，不能简单解释为外来文化替代。\n\n\n==== 古巴比伦分支说 ====\n19世纪末，法裔学者拉克伯里提出“中国文明源自古巴比伦”的假说。他在1894年发表论文《古代中国文化西源考》，主张中国早期文明的重要元素来自西亚。\n拉克伯里在文中比对古中国和古巴比伦文明近百种相似之处以构建该假说，附会称黄帝是约前2282年率领部众迁至中原的巴克族（古闪米特人一支）首领，此人在巴比伦典籍中记作奈亨台。\n该说法主要依赖语言、神话和器物相似性的比较，缺乏可靠考古地层、年代学和人群迁徙证据。后来的汉学家和考古学者普遍认为，这类比较存在附会和过度解释问题，不能证明中国文明整体源自西亚。\n随着仰韶、龙山、二里头、殷墟以及各区域新石器文化的发现，中国史前文化的本土连续性和区域多元性得到更多考古支持。古巴比伦分支说因此逐渐失去学术影响，现已不属于主流学说。\n\n\n==== 青铜技术西来说 ====\n近代以来，除“中国文化西来说”外，还存在“中国青铜技术西来说”。该说并不主张中华文明整体来自西方，而是认为铜、青铜冶金、部分兵器形制、马车等技术，可能经欧亚草原、中亚、新疆、河西走廊和甘青地区传入中国。约公元前2200年至前1700年的塞伊玛—图尔宾诺现象，以及甘青地区齐家文化中的早期金属器，是这一观点的重要依据。部分学者认为中国早期冶金技术可能受到西北方向的外来影响，但中国青铜文明的礼制化、政治化和制度化发展主要完成于本土社会复杂化进程之中。\n\n\n== 夏朝 ==\n\n在传统文献叙事中，尧在位后期洪水泛滥，最初任用鲧治水，鲧采用堵截的方法治水长期未"}, "ar": {"text": "الفَلَك أو عِلْمُ الفَلَك هو علم طبيعي يدرس الظواهر الفلكية والأجرام السماوية. يستخدم علم الفلك الرياضيات والفيزياء والكيمياء لشرح أصل وتطور تلك الظواهر والأجرام. تشمل الأجرام المثيرة للاهتمام الكواكب والأقمار والنجوم والسدم والمجرات والمذنبات. وتشمل الظواهر ذات الصلة انفجارات المستعر الأعظم، انفجارات أشعة جاما، والنجوم الزائفة، والأجرام الوهاجة، والنباضات (تختلف عن النجوم النابضة)، وإشعاع الخلفية الكونية الميكروي. عمومًا، يدرس علم الفلك كل ما ينشأ خارج الغلاف الجوي للأرض. علم الكون هو فرع من فروع علم الفلك. يدرس الفضاء الكوني ككل.\nعلم الفلك من أقدم العلوم الطبيعية، وقد قدمت الحضارات المبكرة في التاريخ المسجل ملاحظات منهجية لسماء الليل. ومن هؤلاء البابليون واليونانيون والهنود والمصريون والصينيون والمايا والعديد من الشعوب الأصلية في الأمريكتين. في الماضي، كان علم الفلك يتضمن تخصصات متنوعة مثل علم القياسات الفلكية، والملاحة الفلكية، وعلم الفلك الرصدي، وصنع التقويمات. في الوقت الحاضر، غالبًا ما يُعد علم الفلك الاحترافي مرادفًا لعلم الفيزياء الفلكية.\nينقسم علم الفلك الحالي إلى فرعين علم الفلك النظري وعلم الفلك الرصدي. يركز علم الفلك الرصدي على الحصول على البيانات من ملاحظات الأجرام الفلكية. ثم يجري تحليل هذه البيانات باستخدام المبادئ الأساسية لعلم الفيزياء. علم الفلك النظري موجه نحو تطوير نماذج حاسوبية أو تحليلية لوصف الظواهر والأجرام الفلكية. هذان المجالان يكملان بعضهما البعض. يسعى علم الفلك النظري إلى شرح نتائج الرصد وتستخدم الملاحظات المرصودة لتأكيد النتائج النظرية.\nساهم الفلكيون الهواة في العديد من الاكتشافات المهمة، حيث يعدّ علم الفلك من العلوم القليلة التي يمكن للهواة أن يلعبوا فيها دورًا هامًا، وخاصة في اكتشاف ورصد الظواهر العابرة.\nأعلنت الأمم المتحدة عام 2009 لتصبح السنة الدولية لعلم الفلك (IYA2009)، وهي تهدف إلى التأكيد على الوعي الجماهيري والتعامل مع علم الفلك.\n\n\n== أصل التسمية ==\nفي العربية، العِلْمُ هو المعرفة وهو نقيض الجهل، والفَلَك هو مدار النجوم، وجمعها أَفلاك، وجمعها الفيروز أبادي في محيطه على فُلُك أيضاً وجاء في المعجم الوسيط أن الفَلَك هو المدار الذي يسبح فيه الجرم السماوي وبأن علم الفلك هو علم يُبحث فيه عن الأجرام العلوية وأحوالها وبأن الفلكي هو المُشتغِل بهذا العلم.\nويُسمى علم الفلك (الإنجليزية: Astronomy) وهي مكونة من مقطعين، البادئة Astro- وتعني نجم أو سماء أو فلكي  واللاحقة onomy- التي تعني مجموعة القواعد أو القوانين الناظمة للمعرفة في أحد حقول المعارف البشرية.\nويُسمى علم الفلك (اليونانية: ἀστρονομία) وهي كلمة مكونة من مقطعين، ἀστρο وتعني نجم وνόμος وتعني قانون، فيصبح معنى الكلمة الحرفي «قانون النجوم». لا ينبغي الخلط بين علم الفلك وعلم التنجيم، والتنجيم هو الادعاء أن الشؤون البشرية مرتبطة بمواقع الأجرام السماوية. على الرغم من أن الحقلين يشتركان في أصل مشترك، إلا أنهما الآن مختلفان تمامًا.\n\n\n=== علم الفلك والفيزياء الفلكية ===\n\n«علم الفلك» و«الفيزياء الفلكية» كلمتان مترادفتان. استنادًا إلى تعريفات القاموس الدقيقة، يشير مصطلح «علم الفلك» إلى «دراسة الأجرام والمواد خارج الغلاف الجوي للأرض ودراسة خصائصها الفيزيائية والكيميائية»، بينما تشير «الفيزياء الفلكية» إلى فرع علم الفلك الذي يتعامل مع «السلوك، والخصائص الفيزيائية والعمليات الديناميكية للأجرام والظواهر السماوية». في بعض الحالات، كما هو الحال في مقدمة الكتاب المدرسي التمهيدي «الكون الفيزيائي» بقلم فرانك شو، يمكن استخدام «علم الفلك» لوصف الدراسة النوعية للموضوع، بينما يمكن استخدام «الفيزياء الفلكية» لوصف النسخة الموجهة نحو الشرح الفيزيائي للموضوع. ومع ذلك، نظرًا لأن معظم الأبحاث الفلكية الحديثة تتعامل مع الموضوعات المتعلقة بالفيزياء، يمكن أن يُطلق على علم الفلك الحديث في الواقع اسم الفيزياء الفلكية. بعض المجالات، مثل علم القياسات الفلكية، هي مجرد علم فلك أكثر من فيزياء فلكية. قد تستخدم الأقسام المختلفة التي يجري فيها العلماء أبحاثًا حول هذا الموضوع «علم الفلك» و«الفيزياء الفلكية»، اعتمادًا جزئيًا على ما إذا كان القسم تابعًا تاريخيًا لقسم الفيزياء، والعديد من علماء الفلك المحترفين حاصلون على درجات في الفيزياء بدلاً من علم الفلك. تشمل بعض عناوين المجلات العلمية الرائدة في هذا المجال المجلة الفلكية والمجلة الفيزيائية الفلكية ومجلة علم الفلك والفيزياء الفلكية.\n\n\n=== علم الفلك والتنجيم ===\n\nعلم الفلك والتنجيم كانا في العصور القديمة يُعاملان كعلمٍ واحد، وأخذا بالانفصال تدريجيا عن بعضهما البعض ليغدوا علمين منفصلين حتى القرن السابع عشر (في عصر التنوير تحديدا) عندما رُفِض اعتبار التنجيم كعلم. وخلال الجزء الأخير من فترة العصور الوسطى، أصبح علم الفلك هو الأساس وأصبح علم التنجيم يعمل من خلاله.\nمنذ القرن الثامن عشر، أصبحا يعاملان بصفتهما اختصاصين منفصلين. علم الفلك، أي دراسة الأجرام والظواهر التي تنشأ خارج الغلاف الجوي للأرض، وهو علم وأصبح على نطاق واسع من ضمن الانضباط الأكاديمي. أما التنجيم، والذي يستخدم المواقع الظاهرة للأجرام السماوية للتنبؤ بالأحداث المستقبلية، هو شكل من أشكال العرافة وليس سوى أحد العلوم الزائفة.\n\n\n== التاريخ ==\n\n\n=== العصور القديمة ===\nفي العصور التاريخية المبكرة، كان علم الفلك يتألف فقط من المراقبة والتنبؤ بحركات الأجرام المرئية بالعين المجردة. في بعض المواقع، جمعت الثقافات المبكرة قطعًا أثرية ضخمة ربما كان لها بعض الأغراض الفلكية. بالإضافة إلى استخداماتها الاحتفالية، يمكن استخدام هذه المراصد لتحديد فصول السنة، وهو عامل مهم في معرفة وقت زراعة المحاصيل وفهم طول العام.\nقبل اختراع أدوات مثل التلسكوب، أجريت دراسة مبكرة للنجوم باستخدام العين المجردة. مع تطور الحضارات، وعلى الأخص في بلاد ما بين النهرين واليونان وبلاد فارس والهند والصي"}};
+
+
+const $ = (id) => document.getElementById(id);
+const fmt = (n, d=0) => n.toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d });
+const CORPORA = { en: "English prose", code: "Python source", zh: "Chinese", ar: "Arabic" };
+
+function detectScript(text) {
+  const n = Math.min(text.length, 20000);
+  const s = text.slice(0, n);
+  let han = 0, arab = 0, codeish = 0, alpha = 0;
+  for (const ch of s) {
+    const c = ch.codePointAt(0);
+    if ((c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF)) han++;
+    else if (c >= 0x0600 && c <= 0x06FF) arab++;
+    else if (/[A-Za-z]/.test(ch)) alpha++;
+    if (/[;{}=<>()[\]_]/.test(ch)) codeish++;
+  }
+  const keywords = (s.match(/\b(?:def|import|return|class|const|function|self|None|True|False|null|void|public|if|else|for|while)\b/g) || []).length;
+  if (han / n > 0.15) return "zh";
+  if (arab / n > 0.15) return "ar";
+  if (codeish / n > 0.02 && keywords / (alpha || 1) > 0.0015) return "code";
+  return "en";
+}
+
+function scriptChip(k) {
+  const chip = document.createElement("span");
+  chip.className = "chip " + k;
+  chip.textContent = CORPORA[k];
+  return chip;
+}
+
+function modelLabel(key) {
+  const m = FIXTURES.models.find((m) => m.key === key);
+  return m ? m.label : key;
+}
+
+function modelVocab(key) {
+  const first = Object.keys(FIXTURES.calibration)[0];
+  return FIXTURES.calibration[first][key].vocab;
+}
+
+function buyChars(key, ck, budget) {
+  return FIXTURES.calibration[ck][key].cpt * budget;
+}
+
+function heldoutBand(key, ck) {
+  // worst relative error of chars/cpt estimation on the never-aggregated slices
+  const cpt = FIXTURES.calibration[ck][key].cpt;
+  let worst = 0;
+  for (const s of FIXTURES.heldout[ck][key]) {
+    const est = s.chars / cpt;
+    const err = Math.abs(est - s.tokens) / s.tokens;
+    if (err > worst) worst = err;
+  }
+  return worst;
+}
+
+function renderBuy() {
+  const w = parseInt($("window").value, 10);
+  const ov = parseInt($("overhead").value, 10);
+  const out = $("buyOut");
+  out.innerHTML = "";
+  if (!(w > 0)) { out.innerHTML = '<p id="err">Window must be a positive number of tokens.</p>'; return; }
+  if (!(ov >= 0)) { out.innerHTML = '<p id="err">Overhead must be zero or more.</p>'; return; }
+  const budget = w - ov;
+  if (budget <= 0) { out.innerHTML = '<p id="err">Overhead eats the whole window: nothing left for your text.</p>'; return; }
+  const tbl = document.createElement("table");
+  const thead = document.createElement("thead");
+  const hr = document.createElement("tr");
+  hr.appendChild(Object.assign(document.createElement("th"), { textContent: "Tokenizer (vocab)" }));
+  for (const ck of Object.keys(CORPORA)) {
+    const th = document.createElement("th");
+    th.textContent = CORPORA[ck];
+    hr.appendChild(th);
+  }
+  thead.appendChild(hr); tbl.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  const colBest = {}, colWorst = {};
+  for (const ck of Object.keys(CORPORA)) {
+    const vals = FIXTURES.models.map((m) => buyChars(m.key, ck, budget));
+    colBest[ck] = Math.max(...vals); colWorst[ck] = Math.min(...vals);
+  }
+  for (const m of FIXTURES.models) {
+    const tr = document.createElement("tr");
+    const td0 = document.createElement("td");
+    td0.textContent = m.label + " ";
+    const v = document.createElement("span");
+    v.className = "muted"; v.textContent = fmt(modelVocab(m.key));
+    td0.appendChild(v); tr.appendChild(td0);
+    for (const ck of Object.keys(CORPORA)) {
+      const td = document.createElement("td");
+      td.className = "num bar";
+      const val = buyChars(m.key, ck, budget);
+      if (val === colBest[ck]) td.classList.add("best");
+      if (val === colWorst[ck]) td.classList.add("worst");
+      const fill = document.createElement("span");
+      fill.className = "fill";
+      fill.style.width = Math.max(2, (val / colBest[ck]) * 100) + "%";
+      td.appendChild(fill);
+      td.appendChild(document.createTextNode(" " + fmt(val)));
+      td.title = fmt(FIXTURES.calibration[ck][m.key].cpt, 2) + " chars/token; " +
+                 fmt(FIXTURES.calibration[ck][m.key].tokens) + " tokens measured on the " +
+                 fmt(FIXTURES.calibration[ck][m.key].chars) + "-char fixture";
+      tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+  }
+  tbl.appendChild(tbody); out.appendChild(tbl);
+  // spread row in the note
+  const spreads = Object.keys(CORPORA).map((ck) => {
+    const x = colBest[ck] / colWorst[ck];
+    return CORPORA[ck] + " " + x.toFixed(2) + "x";
+  });
+  $("buyNote").textContent =
+    "Characters held by a " + fmt(budget) + "-token budget (window minus overhead). " +
+    "Best per column in green; spread best-to-worst: " + spreads.join(", ") + ".";
+}
+
+function renderYours() {
+  $("err").textContent = "";
+  $("summary").innerHTML = "";
+  $("yoursOut").innerHTML = "";
+  const text = $("sample").value;
+  if (!text.trim()) { $("err").textContent = "Paste some text first, or load an example."; return; }
+  let ck = $("script").value;
+  let detected = null;
+  if (ck === "auto") { detected = detectScript(text); ck = detected; }
+  const w = parseInt($("window").value, 10);
+  const ov = parseInt($("overhead").value, 10);
+  if (!(w > 0)) { $("err").textContent = "Fix the window value in the section above first."; return; }
+  const budget = w - ov;
+  if (budget <= 0) { $("err").textContent = "Overhead eats the whole window: nothing left for your text."; return; }
+  const chars = [...text].length; // code points, not UTF-16 units
+  const rows = [];
+  for (const m of FIXTURES.models) {
+    const cpt = FIXTURES.calibration[ck][m.key].cpt;
+    const est = chars / cpt;
+    const band = heldoutBand(m.key, ck);
+    rows.push({ m, cpt, est, band, fit: buyChars(m.key, ck, budget) / chars });
+  }
+  const customRaw = parseFloat($("customCpt").value);
+  const hasCustom = isFinite(customRaw) && customRaw > 0;
+  if (hasCustom) {
+    const est = chars / customRaw;
+    rows.push({ m: { label: "Custom rate", key: null, vocab: null }, cpt: customRaw, est, band: 0,
+                fit: customRaw * budget / chars });
+  }
+  rows.sort((a, b) => b.cpt - a.cpt);
+  const best = rows[0].fit, worstFit = rows[rows.length - 1].fit;
+  const maxBand = Math.max(...rows.filter(r => r.m.key).map(r => r.band));
+
+  const chip = scriptChip(ck);
+  const s = $("summary");
+  const line = document.createElement("p");
+  line.appendChild(document.createTextNode("Sample: " + fmt(chars) + " characters. Detected script: "));
+  line.appendChild(chip);
+  line.appendChild(document.createTextNode(". A " + fmt(budget) + "-token budget holds between " +
+    fmt(worstFit * chars) + " and " + fmt(best * chars) + " characters of it, depending on tokenizer" +
+    (rows.length > 1 ? " (" + (best / worstFit).toFixed(2) + "x apart)" : "") + "."));
+  s.appendChild(line);
+  const warn = document.createElement("p");
+  warn.className = "warn";
+  warn.innerHTML = "Token estimates carry a &plusmn;" + (maxBand * 100).toFixed(1) +
+    "% band (worst error measured on five held-out slices of the reference " + CORPORA[ck] +
+    " fixture). Character counts scale with the same error.";
+  s.appendChild(warn);
+  if (detected) {
+    const d = document.createElement("p");
+    d.className = "muted";
+    d.textContent = "Script auto-detected; override with the Script selector if the guess is wrong.";
+    s.appendChild(d);
+  }
+
+  const tbl = document.createElement("table");
+  const hr = document.createElement("tr");
+  for (const h of ["Tokenizer (vocab)", "chars/token (" + ck + ")", "Est. tokens for your sample",
+                   "Est. tokens \u00b1band", "Window holds (chars)", "= copies of your sample"]) {
+    hr.appendChild(Object.assign(document.createElement("th"), { textContent: h }));
+  }
+  const thead = document.createElement("thead"); thead.appendChild(hr); tbl.appendChild(thead);
+  const tbody = document.createElement("tbody");
+  for (const r of rows) {
+    const tr = document.createElement("tr");
+    const td0 = document.createElement("td");
+    td0.textContent = r.m.label + " ";
+    if (r.m.key) {
+      const v = document.createElement("span");
+      v.className = "muted"; v.textContent = fmt(modelVocab(r.m.key));
+      td0.appendChild(v);
+    }
+    tr.appendChild(td0);
+    const cells = [
+      fmt(r.cpt, 2),
+      fmt(r.est),
+      r.m.key ? "\u00b1" + (r.band * 100).toFixed(1) + "%" : "n/a",
+      fmt(r.fit * chars),
+      r.fit.toFixed(2) + "x",
+    ];
+    cells.forEach((c, i) => {
+      const td = Object.assign(document.createElement("td"),
+        { textContent: c, className: "num" });
+      if (i === 3 && r.fit === best) td.classList.add("best");
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  tbl.appendChild(tbody);
+  $("yoursOut").appendChild(tbl);
+  $("detailScript").value = ck;
+  renderDetails();
+}
+
+function renderDetails() {
+  const mk = $("detailModel").value || FIXTURES.models[0].key;
+  const ck = $("detailScript").value;
+  const cal = FIXTURES.calibration[ck][mk];
+  const den = FIXTURES.bounds[ck][mk];
+  const seam = FIXTURES.seams[ck][mk];
+  const out = $("detailOut");
+  out.innerHTML = "";
+  const head = document.createElement("p");
+  head.innerHTML = "<strong>" + modelLabel(mk) + "</strong> on the " + CORPORA[ck] +
+    " fixture (" + fmt(cal.chars) + " chars = " + fmt(cal.tokens) + " tokens, " +
+    fmt(cal.cpt, 2) + " chars/token). Token sizes in characters: median " + fmt(den.p50) +
+    ", 95th pct " + fmt(den.p95) + ", max " + fmt(den.max) +
+    ". At 40 evenly spaced positions in the fixture, " + seam.span + " of " + seam.checked +
+    " fall inside a multi-character token (how often a fixed character cut would split one).";
+  out.appendChild(head);
+  const p = document.createElement("p");
+  p.className = "muted";
+  p.textContent = "Most common tokens in the fixture (count in bold):";
+  out.appendChild(p);
+  const list = document.createElement("div");
+  list.className = "toklist";
+  for (const [tok, count] of FIXTURES.bigrams[ck][mk].slice(0, 30)) {
+    const sp = document.createElement("span");
+    const t = document.createElement("span");
+    t.textContent = tok === " " ? "\u2423" : tok;
+    sp.appendChild(t);
+    const b = document.createElement("b");
+    b.textContent = " " + count;
+    sp.appendChild(b);
+    list.appendChild(sp);
+  }
+  out.appendChild(list);
+}
+
+function loadExample(kind) {
+  const ex = EXAMPLES[kind];
+  $("sample").value = ex.text;
+  $("script").value = "auto";
+  renderYours();
+  window.scrollTo({ top: $("sample").offsetTop - 60, behavior: "smooth" });
+}
+
+function init() {
+  $("metaVersion").textContent = FIXTURES.meta.tokenizers_version;
+  $("metaDate").textContent = "fixtures generated " + FIXTURES.meta.generated;
+  const sel = $("detailModel");
+  for (const m of FIXTURES.models) {
+    const o = document.createElement("option");
+    o.value = m.key; o.textContent = m.label;
+    sel.appendChild(o);
+  }
+  // global band per script for the footer
+  const bands = Object.keys(CORPORA).map((ck) => {
+    const worst = Math.max(...FIXTURES.models.map((m) => heldoutBand(m.key, ck)));
+    return CORPORA[ck] + " \u00b1" + (worst * 100).toFixed(1) + "%";
+  });
+  $("metaBand").textContent = "Measured estimation error on held-out slices: " + bands.join(", ") + ".";
+  $("renderBuy").addEventListener("click", renderBuy);
+  $("window").addEventListener("change", renderBuy);
+  $("overhead").addEventListener("change", renderBuy);
+  $("renderYours").addEventListener("click", renderYours);
+  $("script").addEventListener("change", renderYours);
+  $("customCpt").addEventListener("change", renderYours);
+  $("detailModel").addEventListener("change", renderDetails);
+  $("detailScript").addEventListener("change", renderDetails);
+  $("exampleEn").addEventListener("click", () => loadExample("en"));
+  $("exampleCode").addEventListener("click", () => loadExample("code"));
+  $("exampleZh").addEventListener("click", () => loadExample("zh"));
+  $("exampleAr").addEventListener("click", () => loadExample("ar"));
+  renderBuy();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>

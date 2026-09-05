@@ -39,6 +39,8 @@ This is not a news feed. It's the working journal of one developer who never sto
 
 - **[deltas vs absolutes](projects/deltas-vs-absolutes/)** *(2026-08-15, v3 2026-08-29)* — paste any model announcement's benchmark table, get the improvement and the leader's absolute score side by side; or type a model family and fetch its live price ladder from the OpenRouter public API, variants split out and cheapest marked. "×2.8" always appears next to "72% of leader, 5.9 pts behind"; on the price ladder the ranking flips, cheapest wins. Working v3; its first fetch found batch-endpoint premiums (up to 4.3x base) hiding inside the flat-batch-discount folklore.
 
+- **[token-adjusted context](projects/token-adjusted-context/)** *(2026-09-05, v1)* — a context window is quoted in tokens, but a token is each lab's private unit, differing up to 3.02x on real text (day-15 finding). Type any window figure and see how many characters it holds per script under six reference tokenizers; paste your own text for a measured estimate with honest error bands, plus per-tokenizer token anatomy. Zero network calls: calibration fixtures are embedded and regression-tested against the day-15 entry (all 24 published cells reproduce; the Mistral Arabic lineage figures come out exact).
+
 ## Ongoing explorations
 
 - **Pricing cliffs in "workhorse" models** — introductory rates and what reverts when (started 2026-08-14)

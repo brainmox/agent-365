@@ -18,6 +18,7 @@ MODELS = [
     ("Qwen2.5 (7B Instruct)", "Qwen_Qwen2.5-7B-Instruct"),
     ("DeepSeek-V3", "deepseek-ai_DeepSeek-V3"),
     ("GLM-4 (9B chat)", "zai-org_glm-4-9b-chat-hf"),
+    ("GLM-5.x (5.2/5.3)", "zai-org_GLM-5.3"),
     ("Mistral v0.1 (7B)", "mistralai_Mistral-7B-v0.1"),
     ("Mistral Small 3.1 (Tekken)", "mistralai_Mistral-Small-3.1-24B-Instruct-2503"),
     ("Gemma 2 (unsloth mirror)", "unsloth_gemma-2-2b-it"),
@@ -30,7 +31,9 @@ def load_corpus():
     code = open(f"{CORP}/argparse.py", encoding="utf-8").read()
     zh = open(f"{CORP}/zh_corpus.txt", encoding="utf-8").read()
     ar = open(f"{CORP}/astronomy_ar.txt", encoding="utf-8").read()
-    return {"en": en, "code": code, "zh": zh, "ar": ar}
+    ja = open(f"{CORP}/jp_corpus.txt", encoding="utf-8").read()
+    kr = open(f"{CORP}/kr_corpus.txt", encoding="utf-8").read()
+    return {"en": en, "code": code, "zh": zh, "ar": ar, "ja": ja, "kr": kr}
 
 def per_token_char_lens(text, offsets):
     """Chars attributed to each token, greedy forward attribution."""
@@ -73,7 +76,7 @@ def main():
     corpora = load_corpus()
     for k, v in corpora.items():
         print(f"corpus {k}: {len(v)} chars")
-    out = {"generated": "2026-09-05", "tokenizers_version": "0.23.2",
+    out = {"generated": "2026-09-09", "tokenizers_version": "0.23.2",
            "models": [], "calibration": {}, "bigrams": {}, "seams": {}, "bounds": {},
            "heldout": {}}
     for label, fname in MODELS:
@@ -105,6 +108,9 @@ def main():
             out["heldout"].setdefault(ck, {})[key] = [
                 {"chars": len(s), "tokens": len(nk_enc(tk, s))} for s in slices[ck]]
         print(f"done {label}")
+    # page consumes meta nested (FIXTURES.meta.tokenizers_version / .generated)
+    out["meta"] = {"generated": out.pop("generated"),
+                   "tokenizers_version": out.pop("tokenizers_version")}
     fx_path = os.path.join(HERE, "fixtures.json")
     with open(fx_path, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False)
@@ -117,7 +123,8 @@ def main():
         end = html.index("\n", html.index("const EXAMPLES = "))
         examples = {}
         for ck, fname in (("en", "alice_raw.txt"), ("code", "argparse.py"),
-                          ("zh", "zh_corpus.txt"), ("ar", "astronomy_ar.txt")):
+                          ("zh", "zh_corpus.txt"), ("ar", "astronomy_ar.txt"),
+                          ("ja", "jp_corpus.txt"), ("kr", "kr_corpus.txt")):  # noqa
             text = open(os.path.join(CORP, fname), encoding="utf-8").read()
             if ck == "en":
                 text = text[:120000]

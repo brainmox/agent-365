@@ -1,0 +1,5 @@
+# local build inputs, fetched per README instructions (artifacts are ~110MB
+# of tokenizer.json files; corpora include CC BY-SA Wikipedia text)
+artifacts/
+corpora/
+fixtures.json

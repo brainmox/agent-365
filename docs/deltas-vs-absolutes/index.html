@@ -45,6 +45,9 @@
   .bar { min-width: 7rem; }
   .bar .fill { display: block; height: 0.8em; background: #a8c4e4; border-radius: 3px; min-width: 2px; }
   .variantline { font-size: 0.82rem; color: #5a6675; margin: 0.3rem 0; }
+  .familycell { color: #5a6675; }
+  .familyhead { font-size: 0.78rem; color: #5a6675; letter-spacing: 0.03em; }
+  .wnum { width: 5ch; }
   #err { color: #8c2f24; font-weight: 600; margin: 0.5rem 0; }
   footer { margin-top: 2.5rem; font-size: 0.85rem; color: #5a6675; border-top: 1px solid #e2e5ea; padding-top: 0.8rem; }
   footer a { color: #2b5dab; }
@@ -54,7 +57,7 @@
 <body>
 <header>
   <h1>deltas vs absolutes</h1>
-  <p class="tag">Paste a benchmark table from any model announcement. Two modes: <strong>prev &rarr; new</strong> (improvement plus leader re-anchoring) and <strong>model card</strong> (paste the whole multi-model comparison table; the tool picks the per-benchmark leader itself, so no hand-copied attributions). Or press <strong>Fetch live prices</strong> to pull a provider's actual price ladder from OpenRouter's public API, where the ranking direction inverts: cheapest wins.</p>
+  <p class="tag">Paste a benchmark table from any model announcement. Two modes: <strong>prev &rarr; new</strong> (improvement plus leader re-anchoring) and <strong>model card</strong> (paste the whole multi-model comparison table; the tool picks the per-benchmark leader itself, so no hand-copied attributions). Or press <strong>Fetch live prices</strong> to pull a provider's actual price ladder from OpenRouter's public API, where the ranking direction inverts: cheapest wins. v4 adds workload-weighted ranking (set the input/output weights, the ladder re-ranks on real cost) and combined ladders (comma-separate two families, one ranking across both).</p>
 </header>
 
 <h2 for="input">Input</h2>
@@ -73,7 +76,7 @@ DeepSWE, 32.7, 54.0, 70.0
   <button class="primary" id="render">Render</button>
   <button id="exampleClassic">Example: prev → new (Gemini 3.7 Flash)</button>
   <button id="exampleCard">Example: model card (Seed 2.1 launch)</button>
-  <button id="fetchPrices" title="Fetch live per-token prices from OpenRouter's public models API and rank a price ladder">Fetch live prices (OpenRouter)</button>
+  <button id="fetchPrices" title="Fetch live per-token prices from OpenRouter's public models API and rank a price ladder. Comma-separate fragments to combine families into one ranking.">Fetch live prices (OpenRouter)</button>
   <button id="copy" hidden>Copy as markdown</button>
 </div>
 <div class="controls">
@@ -90,6 +93,14 @@ DeepSWE, 32.7, 54.0, 70.0
     <label><input type="radio" name="order" value="newFirst"> new, prev</label>
   </fieldset>
   <label class="inline" id="focalWrap" hidden>Focal model: <select id="focal"></select></label>
+  <fieldset id="weightFs" hidden>
+    <legend>Rank by cost of</legend>
+    <label><input type="radio" name="wmode" value="blend" checked> blend (50/50)</label>
+    <label><input type="radio" name="wmode" value="custom"> custom:</label>
+    <input type="number" id="wIn" class="wnum" min="0" step="0.5" value="3" aria-label="input weight"> in /
+    <input type="number" id="wOut" class="wnum" min="0" step="0.5" value="1" aria-label="output weight"> out
+    <span id="werr" class="muted"></span>
+  </fieldset>
 </div>
 
 <p id="err" role="alert" hidden></p>
@@ -484,7 +495,30 @@ function fmtRatio(r) {
   return (r >= 10 ? String(Math.round(r)) : r.toFixed(1)) + "x";
 }
 
-function renderLadder(rows, q, totalFetched, fetchedAtStr) {
+function pricingBasis(r, wIn, wOut) {
+  // Cost of the configured workload: wIn units of input text and wOut units of output.
+  // wIn == wOut reproduces the 50/50 blend exactly; the blend stays the default.
+  if (r.inP === null && r.outP === null) return null;
+  var i = r.inP === null ? 0 : r.inP, o = r.outP === null ? 0 : r.outP;
+  return i * wIn + o * wOut;
+}
+
+function readWeights() {
+  var mode = (document.querySelector("input[name=wmode]:checked") || {}).value || "blend";
+  var werr = $("werr");
+  if (mode === "blend") { if (werr) werr.textContent = ""; return { wIn: 1, wOut: 1, label: "blend = mean of input and output $/M" }; }
+  var wi = parseFloat($("wIn").value), wo = parseFloat($("wOut").value);
+  var bad = !(wi >= 0) || !(wo >= 0) || (wi === 0 && wo === 0);
+  if (bad) {
+    if (werr) werr.textContent = "weights must be numbers, not both zero \u2014 using the 50/50 blend";
+    return { wIn: 1, wOut: 1, label: "blend = mean of input and output $/M (fallback: invalid custom weights)" };
+  }
+  if (werr) werr.textContent = "";
+  return { wIn: wi, wOut: wo, label: "workload-weighted: " + wi + " units in / " + wo + " units out" };
+}
+
+function renderLadder(rows, q, totalFetched, fetchedAtStr, multiFamily, famCount) {
+  var w = readWeights();
   var out = $("out"), thead = out.tHead, tbody = out.tBodies[0];
   var bases = rows.filter(function (r) { return r.variant === "base"; });
   var variantRows = rows.filter(function (r) { return r.variant !== "base"; });
@@ -494,11 +528,13 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
   bases.forEach(function (r) {
     r.blend = (r.inP !== null && r.outP !== null) ? (r.inP + r.outP) / 2
             : (r.inP !== null ? r.inP : r.outP);
+    r.basis = pricingBasis(r, w.wIn, w.wOut);
   });
-  var ranked = bases.filter(function (r) { return r.blend !== null; })
-                    .sort(function (a, b) { return a.blend - b.blend; });
-  var unpriced = bases.filter(function (r) { return r.blend === null; });
-  var cheapest = ranked.length ? ranked[0].blend : null;
+  var ranked = bases.filter(function (r) { return r.basis !== null; })
+                    .sort(function (a, b) { return a.basis - b.basis; });
+  var unpriced = bases.filter(function (r) { return r.basis === null; });
+  var cheapest = ranked.length ? ranked[0].basis : null;
+  var modeTag = w.wIn === 1 && w.wOut === 1 ? "blend" : "workload " + w.wIn + ":" + w.wOut;
 
   thead.innerHTML = ""; tbody.innerHTML = "";
   var hr = document.createElement("tr");
@@ -512,7 +548,8 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
   function dateOf(ts) { return ts ? new Date(ts).toISOString().slice(0, 10) : "—"; }
 
   function variantLine(v, baseRow) {
-    var bits = [v.id + ": " + v.name, fmtPrice(v.inP) + " in / " + fmtPrice(v.outP) + " out"];
+    var bits = [(multiFamily ? "[" + v.family + "] " : "") +
+                v.id + ": " + v.name, fmtPrice(v.inP) + " in / " + fmtPrice(v.outP) + " out"];
     var hasBase = baseRow && baseRow.inP !== null && baseRow.outP !== null;
     if (hasBase && v.inP !== null && v.outP !== null) {
       if (v.inP === 0 && v.outP === 0) {
@@ -527,19 +564,29 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
     return bits.join(" · ");
   }
 
+  var seenFam = {};
   ranked.forEach(function (r) {
-    var isCheapest = cheapest !== null && r.blend === cheapest;
+    if (multiFamily && !seenFam[r.family]) {
+      seenFam[r.family] = true;
+      var ghr = document.createElement("tr");
+      var ghd = document.createElement("td"); ghd.colSpan = 6;
+      ghd.innerHTML = '<span class="familyhead">' + esc(r.family) + ' \u2014 ' + famCount[r.family] + ' listing' + (famCount[r.family] === 1 ? "" : "s") + '</span>';
+      ghr.appendChild(ghd); tbody.appendChild(ghr);
+      md.push("| **" + r.family + "** (" + famCount[r.family] + " listings) | | | | | |");
+    }
+    var isCheapest = cheapest !== null && r.basis === cheapest;
     var tr = document.createElement("tr");
     if (isCheapest) tr.className = "leads";
     function td(html) { var d = document.createElement("td"); d.className = "num"; d.innerHTML = html; tr.appendChild(d); }
-    td(esc(r.id) + (r.alias ? ' <span class="muted">(alias)</span>' : ""));
+    td((multiFamily ? '<span class="familycell">[' + esc(r.family) + ']</span> ' : "") +
+       esc(r.id) + (r.alias ? ' <span class="muted">(alias)</span>' : ""));
     td(fmtPrice(r.inP)); td(fmtPrice(r.outP));
-    td(isCheapest ? '<span class="chip up">CHEAPEST</span>' : "×" + fmtRatio(r.blend / cheapest));
+    td(isCheapest ? '<span class="chip up">CHEAPEST</span>' : "×" + fmtRatio(r.basis / cheapest) + '<span class="muted"> (' + modeTag + ')</span>');
     td(r.ctx ? r.ctx.toLocaleString("en-US") : "—");
     td(dateOf(r.created));
     tbody.appendChild(tr);
     md.push("| " + r.id + " | " + fmtPrice(r.inP) + " | " + fmtPrice(r.outP) + " | " +
-            (isCheapest ? "cheapest" : "×" + fmtRatio(r.blend / cheapest)) + " | " +
+            (isCheapest ? "cheapest" : "×" + fmtRatio(r.basis / cheapest)) + " | " +
             (r.ctx ? r.ctx.toLocaleString("en-US") : "—") + " | " + dateOf(r.created) + " |");
 
     (variantsByBase[r.id] || []).forEach(function (v) {
@@ -555,7 +602,7 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
   unpriced.forEach(function (r) {
     var tr = document.createElement("tr");
     function cell(t) { var d = document.createElement("td"); d.className = "num"; d.innerHTML = '<span class="muted">' + esc(t) + "</span>"; tr.appendChild(d); }
-    cell(r.id + (r.alias ? " (alias)" : "")); cell("unlisted"); cell("unlisted"); cell("—");
+    cell((multiFamily ? "[" + r.family + "] " : "") + r.id + (r.alias ? " (alias)" : "")); cell("unlisted"); cell("unlisted"); cell("—");
     cell(r.ctx ? r.ctx.toLocaleString("en-US") : "—"); cell(dateOf(r.created));
     tbody.appendChild(tr);
   });
@@ -576,7 +623,9 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
     });
   });
 
-  var parts = [ranked.length + (ranked.length === 1 ? " base listing" : " base listings") + " ranked · blend = mean of input and output $/M"];
+  var parts = [ranked.length + (ranked.length === 1 ? " base listing" : " base listings") + " ranked · " + w.label];
+  if (multiFamily) parts.push("combined ladder: " + Object.keys(famCount).length + " families (" +
+                    Object.keys(famCount).sort().join(", ") + "), ranked against the global cheapest across all of them");
   if (cheapest !== null) parts.push("cheapest: " + ranked[0].id + " at " + fmtPrice(ranked[0].inP) + " in / " + fmtPrice(ranked[0].outP) + " out");
   if (variantRows.length) {
     parts.push(variantRows.length + (variantRows.length === 1 ? " variant" : " variants") + ": " +
@@ -593,10 +642,12 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr) {
 
 function fetchPrices() {
   var btn = $("fetchPrices"), err = $("err");
-  var q = $("input").value.trim().toLowerCase().replace(/^["']+|["']+$/g, "");
+  var raw = $("input").value.trim().toLowerCase().replace(/^["']+|["']+$/g, "");
+  var frags = raw.split(",").map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
+  var q = frags.join(", ");
   err.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("out").hidden = true;
-  if (!q) {
-    err.textContent = 'Type a model id or family fragment to look up (e.g. "glm-5.3" or just "glm"), then press Fetch live prices.';
+  if (!frags.length) {
+    err.textContent = 'Type a model id or family fragment to look up (e.g. "glm-5.3" or just "glm"), then press Fetch live prices. Comma-separate fragments (e.g. "glm, gemini-3.7-flash") to rank one combined ladder.';
     err.hidden = false; return;
   }
   btn.disabled = true;
@@ -610,20 +661,32 @@ function fetchPrices() {
       var byId = {};
       all.forEach(function (m) { byId[m.id] = m; });
       var classed = all.map(function (m) { return classifyModelId(m.id); });
-      var exact = classed.filter(function (c) { return c.base === q; });
-      var fam = exact.length ? exact : classed.filter(function (c) { return c.base.indexOf(q) >= 0; });
-      if (!fam.length) throw new Error('no listing matches "' + q + '" among the ' + all.length + ' models the API returned; try a shorter family fragment');
-      var rows = fam.map(function (c) {
+      var matched = [], misses = [];
+      frags.forEach(function (frag) {
+        var exact = classed.filter(function (c) { return c.base === frag; });
+        var famM = exact.length ? exact : classed.filter(function (c) { return c.base.indexOf(frag) >= 0; });
+        if (famM.length) famM.forEach(function (c) { c.family = frag; matched.push(c); });
+        else misses.push(frag);
+      });
+      if (!matched.length) throw new Error('no listing matches "' + q + '" among the ' + all.length + ' models the API returned; try a shorter family fragment');
+      var seen = {};
+      matched = matched.filter(function (c) { if (seen[c.id]) return false; seen[c.id] = true; return true; });
+      var multiFamily = frags.length > 1 && new Set(matched.map(function (c) { return c.family; })).size > 1;
+      var famCount = {};
+      matched.forEach(function (c) { famCount[c.family] = (famCount[c.family] || 0) + 1; });
+      var rows = matched.map(function (c) {
         var m = byId[c.id];
-        return { id: m.id, base: c.base, variant: c.variant, alias: c.alias, name: m.name || "",
+        return { id: m.id, base: c.base, variant: c.variant, alias: c.alias, family: c.family, name: m.name || "",
                  inP: perMillion(m.pricing && m.pricing.prompt),
                  outP: perMillion(m.pricing && m.pricing.completion),
                  ctx: m.context_length || null, created: m.created ? m.created * 1000 : null };
       });
-      renderLadder(rows, q, all.length, t0.toISOString().slice(0, 16).replace("T", " "));
+      renderLadder(rows, q, all.length, t0.toISOString().slice(0, 16).replace("T", " "), multiFamily, famCount);
       $("orderFs").style.opacity = "0.45";
+      $("weightFs").hidden = false;
     })
     .catch(function (e) {
+      $("weightFs").hidden = true;
       err.textContent = "Price fetch failed: " + e.message +
         " (the endpoint is public and CORS-open; if this fails, check the network, or paste the table manually.)";
       err.hidden = false;
@@ -637,7 +700,7 @@ var lastState = null;
 
 function doRender() {
   var err = $("err"), out = $("out");
-  err.hidden = true; out.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true;
+  err.hidden = true; out.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("weightFs").hidden = true;
   try {
     var parsed = parseInput();
     if (!parsed.dataRows.length) throw new Error("No data rows found. Each row needs at least one number, and most rows need two or more.");
@@ -666,6 +729,7 @@ window.addEventListener("DOMContentLoaded", function () {
   $("exampleClassic").addEventListener("click", function () { $("input").value = EXAMPLE_CLASSIC; doRender(); });
   $("exampleCard").addEventListener("click", function () { $("input").value = EXAMPLE_CARD; lastState = null; doRender(); });
   $("fetchPrices").addEventListener("click", fetchPrices);
+  document.querySelector('input[name=wmode][value="custom"]').checked = true;
   $("focal").addEventListener("change", function () {
     if (lastState) { lastState.fi = parseInt(this.value, 10); renderCard(lastState); }
   });

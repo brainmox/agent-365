@@ -57,7 +57,7 @@
 <body>
 <header>
   <h1>deltas vs absolutes</h1>
-  <p class="tag">Paste a benchmark table from any model announcement. Two modes: <strong>prev &rarr; new</strong> (improvement plus leader re-anchoring) and <strong>model card</strong> (paste the whole multi-model comparison table; the tool picks the per-benchmark leader itself, so no hand-copied attributions). Or press <strong>Fetch live prices</strong> to pull a provider's actual price ladder from OpenRouter's public API, where the ranking direction inverts: cheapest wins. v4 adds workload-weighted ranking (set the input/output weights, the ladder re-ranks on real cost) and combined ladders (comma-separate two families, one ranking across both).</p>
+  <p class="tag">Paste a benchmark table from any model announcement. Two modes: <strong>prev &rarr; new</strong> (improvement plus leader re-anchoring) and <strong>model card</strong> (paste the whole multi-model comparison table; the tool picks the per-benchmark leader itself, so no hand-copied attributions). Or press <strong>Fetch live prices</strong> to pull a provider's actual price ladder from OpenRouter's public API, where the ranking direction inverts: cheapest wins. v4 adds workload-weighted ranking (set the input/output weights, the ladder re-ranks on real cost) and combined ladders (comma-separate two families, one ranking across both). v5 adds a coverage audit: paste a launch table and the audit recomputes the focal model's win count, maps where the missing competitor cells sit, and checks the abstract's claim and the table's bold marks against the recompute.</p>
 </header>
 
 <h2 for="input">Input</h2>
@@ -76,6 +76,7 @@ DeepSWE, 32.7, 54.0, 70.0
   <button class="primary" id="render">Render</button>
   <button id="exampleClassic">Example: prev → new (Gemini 3.7 Flash)</button>
   <button id="exampleCard">Example: model card (Seed 2.1 launch)</button>
+  <button id="exampleAudit" title="Pastes a synthetic 16-row launch table and runs the coverage audit on it: claim check, missing-cell gradient, bold-mark agreement.">Example: coverage audit (synthetic launch table)</button>
   <button id="fetchPrices" title="Fetch live per-token prices from OpenRouter's public models API and rank a price ladder. Comma-separate fragments to combine families into one ranking.">Fetch live prices (OpenRouter)</button>
   <button id="copy" hidden>Copy as markdown</button>
 </div>
@@ -85,6 +86,7 @@ DeepSWE, 32.7, 54.0, 70.0
     <label><input type="radio" name="mode" value="auto" checked> auto</label>
     <label><input type="radio" name="mode" value="classic"> prev → new</label>
     <label><input type="radio" name="mode" value="card"> model card</label>
+    <label><input type="radio" name="mode" value="audit"> coverage audit</label>
   </fieldset>
   <fieldset id="orderFs">
     <legend>Number columns are</legend>
@@ -101,14 +103,22 @@ DeepSWE, 32.7, 54.0, 70.0
     <input type="number" id="wOut" class="wnum" min="0" step="0.5" value="1" aria-label="output weight"> out
     <span id="werr" class="muted"></span>
   </fieldset>
+  <fieldset id="claimFs" hidden>
+    <legend>Claim check</legend>
+    <label class="inline">Abstract claims
+      <input type="text" id="claim" size="24" placeholder="e.g. 5, or five of sixteen" aria-label="abstract claim text">
+    </label>
+  </fieldset>
 </div>
 
 <p id="err" role="alert" hidden></p>
 <p id="summary" aria-live="polite"></p>
 <div class="tablewrap"><table id="out" hidden><thead></thead><tbody></tbody></table></div>
+<p id="out2cap" class="variantline" hidden style="margin-top:1.2rem;">Win rate by competitor coverage</p>
+<div class="tablewrap"><table id="out2" hidden><thead></thead><tbody></tbody></table></div>
 
 <footer>
-  Built by <a href="https://github.com/brainmox/agent-365">Agent 365</a>. v2 adds model-card mode: paste a launch comparison table and the per-benchmark leader is computed, not trusted. v3 adds live price fetching: paste nothing, type a model family, and the ladder is pulled from OpenRouter's public models API with variants split out and cheapest marked. Benchmark math stays entirely client-side; the pricing button is the page's only network call. Code under MIT (see repo LICENSE).
+  Built by <a href="https://github.com/brainmox/agent-365">Agent 365</a>. v2 adds model-card mode: paste a launch comparison table and the per-benchmark leader is computed, not trusted. v3 adds live price fetching: paste nothing, type a model family, and the ladder is pulled from OpenRouter's public models API with variants split out and cheapest marked. v5 adds the coverage audit: paste a launch comparison table and it recomputes the headline win count, maps where the missing competitor cells sit, and checks the abstract's claim and the table's bold marks against the recompute. Benchmark math stays entirely client-side; the pricing button is the page's only network call. Code under MIT (see repo LICENSE).
 </footer>
 
 <script>
@@ -175,6 +185,20 @@ function splitLine(line) {
   return cells;
 }
 
+// Raw positional split: keeps ** markers so bold marks can be audited later.
+function splitLineRaw(line) {
+  var cells;
+  if (line.indexOf("|") >= 0) {
+    cells = line.split("|");
+    if (cells.length && cells[0].trim() === "") cells.shift();
+    if (cells.length && cells[cells.length - 1].trim() === "") cells.pop();
+  } else {
+    cells = line.split(/[\t,;]/);
+    while (cells.length && cells[cells.length - 1].trim() === "") cells.pop();
+  }
+  return cells;
+}
+
 function isNumCell(c) { return NUM.test(c); }
 function isMissingCell(c) { return DASH.test(c); }
 
@@ -192,7 +216,7 @@ function isHeader(cells) {
 
 function parseInput() {
   var lines = $("input").value.split(/\r?\n/);
-  var dataRows = [], headerRow = null;
+  var dataRows = [], headerRow = null, dataBold = [];
   lines.forEach(function (line) {
     var t = line.trim();
     if (!t || t.charAt(0) === "#") return;
@@ -201,9 +225,11 @@ function parseInput() {
     if (isHeader(cells)) { headerRow = cells; return; }
     var numCount = cells.filter(isNumCell).length;
     if (numCount === 0) return; // stray text row (e.g. lone category label)
+    var rawCells = splitLineRaw(t);
     dataRows.push(cells);
+    dataBold.push(rawCells.map(function (c) { return c.indexOf("**") >= 0; }));
   });
-  return { dataRows: dataRows, headerRow: headerRow };
+  return { dataRows: dataRows, headerRow: headerRow, dataBold: dataBold };
 }
 
 // Columns numeric in >= half the data rows are model columns.
@@ -363,12 +389,14 @@ function buildCard(parsed) {
     return { idx: i, name: nm || ("Model " + (n + 1)) };
   });
   var firstCol = cols[0];
-  var card = rows.map(function (r) {
+  var card = rows.map(function (r, ri) {
     var name = "";
     for (var i = firstCol - 1; i >= 0; i--) {
       if (r[i] !== "" && !isMissingCell(r[i])) { name = r[i]; break; }
     }
-    return { name: name || "row", scores: cols.map(function (c) { return c < r.length && isNumCell(r[c]) ? parseFloat(r[c]) : null; }) };
+    var b = parsed.dataBold && parsed.dataBold[ri] ? parsed.dataBold[ri] : [];
+    return { name: name || "row", bold: cols.map(function (c) { return c < b.length && !!b[c]; }),
+             scores: cols.map(function (c) { return c < r.length && isNumCell(r[c]) ? parseFloat(r[c]) : null; }) };
   });
   var allNums = [];
   card.forEach(function (r) { r.scores.forEach(function (s) { allNums.push(s); }); });
@@ -640,12 +668,172 @@ function renderLadder(rows, q, totalFetched, fetchedAtStr, multiFamily, famCount
   $("focalWrap").hidden = true;
 }
 
+// ---- Coverage audit mode (v5) ------------------------------------------------
+// The day-34 manual audit made mechanical: recompute strict wins for the focal
+// model, map where the missing competitor cells sit, and check the abstract's
+// claim and the table's bold marks against the recompute. The tool reads only
+// the pasted table and the claim text supplied next to the mode.
+
+var WORD_NUMS = { zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7,
+                  eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13,
+                  fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
+                  nineteen: 19, twenty: 20 };
+
+// "5 of 16", "five of sixteen", "5/16", plain "5" -> { n, d } (d null when unstated).
+function parseClaim(raw) {
+  var t = String(raw || "").toLowerCase();
+  var m = t.match(/(\d+)\s*(?:\/|of|out of)\s*(\d+)/);
+  if (m) return { n: parseInt(m[1], 10), d: parseInt(m[2], 10) };
+  m = t.match(/\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)(?![a-z])\s*(?:\/|of|out of)\s*(\d+|zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)(?![a-z])/);
+  if (m && WORD_NUMS[m[1]] !== undefined) return { n: WORD_NUMS[m[1]], d: WORD_NUMS[m[2]] !== undefined ? WORD_NUMS[m[2]] : parseInt(m[2], 10) };
+  m = t.match(/\b(\d+)\b/);
+  if (m) return { n: parseInt(m[1], 10), d: null };
+  return null;
+}
+
+var EXAMPLE_AUDIT = [
+  "# Synthetic launch table in the shape the audit targets: 6 models",
+  "# (launch pair plus four rivals), 16 benchmark rows, a 5-of-16 headline claim,",
+  "# bold marks on one launch win, and 9 missing competitor cells. Run with",
+  "# Table type: coverage audit, then Claim check: five of sixteen.",
+  "Benchmark, Launch Pro, Launch Air, Rival A, Rival B, Rival C, Rival D",
+  "SWE-Spikes-Hard, 31.1, 29.4, 31.0, , ,",
+  "BrowseComp, 43.9, 38.0, 41.2, 43.6, ,",
+  "BFCL v4, 79.2, 72.1, 70.5, 74.8, , 76.3",
+  "CyberGym, 86.5, 81.0, 82.2, 84.5, , 80.4",
+  "AutoBench v2, **71.3**, 66.0, 62.4, 67.2, 59.8, 63.1",
+  "Terminal-Bench 3, 62.5, 58.0, 71.0, 69.4, 65.2, 66.8",
+  "SWE-Bench Pro, 48.2, 44.1, 63.4, 55.0, 50.6, 52.8",
+  "DeepSearchQA, 32.4, 28.8, 30.1, 33.5, 29.7, 31.0",
+  "OS-Live, 55.6, 51.2, 63.9, 58.1, , 60.5",
+  "GDPval, 24.8, 22.0, 27.9, 26.3, , 25.7",
+  "FrontierScience-Easy, 29.8, 27.4, 31.6, 30.2, 28.9, 29.5",
+  "FrontierScience-Hard, 12.5, 10.1, 16.4, 14.2, 13.0, 12.8",
+  "OfficeQA Pro, 61.2, 58.7, 69.0, 71.4, 66.8, 64.0",
+  "JobBench, 18.4, 15.2, 27.5, 30.2, 22.9, 20.6",
+  "HealthBench-Meta, 44.9, 41.7, 51.6, 49.8, 47.3, 46.1",
+  "ChartQA-2026, 66.4, 63.0, 70.5, 66.3, 68.2, 67.4"
+].join("\n");
+
+function renderCardHead(card, fi) {
+  var thead = $("out").tHead;
+  thead.innerHTML = "";
+  var hr = document.createElement("tr");
+  var heads = ["Benchmark", card.models[fi].name + " (focal)", "Recomputed", "Rivals scored", "Missing rival cells", "Note"];
+  heads.forEach(function (h) { var th = document.createElement("th"); th.textContent = h; th.scope = "col"; hr.appendChild(th); });
+  thead.appendChild(hr);
+  var sel = $("focal");
+  sel.innerHTML = "";
+  card.models.forEach(function (m, i) {
+    var o = document.createElement("option"); o.value = i; o.textContent = m.name;
+    if (i === fi) o.selected = true; sel.appendChild(o);
+  });
+  $("focalWrap").hidden = false;
+}
+
+function renderAudit(card, fi) {
+  renderCardHead(card, fi);
+  $("claimFs").hidden = false;
+  var wins = 0, ties = 0, hairline = 0, gaps = 0, gapsOnWins = 0;
+  var bands = { sparse: { n: 0, w: 0 }, partial: { n: 0, w: 0 }, full: { n: 0, w: 0 } };
+  var BAND_LABEL = { sparse: "sparse (0-3 rivals scored)", partial: "partial (4 or more, not full)", full: "full (all rivals)" };
+  var boldChecked = 0, boldAgree = 0, boldDisagree = 0;
+  var rowsOut = [];
+  card.rows.forEach(function (r) {
+    var focal = r.scores[fi];
+    var present = 0, missing = 0, best = null;
+    r.scores.forEach(function (s, i) {
+      if (i === fi) return;
+      if (s === null) missing++; else { present++; if (best === null || s > best) best = s; }
+    });
+    var isWin = focal !== null && present > 0 && focal > best;
+    var isTie = focal !== null && present > 0 && focal === best;
+    if (isTie) ties++;
+    if (isWin) {
+      wins++;
+      if (Math.round((focal - best) * 10) / 10 <= 0.1) hairline++;
+    }
+    gaps += missing;
+    if (isWin && missing > 0) gapsOnWins++;
+    var cov = missing === 0 ? "full" : (present <= 3 ? "sparse" : "partial");
+    bands[cov].n++; if (isWin) bands[cov].w++;
+    if (r.bold && r.bold[fi]) { boldChecked++; if (isWin || isTie) boldAgree++; else boldDisagree++; }
+    rowsOut.push({ name: r.name, focal: focal, win: isWin, tie: isTie, present: present, missing: missing, rivals: present + missing });
+  });
+
+  var out = $("out"), tbody = out.tBodies[0];
+  tbody.innerHTML = "";
+  var md = ["| Benchmark | " + card.models[fi].name + " | Recomputed | Rivals scored | Missing rival cells | Note |", "|---|---|---|---|---|---|"];
+  rowsOut.forEach(function (o) {
+    var tr = document.createElement("tr");
+    if (o.win) tr.className = "leads";
+    function td(html) { var d = document.createElement("td"); d.className = "num"; d.innerHTML = html; tr.appendChild(d); }
+    var d0 = document.createElement("td"); d0.textContent = o.name; tr.appendChild(d0);
+    td(o.focal === null ? '<span class="muted">—</span>' : fmt(o.focal));
+    td(o.win ? '<span class="chip up">WIN</span>' : o.tie ? '<span class="chip flat">TIE</span>' : '<span class="muted">—</span>');
+    td(o.present + " / " + o.rivals);
+    td(String(o.missing));
+    td(o.win && o.missing > 0 ? '<span class="chip down">gap on win row</span>' : '<span class="muted">—</span>');
+    tbody.appendChild(tr);
+    md.push("| " + o.name + " | " + (o.focal === null ? "—" : fmt(o.focal)) + " | " + (o.win ? "WIN" : o.tie ? "TIE" : "—") + " | " +
+            o.present + " / " + o.rivals + " | " + o.missing + " | " + (o.win && o.missing > 0 ? "gap on win row" : "—") + " |");
+  });
+  out.hidden = false;
+
+  var md2 = ["| Coverage of rivals | Rows | Wins | Win rate |", "|---|---|---|---|"];
+  var cap = $("out2cap"), out2 = $("out2");
+  cap.hidden = false; out2.hidden = false;
+  var t2 = out2.tHead, b2 = out2.tBodies[0];
+  t2.innerHTML = ""; b2.innerHTML = "";
+  var hr2 = document.createElement("tr");
+  ["Rivals scored per row", "Rows", "Wins", "Win rate"].forEach(function (h) { var th = document.createElement("th"); th.textContent = h; th.scope = "col"; hr2.appendChild(th); });
+  t2.appendChild(hr2);
+  ["sparse", "partial", "full"].forEach(function (k) {
+    var bd = bands[k]; if (!bd.n) return;
+    var tr = document.createElement("tr");
+    var first = document.createElement("td"); first.textContent = BAND_LABEL[k]; tr.appendChild(first);
+    [bd.n, bd.w, Math.round(bd.w / bd.n * 100) + "%"].forEach(function (v) {
+      var d = document.createElement("td"); d.className = "num"; d.textContent = String(v); tr.appendChild(d);
+    });
+    b2.appendChild(tr);
+    md2.push("| " + BAND_LABEL[k] + " | " + bd.n + " | " + bd.w + " | " + Math.round(bd.w / bd.n * 100) + "% |");
+  });
+
+  var totalRows = card.rows.length;
+  var parts = [totalRows + (totalRows === 1 ? " row recomputed" : " rows recomputed") + " · focal: " + card.models[fi].name, wins + " of " + totalRows + " strict wins"];
+  if (ties) parts.push(ties + (ties === 1 ? " tie excluded" : " ties excluded"));
+  var claimEl = $("claim");
+  var cl = parseClaim(claimEl ? claimEl.value : "");
+  if (cl) {
+    var claimTxt = "claim " + cl.n + (cl.d === null ? "" : " of " + cl.d);
+    if (cl.n === wins && (cl.d === null || cl.d === totalRows)) parts.push(claimTxt + ": CONFIRMED");
+    else {
+      var extra = (cl.d !== null && cl.d !== totalRows) ? " (denominator " + cl.d + " vs " + totalRows + " table rows)" : "";
+      parts.push(claimTxt + ": MISMATCH, recompute found " + wins + " of " + totalRows + extra);
+    }
+  }
+  if (hairline) parts.push(hairline + (hairline === 1 ? " hairline win" : " hairline wins") + " (margin within 0.1)");
+  parts.push(gaps + " missing rival cells" + (gaps ? ", " + gapsOnWins + " on win rows (" + Math.round(gapsOnWins / gaps * 100) + "% of the gaps vs " + Math.round(wins / totalRows * 100) + "% of rows are wins)" : ""));
+  var bandTxt = ["sparse", "partial", "full"].filter(function (k) { return bands[k].n; }).map(function (k) {
+    return Math.round(bands[k].w / bands[k].n * 100) + "% " + BAND_LABEL[k] + " (" + bands[k].n + (bands[k].n === 1 ? " row)" : " rows)");
+  }).join(", ");
+  if (bandTxt) parts.push("win rate " + bandTxt);
+  parts.push(boldChecked ? "bold marks agree with recompute: " + boldAgree + "/" + boldChecked +
+             (boldDisagree ? " (" + boldDisagree + " disagree)" : "") : "bold marks: none detected");
+  parts.push("mode: coverage audit");
+  $("summary").textContent = parts.join(" · ");
+  $("copy").dataset.md = md.concat([""], md2).join("\n");
+  $("copy").hidden = false;
+  $("orderFs").style.opacity = "0.45";
+}
+
 function fetchPrices() {
+
   var btn = $("fetchPrices"), err = $("err");
   var raw = $("input").value.trim().toLowerCase().replace(/^["']+|["']+$/g, "");
   var frags = raw.split(",").map(function (s) { return s.trim(); }).filter(function (s) { return s.length > 0; });
   var q = frags.join(", ");
-  err.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("out").hidden = true;
+  err.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("out").hidden = true; $("out2cap").hidden = true; $("out2").hidden = true;
   if (!frags.length) {
     err.textContent = 'Type a model id or family fragment to look up (e.g. "glm-5.3" or just "glm"), then press Fetch live prices. Comma-separate fragments (e.g. "glm, gemini-3.7-flash") to rank one combined ladder.';
     err.hidden = false; return;
@@ -700,13 +888,20 @@ var lastState = null;
 
 function doRender() {
   var err = $("err"), out = $("out");
-  err.hidden = true; out.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("weightFs").hidden = true;
+  err.hidden = true; out.hidden = true; $("summary").textContent = ""; $("copy").hidden = true; $("focalWrap").hidden = true; $("weightFs").hidden = true; $("claimFs").hidden = true; $("out2cap").hidden = true; $("out2").hidden = true;
   try {
     var parsed = parseInput();
     if (!parsed.dataRows.length) throw new Error("No data rows found. Each row needs at least one number, and most rows need two or more.");
     var modeSetting = document.querySelector("input[name=mode]:checked").value;
     var mode = modeSetting === "auto" ? autoMode(parsed) : modeSetting;
-    if (mode === "card") {
+    if (mode === "audit") {
+      var cardA = buildCard(parsed);
+      var fiA = 0;
+      cardA.models.forEach(function (m, i) { if (/atria|focal/i.test(m.name)) fiA = i; });
+      lastState = { card: cardA, fi: fiA, audit: true };
+      renderAudit(cardA, fiA);
+      $("orderFs").style.opacity = "0.45";
+    } else if (mode === "card") {
       var card = buildCard(parsed);
       var lastName = lastState && lastState.card && lastState.card.models[lastState.fi] ? lastState.card.models[lastState.fi].name : null;
       var fi = 0;
@@ -726,12 +921,13 @@ function doRender() {
 
 window.addEventListener("DOMContentLoaded", function () {
   $("render").addEventListener("click", doRender);
-  $("exampleClassic").addEventListener("click", function () { $("input").value = EXAMPLE_CLASSIC; doRender(); });
-  $("exampleCard").addEventListener("click", function () { $("input").value = EXAMPLE_CARD; lastState = null; doRender(); });
+  $("exampleClassic").addEventListener("click", function () { $("input").value = EXAMPLE_CLASSIC; lastState = null; document.querySelector('input[name=mode][value="auto"]').checked = true; doRender(); });
+  $("exampleCard").addEventListener("click", function () { $("input").value = EXAMPLE_CARD; lastState = null; document.querySelector('input[name=mode][value="auto"]').checked = true; doRender(); });
+  $("exampleAudit").addEventListener("click", function () { $("input").value = EXAMPLE_AUDIT; $("claim").value = "five of sixteen"; lastState = null; document.querySelector('input[name=mode][value="audit"]').checked = true; doRender(); });
   $("fetchPrices").addEventListener("click", fetchPrices);
   document.querySelector('input[name=wmode][value="custom"]').checked = true;
   $("focal").addEventListener("change", function () {
-    if (lastState) { lastState.fi = parseInt(this.value, 10); renderCard(lastState); }
+    if (lastState) { lastState.fi = parseInt(this.value, 10); if (lastState.audit) renderAudit(lastState.card, lastState.fi); else renderCard(lastState); }
   });
   $("copy").addEventListener("click", function () {
     var t = this.dataset.md || "";

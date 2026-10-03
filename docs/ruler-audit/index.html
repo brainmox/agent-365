@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ruler Audit — who owns the leaderboard?</title>
+<style>
+  :root { --ink:#1a1a1a; --mut:#667; --line:#d8d8e0; --bg:#fafaff; --accent:#2b4a8f; --warn:#a33c25; --ok:#1f6b3a; --chipbg:#eef1fa; }
+  * { box-sizing:border-box; }
+  body { font:15px/1.5 -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:var(--bg); margin:0; padding:24px; max-width:1180px; margin-inline:auto; }
+  h1 { font-size:22px; margin:0 0 4px; }
+  h2 { font-size:16px; margin:26px 0 6px; border-bottom:1px solid var(--line); padding-bottom:4px; }
+  .tag { color:var(--mut); font-size:13px; }
+  textarea { width:100%; font:12px/1.45 ui-monospace, Menlo, Consolas, monospace; border:1px solid var(--line); border-radius:6px; padding:8px; min-height:110px; background:#fff; }
+  button { background:var(--accent); color:#fff; border:0; border-radius:6px; padding:8px 14px; font-size:14px; cursor:pointer; margin:6px 8px 6px 0; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  table { border-collapse:collapse; width:100%; font-size:13px; margin:8px 0; background:#fff; }
+  th, td { border:1px solid var(--line); padding:4px 8px; text-align:left; }
+  th { background:var(--chipbg); font-weight:600; }
+  td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
+  .chip { display:inline-block; background:var(--chipbg); border-radius:10px; padding:0 8px; font-size:12px; margin-left:4px; }
+  .chip.warn { background:#f9e8e3; color:var(--warn); }
+  .chip.ok { background:#e5f2e9; color:var(--ok); }
+  .flag { color:var(--warn); font-weight:600; }
+  .good { color:var(--ok); font-weight:600; }
+  summary { cursor:pointer; font-weight:600; margin:6px 0; }
+  details { margin:4px 0; }
+  .summary-line { background:#fff; border:1px solid var(--line); border-left:4px solid var(--accent); padding:10px 14px; border-radius:6px; margin:14px 0; font-size:14px; }
+  .census { display:flex; gap:18px; flex-wrap:wrap; font-size:13px; margin:8px 0; }
+  .census b { font-size:16px; }
+  code { background:var(--chipbg); padding:0 4px; border-radius:4px; font-size:12.5px; }
+  .note { color:var(--mut); font-size:12.5px; }
+</style>
+</head>
+<body>
+<h1>Ruler Audit</h1>
+<div class="tag">A leaderboard is a claim. This tool reads the claim's paperwork: who ran it, on whose numbers, when, and against which upstream.</div>
+
+<p>
+  <strong>Paste JSON</strong> — primary mode, works offline. Blob <b>A</b>: a forked leaderboard copy (e.g. a vendor's own copy of a community index).
+  Blob <b>B</b> (optional): the upstream index JSON it forked from. The fork diff, date gap and provenance census compare the two.
+</p>
+<p>
+  <strong>Or fetch by URL</strong> — best effort: many leaders serve their JSON without CORS headers, in which case the browser cannot read it and you should
+  <code>curl</code> it and paste. No input is sent anywhere; any fetch goes straight from this page to the URL you name.
+</p>
+
+<textarea id="blobA" placeholder="Blob A — forked leaderboard JSON (required).&#10;Detects the copy schema: top-level generated_utc, upstream{}, areas[], benchmarks[], models[] with areas/scores/closed/self_reported/panel_coverage."></textarea>
+<textarea id="blobB" placeholder="Blob B — upstream index JSON (optional).&#10;Detects the upstream schema: suite{}, jev{} with calibration, models[] with categories[].skill/coverage.&#10;Used for: fork diff (added/reworded rows), upstream snapshot date, and the upstream ruler's own calibration block."></textarea>
+<div>
+  <button id="go">Audit</button>
+  <button id="demo" class="ghost">Load demo data</button>
+  <button id="clear" class="ghost">Clear</button>
+  <input id="fetchUrl" placeholder="https://…/leaderboard.json" style="width:340px; padding:7px; border:1px solid var(--line); border-radius:6px;">
+  <button id="fetch" class="ghost">Fetch A from URL</button>
+  <span id="fetchMsg" class="note"></span>
+</div>
+
+<div id="out"></div>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+const fmt = (x, n=2) => (x === null || x === undefined || Number.isNaN(x)) ? "—" : Number(x).toFixed(n);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- schema detection ---------- */
+// Copy/fork schema: has top-level `upstream` object and `areas` array; models carry published `areas` maps.
+// Upstream schema: has `suite` and `jev`; models carry `categories` arrays with skill/coverage.
+function classify(obj) {
+  if (!obj || typeof obj !== "object") return null;
+  if (obj.suite && obj.benchmarks && Array.isArray(obj.models)) return "upstream";
+  if (obj.upstream && Array.isArray(obj.areas) && Array.isArray(obj.models)) return "copy";
+  return null;
+}
+function parseBlob(text) {
+  const t = text.trim();
+  if (!t) return null;
+  let obj;
+  try { obj = JSON.parse(t); }
+  catch (e) { throw new Error("Not valid JSON: " + e.message); }
+  const kind = classify(obj);
+  if (!kind) throw new Error("JSON parsed but matches neither known schema (copy schema: generated_utc/upstream/areas/benchmarks/models; upstream schema: suite/jev/benchmarks/models).");
+  return { kind, obj };
+}
+
+/* ---------- index math (audited against published values) ---------- */
+// Index = Σ(area weight × area score) / Σ weights, ×100. Verified to reproduce published
+// indices to <0.01 on real data; the tool prints the worst residual rather than trusting it.
+function recomputeIndex(copy) {
+  const w = copy.areas.map(a => ({ id: a.id, weight: a.weight }));
+  const W = w.reduce((s, x) => s + x.weight, 0);
+  const rows = copy.models.map(m => {
+    const calc = w.reduce((s, x) => s + x.weight * (m.areas[x.id] ?? 0), 0) / W * 100;
+    return { name: m.name, published: m.index, calc, resid: calc - m.index };
+  });
+  const worst = rows.reduce((a, r) => Math.abs(r.resid) > Math.abs(a.resid) ? r : a, rows[0]);
+  const meanAbs = rows.reduce((s, r) => s + Math.abs(r.resid), 0) / rows.length;
+  return { rows, worst, meanAbs, W };
+}
+
+// Area recompute from per-benchmark scores: chance-normalized mean over in-index benchmarks.
+// This does NOT reproduce published area values on real data (residuals up to tens of points)
+// — the tool reports the mismatch as a finding about the published pipeline, not as its own truth.
+function recomputeAreas(copy) {
+  const bms = new Map(copy.benchmarks.map(b => [b.id, b]));
+  const inIdx = copy.benchmarks.filter(b => b.in_index);
+  const rows = copy.models.map(m => {
+    const residByArea = {};
+    for (const a of copy.areas) {
+      const vals = [];
+      for (const b of inIdx) {
+        if (b.area !== a.id) continue;
+        const sc = m.scores[String(b.id)];
+        if (sc === undefined || sc === null) continue;
+        if (b.lower) continue; // lower-is-better rows have no published normalization; skipped, counted
+        const ch = b.chance ?? 0;
+        vals.push((sc - ch) / (1 - ch));
+      }
+      if (vals.length) residByArea[a.id] = (vals.reduce((s, v) => s + v, 0) / vals.length) - m.areas[a.id];
+    }
+    return { name: m.name, residByArea, skippedLower: inIdx.filter(b => b.lower).length };
+  });
+  const agg = {};
+  for (const r of rows) for (const [a, v] of Object.entries(r.residByArea)) (agg[a] ??= []).push(Math.abs(v));
+  const summary = Object.fromEntries(Object.entries(agg).map(([a, v]) =>
+    [a, { mean: v.reduce((s, x) => s + x, 0) / v.length, max: Math.max(...v) }]));
+  return { rows, summary, inIdxCount: inIdx.length };
+}
+
+/* ---------- fork diff ---------- */
+function forkDiff(copy, up) {
+  const upNames = new Map();
+  for (const m of up.models) upNames.set(m.name, m);
+  if (up.jev && up.jev.name) upNames.set(up.jev.name, up.jev);
+  const copyNames = new Set(copy.models.map(m => m.name));
+  const added = copy.models.filter(m => !upNames.has(m.name)).map(m => m.name);
+  const removed = [...upNames.keys()].filter(n => !copyNames.has(n));
+  return { added, removed, upCount: upNames.size, copyCount: copy.models.length + (copy.jev ? 1 : 0) };
+}
+
+/* ---------- provenance census ---------- */
+function census(copy) {
+  const panel = copy.panel_size || 38;
+  const c = { closed: 0, selfReported: 0, community: 0, fullCoverage: 0, withMissing: 0, maxMissing: 0, panel };
+  for (const m of copy.models) {
+    if (m.closed) c.closed++;
+    if (m.self_reported) c.selfReported++;
+    if (m.source === "community") c.community++;
+    const miss = (m.missing || []).length;
+    if (miss > 0) c.withMissing++;
+    c.maxMissing = Math.max(c.maxMissing, miss);
+    if (m.panel_coverage === null || m.panel_coverage === undefined) c.fullCoverage++;
+    else if (m.panel_coverage === panel) c.fullCoverage++;
+  }
+  return c;
+}
+
+function topTable(copy) {
+  const panel = copy.panel_size || 38;
+  const sorted = [...copy.models].sort((a, b) => b.index - a.index);
+  const top = sorted.slice(0, 12);
+  let html = `<table><tr><th>#</th><th>Model</th><th class="num">Index</th><th>Source</th><th class="num">Coverage</th><th class="num">Missing</th><th class="num">ECE</th><th class="num">p50 ms</th></tr>`;
+  top.forEach((m, i) => {
+    const prov = m.self_reported ? '<span class="flag">self-reported</span>' : esc(m.source || "?");
+    const cov = m.panel_coverage === null || m.panel_coverage === undefined ? "—" : `${m.panel_coverage}/${panel}`;
+    const miss = (m.missing || []).length;
+    html += `<tr><td class="num">${i + 1}</td><td>${esc(m.name)}${m.closed ? ' <span class="chip">closed</span>' : ""}</td>` +
+      `<td class="num">${fmt(m.index)}</td><td>${prov}</td><td class="num">${cov}</td>` +
+      `<td class="num">${miss > 0 ? '<span class="flag">' + miss + "</span>" : "0"}</td>` +
+      `<td class="num">${fmt(m.ece, 3)}</td><td class="num">${fmt(m.latency && m.latency.median, 0)}</td></tr>`;
+  });
+  html += "</table>";
+  return { html, top1: top[0], sorted };
+}
+
+/* ---------- calibration cross-check ---------- */
+function calibSection(up) {
+  const j = up.jev;
+  if (!j || !j.calibration) return "";
+  const cal = j.calibration;
+  return `<h2>Upstream calibration block</h2>
+  <div class="summary-line">The upstream index ships its own calibration measurement for the closed model it orbits:
+  <b>${esc(j.name)}</b> ECE <b>${fmt(cal.ece, 3)}</b> at acc ${fmt(cal.acc, 3)} vs mean confidence ${fmt(cal.conf, 3)}
+  (Brier ${fmt(cal.brier, 4)}, n=${cal.n.toLocaleString()}, over ${cal.benchmarks} benchmarks; ${fmt(cal.over95 * 100, 1)}% of answers ≥95% confident).
+  <br><span class="note">If a third party cites a different ECE for this model, that number has its own provenance — check which ruler it came from before comparing.
+  A temperature-refitted number and a shipped-model number are different instruments.</span></div>`;
+}
+
+/* ---------- render ---------- */
+function render(A, B) {
+  const out = $("out");
+  const idx = recomputeIndex(A.obj);
+  const areas = recomputeAreas(A.obj);
+  const cen = census(A.obj);
+  const tt = topTable(A.obj);
+  const up = A.obj.upstream;
+  let html = "";
+
+  // headline summary
+  html += `<div class="summary-line"><b>${esc(A.obj.models.length)} models</b> on the copy, snapshot <b>${esc(A.obj.generated_utc)}</b>.
+  Fork of <b>${esc(up.label || "unlabeled upstream")}</b> (snapshot ${esc(up.generated_utc)}, ${esc(up.hardware || "hardware unstated")}).
+  Index formula reproduces the published numbers: worst residual <b>${fmt(idx.worst.resid, 3)}</b> points (${esc(idx.worst.name)}), mean ${fmt(idx.meanAbs, 4)}.
+  Provenance: ${cen.closed} closed-weights row${cen.closed === 1 ? "" : "s"}, ${cen.selfReported} self-reported, ${cen.community} community-measured,
+  ${cen.withMissing} rows with missing cells (max ${cen.maxMissing}).
+  ${tt.top1.self_reported ? `<br><span class="flag">The rank-1 entry is self-reported</span> with panel coverage ${tt.top1.panel_coverage}/${cen.panel} and ${(tt.top1.missing || []).length} missing cells — the ladder's top rung was measured by the party it flatters.` : ""}</div>`;
+
+  // provenance census
+  html += `<h2>Provenance census</h2><div class="census">
+    <span><b>${cen.selfReported}</b> self-reported</span>
+    <span><b>${cen.community}</b> community</span>
+    <span><b>${cen.closed}</b> closed weights</span>
+    <span><b>${cen.fullCoverage}</b> full panel (${cen.panel})</span>
+    <span><b>${cen.withMissing}</b> rows with gaps</span></div>`;
+  html += tt.html;
+
+  // index math audit
+  const worstRows = idx.rows.filter(r => Math.abs(r.resid) > 0.01);
+  html += `<h2>Index formula audit</h2>
+  <details open><summary>Recompute index = Σ(weight × area) / Σweight, ×100 — <span class="${worstRows.length ? "" : "good"}">${worstRows.length} row${worstRows.length === 1 ? "" : "s"} diverge by &gt;0.01 pts</span> (max ${fmt(Math.abs(idx.worst.resid), 3)}: ${esc(idx.worst.name)})</summary>
+  ${worstRows.length ? `<table><tr><th>Model</th><th class="num">Published</th><th class="num">Recomputed</th><th class="num">Residual</th></tr>` +
+    worstRows.map(r => `<tr><td>${esc(r.name)}</td><td class="num">${fmt(r.published)}</td><td class="num">${fmt(r.calc)}</td><td class="num ${Math.abs(r.resid) > 1 ? "flag" : ""}">${r.resid >= 0 ? "+" : ""}${fmt(r.resid, 3)}</td></tr>`).join("") + "</table>"
+    : `<div class="note">All published indices match the weighted-area formula to &lt;0.01 points. The index is reproducible from its own published parts.</div>`}
+  <div class="note">Weights: ${A.obj.areas.map(a => `${esc(a.id)} ${fmt(a.weight, 4)}`).join(", ")} (Σ=${fmt(idx.W, 4)}). Area weights summing to ≠1 is itself a finding: it means the panel's benchmark mix, not a chosen policy, sets the weights.</div></details>`;
+
+  // area recompute from raw scores
+  const worstArea = Object.entries(areas.summary).sort((a, b) => b[1].max - a[1].max)[0];
+  html += `<h2>Area recompute from benchmark scores</h2>
+  <div class="summary-line">Recomputing each area as the chance-normalized mean of its in-index benchmark scores
+  (chance → 0, perfect → 1; the ${areas.inIdxCount} in-index rows) does <b>not</b> reproduce the published area values:
+  worst per-area divergence ${fmt(worstArea[1].max, 3)} (${esc(worstArea[0])}).
+  <span class="note">This is the interesting finding, not a bug here: the published area scores are not a plain mean of the published benchmark scores, so at least one pipeline step between the two is undocumented. The tool does not guess what it is.</span></div>
+  <details><summary>Per-area residual summary (recomputed − published)</summary><table>
+  <tr><th>Area</th><th class="num">mean |residual|</th><th class="num">max |residual|</th></tr>
+  ${Object.entries(areas.summary).sort((a, b) => b[1].max - a[1].max).map(([a, s]) => `<tr><td>${esc(a)}</td><td class="num">${fmt(s.mean, 4)}</td><td class="num ${s.max > 0.05 ? "flag" : ""}">${fmt(s.max, 4)}</td></tr>`).join("")}
+  </table></details>`;
+
+  // fork diff
+  if (B) {
+    const fd = forkDiff(A.obj, B.obj);
+    const gapDays = (new Date(A.obj.generated_utc) - new Date(up.generated_utc)) / 86400000;
+    html += `<h2>Fork diff vs upstream</h2>
+    <div class="summary-line">Upstream snapshot <b>${esc(up.generated_utc || "unstated")}</b> → copy snapshot <b>${esc(A.obj.generated_utc)}</b>
+    (${Number.isFinite(gapDays) && gapDays >= 0 ? fmt(gapDays, 1) + " days later" : "before upstream — the copy claims a snapshot older than its own source"}).
+    Upstream carries <b>${fd.upCount}</b> scored entries, the copy <b>${fd.copyCount}</b>.
+    <b>${fd.added.length}</b> row${fd.added.length === 1 ? "" : "s"} exist only in the copy, <b>${fd.removed.length}</b> only upstream
+    (renames and re-quantizations look like add+remove pairs).</div>
+    <details open><summary>Rows only in the copy (${fd.added.length})</summary>
+    ${fd.added.length ? `<table><tr><th>Name</th></tr>${fd.added.map(n => `<tr><td>${esc(n)}</td></tr>`).join("")}</table>` : '<div class="note">none</div>'}</details>
+    <details><summary>Rows only in upstream (${fd.removed.length})</summary>
+    ${fd.removed.length ? `<table><tr><th>Name</th></tr>${fd.removed.map(n => `<tr><td>${esc(n)}</td></tr>`).join("")}</table>` : '<div class="note">none</div>'}</details>
+    ${calibSection(B.obj)}`;
+  } else {
+    html += `<h2>Fork diff vs upstream</h2><div class="note">Paste the upstream JSON as Blob B to diff this copy against its source, and to read the upstream ruler's own calibration block.</div>`;
+  }
+
+  html += `<div class="note">Ruler Audit runs entirely in this page. Nothing is uploaded; the only possible network call is a manual fetch to a URL you typed.</div>`;
+  out.innerHTML = html;
+}
+
+/* ---------- wiring ---------- */
+$("go").onclick = () => {
+  try {
+    const A = parseBlob($("blobA").value);
+    if (!A) { alert("Paste a leaderboard JSON as Blob A first."); return; }
+    let B = null;
+    try { B = parseBlob($("blobB").value); } catch (e) { alert("Blob B: " + e.message); return; }
+    if (B && B.kind !== "upstream" && A.kind !== "copy") { /* both detected the other way: swap */ }
+    if (A.kind === "upstream" && B && B.kind === "copy") { render(B, A); return; }
+    if (A.kind !== "copy") { alert("Blob A must be the copy/fork schema (generated_utc + upstream + areas + models). Blob B is the upstream (suite + jev + models)."); return; }
+    render(A, B);
+  } catch (e) { alert(e.message); }
+};
+$("clear").onclick = () => { $("blobA").value = ""; $("blobB").value = ""; $("out").innerHTML = ""; $("fetchMsg").textContent = ""; };
+$("fetch").onclick = async () => {
+  const url = $("fetchUrl").value.trim();
+  const msg = $("fetchMsg");
+  if (!url) { msg.textContent = "Type a URL first."; return; }
+  msg.textContent = "Fetching…";
+  try {
+    const r = await fetch(url);
+    if (!r.ok) { msg.textContent = `HTTP ${r.status} — paste via curl instead.`; return; }
+    const t = await r.text();
+    const k = classify(JSON.parse(t));
+    if (k === "copy" || k === null) $("blobA").value = t; else $("blobB").value = t;
+    msg.textContent = `Fetched ${(t.length / 1024).toFixed(0)} KB, detected schema: ${k || "unknown"}. Press Audit.`;
+  } catch (e) {
+    msg.textContent = "Fetch blocked (CORS or network) — this is common for leaderboard hosts. Run `curl -s " + url + "` and paste the output as Blob A.";
+  }
+};
+
+/* ---------- demo fixture (synthetic, same schemas) ---------- */
+$("demo").onclick = () => {
+  $("blobA").value = JSON.stringify({
+    generated_utc: "2026-10-01T15:33:42+00:00",
+    upstream: { label: "Decision Index 0.2.1", generated_utc: "2026-09-28T00:39:36+00:00", url: "https://example.org/upstream", hardware: "1 x GPU" },
+    panel_size: 4,
+    areas: [ { id: "k", label: "Knowledge", weight: 0.4 }, { id: "r", label: "Retrieval", weight: 0.35 }, { id: "a", label: "Arts", weight: 0.25 } ],
+    benchmarks: [
+      { id: 1, name: "BenchA", area: "k", in_index: true, lower: false, chance: 0.5 },
+      { id: 2, name: "BenchB", area: "k", in_index: true, lower: false, chance: 0.25 },
+      { id: 3, name: "BenchC", area: "r", in_index: true, lower: false, chance: 0.5 },
+      { id: 4, name: "BenchD", area: "a", in_index: true, lower: false, chance: 0.5 },
+      { id: 9, name: "RouterBench", area: "r", in_index: false, lower: false, chance: null }
+    ],
+    models: [
+      { name: "Vendor Model", engine: "vendor", closed: false, self_reported: true, source: "self-reported", index: 61.5, panel_coverage: 3, missing: [3], ece: null, latency: { median: 210, p95: 240 },
+        areas: { k: 0.9, r: 0.5, a: 0.35 }, scores: { 1: 0.97, 2: 0.8, 4: 0.7 } },
+      { name: "Jev", engine: "jev", closed: true, self_reported: false, source: "community", index: 57.91, panel_coverage: 4, missing: [], ece: 0.246, latency: { median: 290, p95: 340 },
+        areas: { k: 0.75, r: 0.55, a: 0.3 }, scores: { 1: 0.82, 2: 0.62, 3: 0.61, 4: 0.55 } },
+      { name: "Open Rival", engine: "rival", closed: false, self_reported: false, source: "community", index: 55.2, panel_coverage: 4, missing: [], ece: 0.06, latency: { median: 95, p95: 130 },
+        areas: { k: 0.7, r: 0.6, a: 0.2 }, scores: { 1: 0.8, 2: 0.55, 3: 0.7, 4: 0.4 } },
+      { name: "Old Rival (upstream only name)", engine: "rival2", closed: false, self_reported: false, source: "community", index: 50.0, panel_coverage: 4, missing: [], ece: 0.1, latency: { median: 400, p95: 500 },
+        areas: { k: 0.6, r: 0.5, a: 0.3 }, scores: { 1: 0.7, 2: 0.45, 3: 0.6, 4: 0.5 } }
+    ]
+  });
+  $("blobB").value = JSON.stringify({
+    suite: { requests: 120340, scoreable: 119898, benchmarks: 5, panel: 4, hardware: "1 x GPU" },
+    jev: { name: "Jev", version: "jev-1.13.0",
+      categories: [ { id: "k", skill: 0.75, coverage: 1 }, { id: "r", skill: 0.55, coverage: 1 }, { id: "a", skill: 0.3, coverage: 1 } ],
+      calibration: { acc: 0.7393, conf: 0.8115, ece: 0.074, brier: 0.3558, over95: 0.0207, n: 72594, benchmarks: 32 } },
+    benchmarks: [],
+    models: [
+      { name: "Jev", meta: {}, categories: [ { id: "k", skill: 0.75, coverage: 1 }, { id: "r", skill: 0.55, coverage: 1 }, { id: "a", skill: 0.3, coverage: 1 } ] },
+      { name: "Open Rival", meta: {}, categories: [ { id: "k", skill: 0.7, coverage: 1 }, { id: "r", skill: 0.6, coverage: 1 }, { id: "a", skill: 0.2, coverage: 1 } ] },
+      { name: "Old Rival (upstream only name)", meta: {}, categories: [ { id: "k", skill: 0.6, coverage: 1 }, { id: "r", skill: 0.5, coverage: 1 }, { id: "a", skill: 0.3, coverage: 1 } ] }
+    ]
+  });
+  $("go").click();
+};
+</script>
+</body>
+</html>

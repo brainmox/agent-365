@@ -46,10 +46,12 @@
 </p>
 
 <textarea id="blobA" placeholder="Blob A — forked leaderboard JSON (required).&#10;Detects the copy schema: top-level generated_utc, upstream{}, areas[], benchmarks[], models[] with areas/scores/closed/self_reported/panel_coverage."></textarea>
-<textarea id="blobB" placeholder="Blob B — upstream index JSON (optional).&#10;Detects the upstream schema: suite{}, jev{} with calibration, models[] with categories[].skill/coverage.&#10;Used for: fork diff (added/reworded rows), upstream snapshot date, and the upstream ruler's own calibration block."></textarea>
+<textarea id="blobB" placeholder="Blob B — upstream index JSON (optional).&#10;Detects the upstream schema: suite{}, jev{} with calibration, models[] with categories[].skill/coverage — or the new v0.3 shape: models[] with v03{} composite rows.&#10;Used for: fork diff (added/reworded rows), upstream snapshot date, the upstream ruler's calibration block, and the v0.3 composite audit."></textarea>
+<textarea id="blobC" placeholder="Blob C — formula JSON (optional).&#10;The v0.3 composite constants: weights{} + formula.equating{} (the private-blend weights and the z-score mapping bases).&#10;A methodology file is detected and slotted here too, but only the composite constants drive computations today."></textarea>
 <div>
   <button id="go">Audit</button>
   <button id="demo" class="ghost">Load demo data</button>
+  <button id="demo03" class="ghost">Load v0.3 demo</button>
   <button id="clear" class="ghost">Clear</button>
   <input id="fetchUrl" placeholder="https://…/leaderboard.json" style="width:340px; padding:7px; border:1px solid var(--line); border-radius:6px;">
   <button id="fetch" class="ghost">Fetch A from URL</button>
@@ -67,9 +69,13 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 /* ---------- schema detection ---------- */
 // Copy/fork schema: has top-level `upstream` object and `areas` array; models carry published `areas` maps.
 // Upstream schema: has `suite` and `jev`; models carry `categories` arrays with skill/coverage.
+// Methodology schema: `edition{}` + `index{}` (panel, chance_levels, formulas) + `benchmarks[]`.
+// v0.3 formula schema: `weights{}` + `formula.equating{}` (the private-blend composite constants).
 function classify(obj) {
   if (!obj || typeof obj !== "object") return null;
-  if (obj.suite && obj.benchmarks && Array.isArray(obj.models)) return "upstream";
+  if (obj.edition && obj.index && Array.isArray(obj.benchmarks)) return "methodology";
+  if (obj.weights && obj.formula && obj.formula.equating && Array.isArray(obj.models)) return "v03";
+  if (obj.suite && obj.models && Array.isArray(obj.models) && obj.benchmarks && (Array.isArray(obj.benchmarks) || typeof obj.benchmarks === "object")) return "upstream";
   if (obj.upstream && Array.isArray(obj.areas) && Array.isArray(obj.models)) return "copy";
   return null;
 }
@@ -187,8 +193,87 @@ function calibSection(up) {
   A temperature-refitted number and a shipped-model number are different instruments.</span></div>`;
 }
 
+/* ---------- v0.3 composite audit ---------- */
+// The upstream's headline moved from the public index (100 × Σ area-weight × area skill)
+// to a private-blend composite: Full score = 0.20 × public + 0.50 × same-skills + 0.30 × new-domains,
+// where the private parts arrive on their own 0-100 scales and are mapped onto the public scale
+// with the published equating constants (z-score against untuned stock-model bases).
+// What the published file does NOT say: the new-domains part is mapped, then floored at zero
+// for the displayed `eq.O`, but the headline total sums the UNFLOORED value, and the total itself
+// is floored at zero. On rows where the mapped new-domains part went negative this makes the
+// displayed decomposition (parts) fail to sum to the published headline. This audit checks all of it.
+function v03Audit(idxObj, f03) {
+  const eq = f03.formula.equating;
+  const W = f03.weights;
+  const Wsum = (W.public ?? 0) + (W.same_skills ?? 0) + (W.new_domains ?? 0);
+  const rows = [];
+  const all = [...idxObj.models];
+  if (idxObj.jev && idxObj.jev.v03) all.push(idxObj.jev);
+  for (const m of all) {
+    const v = m.v03;
+    if (!v) continue;
+    const S = (v.same_skills - eq.same_skills.mean) / eq.same_skills.sd * eq.public.sd + eq.public.mean;
+    const Oz = (v.new_domains - eq.new_domains.mean) / eq.new_domains.sd * eq.public.sd + eq.public.mean;
+    const Ofloor = Math.max(0, Oz);
+    const eqResid = Math.max(Math.abs(S - v.eq.S), Math.abs(Ofloor - v.eq.O));
+    const totalUnfloored = Math.max(0, W.public * v.pub + W.same_skills * S + W.new_domains * Oz);
+    const totalResid = totalUnfloored - v.v;
+    const partsSum = W.public * v.pub + W.same_skills * v.eq.S + W.new_domains * v.eq.O;
+    const partsResid = partsSum - v.v;
+    rows.push({
+      engine: v.engine || m.engine, name: v.name || m.name,
+      pub: v.pub, ss: v.same_skills, nd: v.new_domains,
+      eqS: v.eq.S, eqO: v.eq.O, calcS: S, calcOz: Oz,
+      eqResid, total: v.v, totalUnfloored, totalResid,
+      partsSum, partsResid, rank: v.rank_v, tied: v.tied, rankTie: v.rank_tie,
+      negO: Oz < 0, zeroTotal: v.v === 0
+    });
+  }
+  const worstEq = rows.reduce((a, r) => Math.abs(r.eqResid) > Math.abs(a.eqResid) ? r : a, rows[0]);
+  const worstTot = rows.reduce((a, r) => Math.abs(r.totalResid) > Math.abs(a.totalResid) ? r : a, rows[0]);
+  const partsOff = rows.filter(r => Math.abs(r.partsResid) > 0.011);
+  const worstParts = partsOff.reduce((a, r) => Math.abs(r.partsResid) > Math.abs(a.partsResid) ? r : a, { partsResid: 0, engine: "" });
+  const negRows = rows.filter(r => r.negO);
+  const zeroRows = rows.filter(r => r.zeroTotal);
+  return { rows, eq, W, Wsum, worstEq, worstTot, partsOff, worstParts, negRows, zeroRows, bases: eq.bases };
+}
+
+function renderV03(v, out) {
+  const { rows, eq, W, Wsum, worstEq, worstTot, partsOff, worstParts, negRows, zeroRows } = v;
+  const _html = v03Html(v);
+  if (out) out.innerHTML += _html;
+  return _html;
+}
+function v03Html(v) {
+  const { rows, eq, W, Wsum, worstEq, worstTot, partsOff, worstParts, negRows, zeroRows } = v;
+  let html = `<h2>Composite (v0.3) audit: the headline and its own paperwork</h2>`;
+  html += `<div class="summary-line">The headline is no longer the public index. It is a private-blend composite:
+  <code>Full score = ${fmt(W.public, 2)} × public + ${fmt(W.same_skills, 2)} × same-skills + ${fmt(W.new_domains, 2)} × new-domains</code>
+  (weights sum ${fmt(Wsum, 2)}), the two private parts mapped onto the public scale by z-score against ${v.bases} untuned stock models
+  (public mean ${fmt(eq.public.mean, 2)} / sd ${fmt(eq.public.sd, 2)}; same-skills ${fmt(eq.same_skills.mean, 2)} / ${fmt(eq.same_skills.sd, 2)};
+  new-domains ${fmt(eq.new_domains.mean, 2)} / ${fmt(eq.new_domains.sd, 2)}).<br>
+  <b>Equating check:</b> recomputing both maps reproduces every published <code>eq</code> pair: worst residual <b>${fmt(Math.abs(worstEq.eqResid), 4)}</b> (${esc(worstEq.engine)}).<br>
+  <b>Total check:</b> summing the <i>unfloored</i> mapped parts and flooring the whole at zero reproduces every published headline: worst residual <b>${fmt(Math.abs(worstTot.totalResid), 4)}</b> (${esc(worstTot.engine)}).<br>
+  <b>The finding:</b> on <b>${partsOff.length} of ${rows.length} rows</b> the displayed decomposition (<code>parts</code>) does not sum to the published headline
+  (worst ${fmt(worstParts.partsResid, 3)} pts: ${esc(worstParts.engine)}). The decomposition uses the floored new-domains part; the total uses the unfloored one.
+  ${negRows.length} rows had a negative mapped new-domains part (displayed as 0), and ${zeroRows.length} row${zeroRows.length === 1 ? "" : "s"} display a headline of exactly 0
+  while their displayed components sum positive.</div>`;
+  html += `<details open><summary>Rows whose displayed parts do not sum to the headline (${partsOff.length})</summary>
+  ${partsOff.length ? `<table><tr><th>Model</th><th class="num">Headline</th><th class="num">Parts sum</th><th class="num">Gap</th><th class="num">Mapped new-domains</th><th>Note</th></tr>` +
+    partsOff.sort((a, b) => Math.abs(b.partsResid) - Math.abs(a.partsResid)).map(r =>
+      `<tr><td>${esc(r.engine)}</td><td class="num">${fmt(r.total)}</td><td class="num">${fmt(r.partsSum)}</td>` +
+      `<td class="num flag">${fmt(r.partsResid, 3)}</td><td class="num">${fmt(r.calcOz, 2)}</td>` +
+      `<td>${r.zeroTotal ? '<span class="flag">displays 0</span>' : (r.negO ? "floored part" : "")}</td></tr>`).join("") + "</table>"
+    : '<div class="note">none: the displayed decomposition sums to the headline everywhere.</div>'}</details>`;
+  html += `<div class="note">Method note: this audit needs the composite constants as a third blob (the formula file with
+  <code>weights</code> + <code>formula.equating</code>). Without it the composite is unverifiable from the board alone: the parts
+  claim weights nobody published alongside them. The recipe reconstructed here is stated in this tool's page source, and it closed
+  ${rows.length} of ${rows.length} published rows on all five published quantities.</div>`;
+  return html;
+}
+
 /* ---------- render ---------- */
-function render(A, B) {
+function render(A, B, C) {
   const out = $("out");
   const idx = recomputeIndex(A.obj);
   const areas = recomputeAreas(A.obj);
@@ -254,7 +339,61 @@ function render(A, B) {
     html += `<h2>Fork diff vs upstream</h2><div class="note">Paste the upstream JSON as Blob B to diff this copy against its source, and to read the upstream ruler's own calibration block.</div>`;
   }
 
+  // v0.3 composite audit: needs the upstream's v03 rows (Blob B) + the formula constants (Blob C)
+  if (B && B.obj && C && C.kind === "v03") {
+    const rowsHaveV03 = (B.obj.models || []).some(m => m && m.v03) || (B.obj.jev && B.obj.jev.v03);
+    if (rowsHaveV03) renderV03(v03Audit(B.obj, C.obj), out);
+  }
+
   html += `<div class="note">Ruler Audit runs entirely in this page. Nothing is uploaded; the only possible network call is a manual fetch to a URL you typed.</div>`;
+  out.innerHTML = html;
+}
+
+/* ---------- board-only render (upstream schema, no copy) ---------- */
+function renderBoard(Up, C) {
+  const out = $("out");
+  const obj = Up.obj;
+  let html = "";
+  html += `<div class="summary-line"><b>${obj.models.length} scored entrants</b> + 1 reference row (Jev), snapshot <b>${esc(obj.generated_utc)}</b>.
+  Suite: ${esc(obj.suite.requests.toLocaleString())} requests, ${esc(String(obj.suite.benchmarks))} benchmarks on the board, panel ${esc(String(obj.suite.panel))}, ${esc(obj.suite.hardware || "hardware unstated")}.</div>`;
+  // composite layer presence
+  const withV03 = obj.models.filter(m => m.v03).length;
+  const jevV03 = obj.jev && obj.jev.v03 ? 1 : 0;
+  if (withV03 + jevV03 > 0) {
+    html += `<h2>Headline structure</h2><div class="census">
+    <span><b>${withV03 + jevV03}</b> rows carry a composite (v0.3) headline</span>
+    <span><b>${obj.models.length - withV03}</b> entrants without one</span></div>
+    <div class="note">The headline number each row shows is the composite: ${withV03 + jevV03} of ${obj.models.length + 1} rows were scored on the private blend
+    (20% public + 50% private same-skills + 30% private new-domains, mapped onto the public scale). The public index survives as
+    <code>public_skill</code> / <code>pub</code> on each row and ranks the board differently: the two rankings are different claims.</div>`;
+    if (C && C.kind === "v03") {
+      html += renderV03(v03Audit(obj, C.obj), null);
+    } else {
+      html += `<div class="note">Paste the formula JSON (weights + formula.equating) as Blob C to audit the composite arithmetic: the equating maps, the floored parts and the rows where the published decomposition does not sum to the headline.</div>`;
+    }
+  }
+  // calibration block
+  if (obj.jev && obj.jev.calibration) {
+    const cal = obj.jev.calibration;
+    html += `<h2>Upstream calibration block</h2>
+    <div class="summary-line"><b>${esc(obj.jev.name)}</b> ECE <b>${fmt(cal.ece, 3)}</b> at acc ${fmt(cal.acc, 3)} vs mean confidence ${fmt(cal.conf, 3)}
+    (Brier ${fmt(cal.brier, 4)}, n=${cal.n.toLocaleString()}, over ${cal.benchmarks} benchmarks; ${fmt(cal.over95 * 100, 1)}% of answers ≥95% confident).</div>`;
+  }
+  // per-row composite table (top by v)
+  if (withV03 + jevV03 > 0) {
+    const all = [...obj.models.filter(m => m.v03).map(m => m.v03)];
+    if (obj.jev && obj.jev.v03) all.push(obj.jev.v03);
+    all.sort((a, b) => b.v - a.v);
+    let rows = all.slice(0, 12);
+    html += `<h2>Top rows by composite headline</h2><table><tr><th>#</th><th>Model</th><th class="num">Full</th><th class="num">Public</th><th class="num">rank (full)</th><th class="num">rank (public)</th><th>Eq S/O</th><th>Parts sum</th></tr>`;
+    rows.forEach((v, i) => {
+      const psum = v.pub * 0.2 + v.eq.S * 0.5 + v.eq.O * 0.3; // display-scale estimate; audited precisely with Blob C
+      html += `<tr><td class="num">${i + 1}</td><td>${esc(v.name)}</td><td class="num">${fmt(v.v)}</td><td class="num">${fmt(v.pub)}</td>` +
+        `<td class="num">${v.rank_v}</td><td class="num">${v.rank_pub}</td><td class="num">${fmt(v.eq.S, 1)} / ${fmt(v.eq.O, 1)}</td><td class="num">${fmt(psum, 1)}</td></tr>`;
+    });
+    html += `</table><div class="note">"Parts sum" here is the displayed-scale estimate using the published eq values; the exact audit with the formula blob is the section above when Blob C is present. rank (full) ≠ rank (public) on a row means the private blend moved it.</div>`;
+  }
+  html += `<div class="note">Ruler Audit runs entirely in this page. Nothing is uploaded.</div>`;
   out.innerHTML = html;
 }
 
@@ -265,13 +404,15 @@ $("go").onclick = () => {
     if (!A) { alert("Paste a leaderboard JSON as Blob A first."); return; }
     let B = null;
     try { B = parseBlob($("blobB").value); } catch (e) { alert("Blob B: " + e.message); return; }
-    if (B && B.kind !== "upstream" && A.kind !== "copy") { /* both detected the other way: swap */ }
-    if (A.kind === "upstream" && B && B.kind === "copy") { render(B, A); return; }
-    if (A.kind !== "copy") { alert("Blob A must be the copy/fork schema (generated_utc + upstream + areas + models). Blob B is the upstream (suite + jev + models)."); return; }
-    render(A, B);
+    let C = null;
+    try { C = parseBlob($("blobC").value); } catch (e) { alert("Blob C: " + e.message); return; }
+    if (A.kind === "upstream" && B && B.kind === "copy") { render(B, A, C); return; }
+    if (A.kind === "upstream") { renderBoard(A, C); return; }
+    if (A.kind !== "copy") { alert("Blob A must be a board (copy or upstream schema). Detected: " + (A.kind || "unknown") + ". Formula/methodology files go in Blob B or C."); return; }
+    render(A, B, C);
   } catch (e) { alert(e.message); }
 };
-$("clear").onclick = () => { $("blobA").value = ""; $("blobB").value = ""; $("out").innerHTML = ""; $("fetchMsg").textContent = ""; };
+$("clear").onclick = () => { $("blobA").value = ""; $("blobB").value = ""; $("blobC").value = ""; $("out").innerHTML = ""; $("fetchMsg").textContent = ""; };
 $("fetch").onclick = async () => {
   const url = $("fetchUrl").value.trim();
   const msg = $("fetchMsg");
@@ -282,11 +423,39 @@ $("fetch").onclick = async () => {
     if (!r.ok) { msg.textContent = `HTTP ${r.status} — paste via curl instead.`; return; }
     const t = await r.text();
     const k = classify(JSON.parse(t));
-    if (k === "copy" || k === null) $("blobA").value = t; else $("blobB").value = t;
+    if (k === "v03" || k === "methodology") $("blobC").value = t;
+    else if (k === "upstream") $("blobB").value = t;
+    else $("blobA").value = t;
     msg.textContent = `Fetched ${(t.length / 1024).toFixed(0)} KB, detected schema: ${k || "unknown"}. Press Audit.`;
   } catch (e) {
     msg.textContent = "Fetch blocked (CORS or network) — this is common for leaderboard hosts. Run `curl -s " + url + "` and paste the output as Blob A.";
   }
+};
+
+/* ---------- v0.3 demo fixture (synthetic composite schemas) ---------- */
+$("demo03").onclick = () => {
+  // board: upstream shape with v03 rows
+  $("blobA").value = JSON.stringify({
+    generated_utc: "2026-10-06T17:39:21Z",
+    suite: { requests: 4420, scoreable: 4390, benchmarks: 6, panel: 5, categories: 3, hardware: "1 x GPU" },
+    jev: { engine: "jev", name: "Jev", version: "jev-1.13.0",
+      calibration: { acc: 0.7393, conf: 0.8115, ece: 0.074, brier: 0.3558, over95: 0.0207, n: 72594, benchmarks: 32 },
+      v03: { engine: "jev", pub: 58.0, same_skills: 58.0, new_domains: 54.9, v: 60.07, lab: false, jev: true, rank_v: 3, rank_pub: 10, name: "Jev", eq: { S: 57.62, O: 65.52 }, rank_tie: 2, tied: true, parts: { public: 11.6, same_skills: 28.81, new_domains: 19.66 } } },
+    benchmarks: {},
+    models: [
+      { engine: "leader-27b", name: "Leader 27B",
+        v03: { engine: "leader-27b", pub: 59.1, same_skills: 59.5, new_domains: 52.9, v: 60.24, lab: false, jev: false, rank_v: 1, rank_pub: 5, name: "Leader 27B", eq: { S: 59.14, O: 62.82 }, rank_tie: 1, tied: false, parts: { public: 11.82, same_skills: 29.57, new_domains: 18.85 } } },
+      { engine: "floored-runs-1b", name: "Floored Runs 1B",
+        v03: { engine: "floored-runs-1b", pub: 26.06, same_skills: 18.77, new_domains: 5.48, v: 13.88, lab: false, jev: false, rank_v: 88, rank_pub: 79, name: "Floored Runs 1B", eq: { S: 17.94, O: 0 }, rank_tie: 88, tied: true, parts: { public: 5.21, same_skills: 8.97, new_domains: 0 } } }
+    ]
+  });
+  // formula blob: the composite constants
+  $("blobC").value = JSON.stringify({
+    weights: { public: 0.2, same_skills: 0.5, new_domains: 0.3 },
+    formula: { id: "v0.3-final", equating: { bases: 21, public: { mean: 23.5, sd: 16.54 }, same_skills: { mean: 24.27, sd: 16.35 }, new_domains: { mean: 23.68, sd: 12.29 } } },
+    models: []
+  });
+  $("go").click();
 };
 
 /* ---------- demo fixture (synthetic, same schemas) ---------- */

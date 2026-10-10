@@ -1,0 +1,1828 @@
+{
+ "manifest": "librispeech_dummy_40.json",
+ "clips": 40,
+ "audio_seconds": 280.1,
+ "modes": {
+  "bare": {
+   "aggregate": {
+    "errors": 60,
+    "ref_words": 678,
+    "substitutions": 48,
+    "deletions": 9,
+    "insertions": 3,
+    "wer": 0.0885
+   },
+   "median_ttft_ms": 227.5,
+   "wall_seconds": 13.9,
+   "per_clip": [
+    {
+     "id": "1272-128104-0000",
+     "score": {
+      "errors": 2,
+      "ref_words": 17,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1176
+     },
+     "keywords": null,
+     "hyp": "Mr. Quilder is the apostle of the middle classes, and we are glad to welcome his gospel.",
+     "pairs": [
+      [
+       "QUILTER",
+       "QUILDER"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0001",
+     "score": {
+      "errors": 2,
+      "ref_words": 10,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.2
+     },
+     "keywords": null,
+     "hyp": "Nor is Mr. Coulter's manner less interesting than his matter.",
+     "pairs": [
+      [
+       "QUILTER'S",
+       "COULTER'S"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0002",
+     "score": {
+      "errors": 2,
+      "ref_words": 32,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 1,
+      "wer": 0.0625
+     },
+     "keywords": null,
+     "hyp": "He tells us that at this festive season of the year, with Christmas and a roast beef looming before us, similees drawn from eating and its results occur most readily to the mind.",
+     "pairs": [
+      [
+       "SIMILES",
+       "SIMILEES"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0003",
+     "score": {
+      "errors": 2,
+      "ref_words": 24,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0833
+     },
+     "keywords": null,
+     "hyp": "He has graved doubts whether Sir Frederick Latin's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+     "pairs": [
+      [
+       "LEIGHTON'S",
+       "LATIN'S"
+      ],
+      [
+       "GRAVE",
+       "GRAVED"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0004",
+     "score": {
+      "errors": 14,
+      "ref_words": 68,
+      "substitutions": 11,
+      "deletions": 2,
+      "insertions": 1,
+      "wer": 0.2059
+     },
+     "keywords": null,
+     "hyp": "Linell's pictures are a sort of upguards and atom paintings, and Mason's exquisite idols are as national as a jingo poem. Mr. Burke at Foster's landscapes smile at one much in the same way that Mr. Carker is to flash his teeth. And Mr. Joan Collier gives his sister a cheerful slap on the back, before he says, like a shampooer in a Turkish bath, \"Next man!\"",
+     "pairs": [
+      [
+       "SITTER",
+       "SISTER"
+      ],
+      [
+       "JOHN",
+       "JOAN"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ],
+      [
+       "USED",
+       "IS"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ],
+      [
+       "BIRKET",
+       "AT"
+      ],
+      [
+       "MISTER",
+       "BURKE"
+      ],
+      [
+       "IDYLLS",
+       "IDOLS"
+      ],
+      [
+       "EM",
+       "ATOM"
+      ],
+      [
+       "AT",
+       null
+      ],
+      [
+       "GUARDS",
+       "UPGUARDS"
+      ],
+      [
+       "UP",
+       null
+      ],
+      [
+       "LINNELL'S",
+       "LINELL'S"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0005",
+     "score": {
+      "errors": 0,
+      "ref_words": 18,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "It is obviously unnecessary for us to point out how luminous these criticisms are, how delicate in expression.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0006",
+     "score": {
+      "errors": 2,
+      "ref_words": 12,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1667
+     },
+     "keywords": null,
+     "hyp": "On the general principles of art Mr. Crilter writes with equal lucidity.",
+     "pairs": [
+      [
+       "QUILTER",
+       "CRILTER"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0007",
+     "score": {
+      "errors": 0,
+      "ref_words": 19,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "Painting, he tells us, is of a different quality to mathematics, and finish in art is adding more fact.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0008",
+     "score": {
+      "errors": 2,
+      "ref_words": 11,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.1818
+     },
+     "keywords": null,
+     "hyp": "As for etchings, there are two kinds, British and foreign.",
+     "pairs": [
+      [
+       "OF",
+       null
+      ],
+      [
+       "THEY",
+       "THERE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0009",
+     "score": {
+      "errors": 1,
+      "ref_words": 43,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0233
+     },
+     "keywords": null,
+     "hyp": "He laments most bitterly the divorce that has been made between decorative art and what we usually call pictures. Makes a customary appeal to the last judgment and reminds us that in the great days of art Michael Angelo was the furnishing upholsterer.",
+     "pairs": [
+      [
+       "THE",
+       "A"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0010",
+     "score": {
+      "errors": 1,
+      "ref_words": 15,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0667
+     },
+     "keywords": null,
+     "hyp": "Near the fire, and the ornaments fred brought home from India on the Mental Board.",
+     "pairs": [
+      [
+       "MANTEL",
+       "MENTAL"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0011",
+     "score": {
+      "errors": 1,
+      "ref_words": 34,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0294
+     },
+     "keywords": null,
+     "hyp": "In fact, he is quite severe on Mr. Ruskin, for not recognising that \"a picture should denote the frailty of man,\" and remarks with pleasing courtesy and felicitous grace that \"many phases of feeling.\"",
+     "pairs": [
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0012",
+     "score": {
+      "errors": 0,
+      "ref_words": 9,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "Only, unfortunately, his own work never does get good.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0013",
+     "score": {
+      "errors": 3,
+      "ref_words": 18,
+      "substitutions": 3,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1667
+     },
+     "keywords": null,
+     "hyp": "Mr. Coulter has missed his chance, for he has failed even to make himself the tuber of painting.",
+     "pairs": [
+      [
+       "TUPPER",
+       "TUBER"
+      ],
+      [
+       "QUILTER",
+       "COULTER"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0014",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "By Harry Quilter M. A.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0000",
+     "score": {
+      "errors": 6,
+      "ref_words": 26,
+      "substitutions": 4,
+      "deletions": 2,
+      "insertions": 0,
+      "wer": 0.2308
+     },
+     "keywords": null,
+     "hyp": "\"Because you're asleeping instead of conquering, the lovely Rose Princess has become a fiddle with a bow. O'Poor Shaggy sits there a cooing dove.\"",
+     "pairs": [
+      [
+       "POOR",
+       "O'POOR"
+      ],
+      [
+       "WHILE",
+       null
+      ],
+      [
+       "WITHOUT",
+       "WITH"
+      ],
+      [
+       "SLEEPING",
+       "ASLEEPING"
+      ],
+      [
+       "WERE",
+       "YOU'RE"
+      ],
+      [
+       "YOU",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0001",
+     "score": {
+      "errors": 0,
+      "ref_words": 28,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "\"He has gone and gone for good,\" answered Polychrome, who had managed to squeeze into the room beside the dragon, and had witnessed the occurrences with much interest.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0002",
+     "score": {
+      "errors": 0,
+      "ref_words": 31,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "I have remained a prisoner only because I wished to be one.\" And with this he stepped forward and burst the stout chains as easily as if they had been threads.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0003",
+     "score": {
+      "errors": 1,
+      "ref_words": 15,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0667
+     },
+     "keywords": null,
+     "hyp": "The little girl had been asleep, but she heard the wraps and opened the door.",
+     "pairs": [
+      [
+       "RAPS",
+       "WRAPS"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0004",
+     "score": {
+      "errors": 2,
+      "ref_words": 13,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.1538
+     },
+     "keywords": null,
+     "hyp": "The king has flooded disgrace and your friends are asking for you.",
+     "pairs": [
+      [
+       "IN",
+       "FLOODED"
+      ],
+      [
+       "FLED",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0005",
+     "score": {
+      "errors": 0,
+      "ref_words": 15,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "I begged Ruggedo long ago to send him away, but he would not do so.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0006",
+     "score": {
+      "errors": 0,
+      "ref_words": 14,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "I also offered to help your brother to escape, but he would not go.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0007",
+     "score": {
+      "errors": 0,
+      "ref_words": 10,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "He eats and sleeps very steadily, replied the new king.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0008",
+     "score": {
+      "errors": 0,
+      "ref_words": 9,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "\"I hope he doesn't work too hard,\" said Shaggy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0009",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "He doesn't work at all.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0010",
+     "score": {
+      "errors": 0,
+      "ref_words": 30,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "In fact, there is nothing he can do in these dominions as well as our nomes, whose numbers are so great that it worries us to keep them all busy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0011",
+     "score": {
+      "errors": 3,
+      "ref_words": 4,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 1,
+      "wer": 0.75
+     },
+     "keywords": null,
+     "hyp": "Not exactly, we've turned calico.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ],
+      [
+       "RETURNED",
+       "TURNED"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0012",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "Where is my brother now?",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0013",
+     "score": {
+      "errors": 1,
+      "ref_words": 6,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1667
+     },
+     "keywords": null,
+     "hyp": "inquired Sheggy. \"In the metal forest!\"",
+     "pairs": [
+      [
+       "SHAGGY",
+       "SHEGGY"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0014",
+     "score": {
+      "errors": 0,
+      "ref_words": 3,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "Where is that?",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0015",
+     "score": {
+      "errors": 2,
+      "ref_words": 17,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1176
+     },
+     "keywords": null,
+     "hyp": "\"The middle forest is in the great domed cavern. The largest in all our dominions,\" replied Calico.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ],
+      [
+       "METAL",
+       "MIDDLE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0016",
+     "score": {
+      "errors": 1,
+      "ref_words": 2,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.5
+     },
+     "keywords": null,
+     "hyp": "Calico hesitated.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0017",
+     "score": {
+      "errors": 0,
+      "ref_words": 16,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "However, if we look sharp, we may be able to discover one of these secret ways.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0018",
+     "score": {
+      "errors": 2,
+      "ref_words": 7,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.2857
+     },
+     "keywords": null,
+     "hyp": "\"Oh, no, I'm creature he didn't.",
+     "pairs": [
+      [
+       "SURE",
+       "CREATURE"
+      ],
+      [
+       "QUITE",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0019",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "That's funny, remarked Betsy thoughtfully.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0020",
+     "score": {
+      "errors": 5,
+      "ref_words": 13,
+      "substitutions": 3,
+      "deletions": 2,
+      "insertions": 0,
+      "wer": 0.3846
+     },
+     "keywords": null,
+     "hyp": "I don't believe Anne knew any magic, or she diverted before.",
+     "pairs": [
+      [
+       "IT",
+       "DIVERTED"
+      ],
+      [
+       "WORKED",
+       "SHE"
+      ],
+      [
+       "HAVE",
+       null
+      ],
+      [
+       "SHE'D",
+       null
+      ],
+      [
+       "ANN",
+       "ANNE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0021",
+     "score": {
+      "errors": 0,
+      "ref_words": 6,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": null,
+     "hyp": "\"I do not know,\" confessed Shaggy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0022",
+     "score": {
+      "errors": 1,
+      "ref_words": 3,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.3333
+     },
+     "keywords": null,
+     "hyp": "True, agreed Calico.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0023",
+     "score": {
+      "errors": 2,
+      "ref_words": 22,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0909
+     },
+     "keywords": null,
+     "hyp": "Calico went to the big gong and pounded on it just as Vargodo used to do, but no one answered the summons.",
+     "pairs": [
+      [
+       "RUGGEDO",
+       "VARGODO"
+      ],
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0024",
+     "score": {
+      "errors": 2,
+      "ref_words": 38,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0526
+     },
+     "keywords": null,
+     "hyp": "Having returned to the royal cavern, Calico first pounded the gong, and then sat in the throne, wearing rigidos discarded, ruby crown, and holding in his hand the sceptre which Ruggedo had so often thrown at his head.",
+     "pairs": [
+      [
+       "RUGGEDO'S",
+       "RIGIDOS"
+      ],
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    }
+   ]
+  },
+  "oracle_keywords": {
+   "aggregate": {
+    "errors": 51,
+    "ref_words": 678,
+    "substitutions": 41,
+    "deletions": 8,
+    "insertions": 2,
+    "wer": 0.0752
+   },
+   "median_ttft_ms": 218.9,
+   "wall_seconds": 10.8,
+   "per_clip": [
+    {
+     "id": "1272-128104-0000",
+     "score": {
+      "errors": 1,
+      "ref_words": 17,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0588
+     },
+     "keywords": [
+      "APOSTLE",
+      "CLASSES",
+      "QUILTER"
+     ],
+     "hyp": "Mr. Quilter is the Apostle of the Middle Classes, and we are glad to welcome his Gospel.",
+     "pairs": [
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0001",
+     "score": {
+      "errors": 1,
+      "ref_words": 10,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1
+     },
+     "keywords": [
+      "INTERESTING",
+      "QUILTER'S",
+      "MANNER"
+     ],
+     "hyp": "Nor is Mr. Quilter's manner less interesting than his matter.",
+     "pairs": [
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0002",
+     "score": {
+      "errors": 2,
+      "ref_words": 32,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0625
+     },
+     "keywords": [
+      "CHRISTMAS",
+      "FESTIVE",
+      "LOOMING"
+     ],
+     "hyp": "He tells us that at this festive season of the year, with Christmas and Rose Beef looming before us, similees drawn from eating and its results occur most readily to the mind.",
+     "pairs": [
+      [
+       "SIMILES",
+       "SIMILEES"
+      ],
+      [
+       "ROAST",
+       "ROSE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0003",
+     "score": {
+      "errors": 1,
+      "ref_words": 24,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0417
+     },
+     "keywords": [
+      "LEIGHTON'S",
+      "FREDERICK",
+      "DISCOVER"
+     ],
+     "hyp": "He has graved doubts whether Sir Frederick Leighton's work is really Greek after all, and can discover in it but little of Rocky Ithaca.",
+     "pairs": [
+      [
+       "GRAVE",
+       "GRAVED"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0004",
+     "score": {
+      "errors": 13,
+      "ref_words": 68,
+      "substitutions": 10,
+      "deletions": 2,
+      "insertions": 1,
+      "wer": 0.1912
+     },
+     "keywords": [
+      "LANDSCAPES",
+      "EXQUISITE",
+      "LINNELL'S"
+     ],
+     "hyp": "Linnell's pictures are a sort of upguards and atom paintings, and Mason's exquisite idols are as national as a jingo poem. Mr. Burke at Foster's Landscapes smile at one much in the same way that Mr. Carker is to flash his teeth. And Mr. Joan Collier gives his sister a cheerful slap on the back, before he says, like a shampooer in a Turkish bath, \"Next man!\"",
+     "pairs": [
+      [
+       "SITTER",
+       "SISTER"
+      ],
+      [
+       "JOHN",
+       "JOAN"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ],
+      [
+       "USED",
+       "IS"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ],
+      [
+       "BIRKET",
+       "AT"
+      ],
+      [
+       "MISTER",
+       "BURKE"
+      ],
+      [
+       "IDYLLS",
+       "IDOLS"
+      ],
+      [
+       "EM",
+       "ATOM"
+      ],
+      [
+       "AT",
+       null
+      ],
+      [
+       "GUARDS",
+       "UPGUARDS"
+      ],
+      [
+       "UP",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0005",
+     "score": {
+      "errors": 0,
+      "ref_words": 18,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "UNNECESSARY",
+      "CRITICISMS",
+      "EXPRESSION"
+     ],
+     "hyp": "It is obviously unnecessary for us to point out how luminous these criticisms are, how delicate in expression.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0006",
+     "score": {
+      "errors": 2,
+      "ref_words": 12,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1667
+     },
+     "keywords": [
+      "PRINCIPLES",
+      "LUCIDITY",
+      "GENERAL"
+     ],
+     "hyp": "On the General Principles of Art Mr. Crilter writes with equal lucidity.",
+     "pairs": [
+      [
+       "QUILTER",
+       "CRILTER"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0007",
+     "score": {
+      "errors": 0,
+      "ref_words": 19,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "MATHEMATICS",
+      "DIFFERENT",
+      "PAINTING"
+     ],
+     "hyp": "Painting, he tells us, is of a different quality to mathematics, and finish in art is adding more fact.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0008",
+     "score": {
+      "errors": 2,
+      "ref_words": 11,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.1818
+     },
+     "keywords": [
+      "ETCHINGS",
+      "BRITISH",
+      "FOREIGN"
+     ],
+     "hyp": "As for etchings, there are two kinds, British and foreign.",
+     "pairs": [
+      [
+       "OF",
+       null
+      ],
+      [
+       "THEY",
+       "THERE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0009",
+     "score": {
+      "errors": 1,
+      "ref_words": 43,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0233
+     },
+     "keywords": [
+      "UPHOLSTERER",
+      "DECORATIVE",
+      "FURNISHING"
+     ],
+     "hyp": "He laments most bitterly the divorce that has been made between decorative art and what we usually call pictures. Makes a customary appeal to the last judgment and reminds us that in the great days of art Michael Angelo was the furnishing upholsterer.",
+     "pairs": [
+      [
+       "THE",
+       "A"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0010",
+     "score": {
+      "errors": 2,
+      "ref_words": 15,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.1333
+     },
+     "keywords": [
+      "ORNAMENTS",
+      "BROUGHT",
+      "MANTEL"
+     ],
+     "hyp": "Near the fire any ornaments fred brought home from India on the mantel board.",
+     "pairs": [
+      [
+       "THE",
+       "ANY"
+      ],
+      [
+       "AND",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0011",
+     "score": {
+      "errors": 1,
+      "ref_words": 34,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0294
+     },
+     "keywords": [
+      "RECOGNISING",
+      "FELICITOUS",
+      "COURTESY"
+     ],
+     "hyp": "In fact, he is quite severe on Mr. Ruskin, for not recognising that \"a picture should denote the frailty of man,\" and remarks with pleasing courtesy and felicitous grace that \"many phases of feeling.\"",
+     "pairs": [
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0012",
+     "score": {
+      "errors": 0,
+      "ref_words": 9,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "UNFORTUNATELY",
+      "NEVER",
+      "DOES"
+     ],
+     "hyp": "Only, unfortunately, his own work never does get good.",
+     "pairs": []
+    },
+    {
+     "id": "1272-128104-0013",
+     "score": {
+      "errors": 2,
+      "ref_words": 18,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1111
+     },
+     "keywords": [
+      "PAINTING",
+      "HIMSELF",
+      "QUILTER"
+     ],
+     "hyp": "Mr Quilter has missed his chance, for he has failed even to make himself the tuber of painting.",
+     "pairs": [
+      [
+       "TUPPER",
+       "TUBER"
+      ],
+      [
+       "MISTER",
+       "MR"
+      ]
+     ]
+    },
+    {
+     "id": "1272-128104-0014",
+     "score": {
+      "errors": 2,
+      "ref_words": 5,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.4
+     },
+     "keywords": [
+      "QUILTER",
+      "HARRY",
+      "BY"
+     ],
+     "hyp": "By Harry QUILTER M.A.",
+     "pairs": [
+      [
+       "A",
+       "MA"
+      ],
+      [
+       "M",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0000",
+     "score": {
+      "errors": 3,
+      "ref_words": 26,
+      "substitutions": 3,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1154
+     },
+     "keywords": [
+      "CONQUERING",
+      "PRINCESS",
+      "SLEEPING"
+     ],
+     "hyp": "Because you are sleeping instead of conquering, the lovely Rose Princess has become a fiddle without a bow. Oh, poor Shaggy, sits there a cool dove!\"",
+     "pairs": [
+      [
+       "COOING",
+       "COOL"
+      ],
+      [
+       "WHILE",
+       "OH"
+      ],
+      [
+       "WERE",
+       "ARE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0001",
+     "score": {
+      "errors": 0,
+      "ref_words": 28,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "OCCURRENCES",
+      "POLYCHROME",
+      "WITNESSED"
+     ],
+     "hyp": "\"He has gone and gone for good,\" answered Polychrome, who had managed to squeeze into the room beside the dragon, and had witnessed the occurrences with much interest.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0002",
+     "score": {
+      "errors": 0,
+      "ref_words": 31,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "PRISONER",
+      "REMAINED",
+      "BECAUSE"
+     ],
+     "hyp": "I have remained a prisoner only because I wished to be one.\" And with this he stepped forward and burst the stout chains as easily as if they had been threads.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0003",
+     "score": {
+      "errors": 1,
+      "ref_words": 15,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0667
+     },
+     "keywords": [
+      "ASLEEP",
+      "LITTLE",
+      "OPENED"
+     ],
+     "hyp": "The little girl had been asleep, but she heard the wraps and opened the door.",
+     "pairs": [
+      [
+       "RAPS",
+       "WRAPS"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0004",
+     "score": {
+      "errors": 2,
+      "ref_words": 13,
+      "substitutions": 1,
+      "deletions": 1,
+      "insertions": 0,
+      "wer": 0.1538
+     },
+     "keywords": [
+      "DISGRACE",
+      "FRIENDS",
+      "ASKING"
+     ],
+     "hyp": "The king has flooded disgrace and your friends are asking for you.",
+     "pairs": [
+      [
+       "IN",
+       "FLOODED"
+      ],
+      [
+       "FLED",
+       null
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0005",
+     "score": {
+      "errors": 0,
+      "ref_words": 15,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "RUGGEDO",
+      "BEGGED",
+      "WOULD"
+     ],
+     "hyp": "I begged Ruggedo long ago to send him away, but he would not do so.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0006",
+     "score": {
+      "errors": 0,
+      "ref_words": 14,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "BROTHER",
+      "OFFERED",
+      "ESCAPE"
+     ],
+     "hyp": "I also offered to help your brother to escape, but he would not go.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0007",
+     "score": {
+      "errors": 0,
+      "ref_words": 10,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "STEADILY",
+      "REPLIED",
+      "SLEEPS"
+     ],
+     "hyp": "He eats and sleeps very steadily, replied the new king.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0008",
+     "score": {
+      "errors": 0,
+      "ref_words": 9,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "DOESN'T",
+      "SHAGGY",
+      "HARD"
+     ],
+     "hyp": "\"I hope he doesn't work too hard,\" said Shaggy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0009",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "DOESN'T",
+      "WORK",
+      "ALL"
+     ],
+     "hyp": "He doesn't work at all.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0010",
+     "score": {
+      "errors": 0,
+      "ref_words": 30,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "DOMINIONS",
+      "NOTHING",
+      "NUMBERS"
+     ],
+     "hyp": "In fact, there is nothing he can do in these dominions as well as our nomes, whose numbers are so great that it worries us to keep them all busy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0011",
+     "score": {
+      "errors": 0,
+      "ref_words": 4,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "RETURNED",
+      "EXACTLY",
+      "KALIKO"
+     ],
+     "hyp": "Not exactly, returned Kaliko.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0012",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "BROTHER",
+      "WHERE",
+      "NOW"
+     ],
+     "hyp": "Where is my brother now?",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0013",
+     "score": {
+      "errors": 0,
+      "ref_words": 6,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "INQUIRED",
+      "FOREST",
+      "SHAGGY"
+     ],
+     "hyp": "inquired Shaggy in the metal forest.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0014",
+     "score": {
+      "errors": 0,
+      "ref_words": 3,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "WHERE",
+      "THAT",
+      "IS"
+     ],
+     "hyp": "Where is that?",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0015",
+     "score": {
+      "errors": 2,
+      "ref_words": 17,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.1176
+     },
+     "keywords": [
+      "DOMINIONS",
+      "LARGEST",
+      "REPLIED"
+     ],
+     "hyp": "\"The middle forest is in the great domed cavern. The largest in all our dominions,\" replied Calico.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ],
+      [
+       "METAL",
+       "MIDDLE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0016",
+     "score": {
+      "errors": 1,
+      "ref_words": 2,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.5
+     },
+     "keywords": [
+      "HESITATED",
+      "KALIKO"
+     ],
+     "hyp": "Calico hesitated.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0017",
+     "score": {
+      "errors": 0,
+      "ref_words": 16,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "DISCOVER",
+      "HOWEVER",
+      "SECRET"
+     ],
+     "hyp": "However, if we look sharp, we may be able to discover one of these secret ways.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0018",
+     "score": {
+      "errors": 0,
+      "ref_words": 7,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "DIDN'T",
+      "QUITE",
+      "SURE"
+     ],
+     "hyp": "\"Oh, no, I'm quite sure he didn't.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0019",
+     "score": {
+      "errors": 0,
+      "ref_words": 5,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "THOUGHTFULLY",
+      "REMARKED",
+      "THAT'S"
+     ],
+     "hyp": "That's funny, remarked Betsy thoughtfully.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0020",
+     "score": {
+      "errors": 5,
+      "ref_words": 13,
+      "substitutions": 3,
+      "deletions": 2,
+      "insertions": 0,
+      "wer": 0.3846
+     },
+     "keywords": [
+      "BELIEVE",
+      "BEFORE",
+      "WORKED"
+     ],
+     "hyp": "I don't believe Anne knew any magic, or she diverted before.",
+     "pairs": [
+      [
+       "IT",
+       "DIVERTED"
+      ],
+      [
+       "WORKED",
+       "SHE"
+      ],
+      [
+       "HAVE",
+       null
+      ],
+      [
+       "SHE'D",
+       null
+      ],
+      [
+       "ANN",
+       "ANNE"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0021",
+     "score": {
+      "errors": 0,
+      "ref_words": 6,
+      "substitutions": 0,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0
+     },
+     "keywords": [
+      "CONFESSED",
+      "SHAGGY",
+      "KNOW"
+     ],
+     "hyp": "\"I do not know,\" confessed Shaggy.",
+     "pairs": []
+    },
+    {
+     "id": "1272-135031-0022",
+     "score": {
+      "errors": 1,
+      "ref_words": 3,
+      "substitutions": 1,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.3333
+     },
+     "keywords": [
+      "AGREED",
+      "KALIKO",
+      "TRUE"
+     ],
+     "hyp": "True, agreed Calico.",
+     "pairs": [
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0023",
+     "score": {
+      "errors": 2,
+      "ref_words": 22,
+      "substitutions": 2,
+      "deletions": 0,
+      "insertions": 0,
+      "wer": 0.0909
+     },
+     "keywords": [
+      "ANSWERED",
+      "POUNDED",
+      "RUGGEDO"
+     ],
+     "hyp": "Calico went to the big gong and pounded on it just as Vargodo used to do, but no one answered the summons.",
+     "pairs": [
+      [
+       "RUGGEDO",
+       "VARGODO"
+      ],
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    },
+    {
+     "id": "1272-135031-0024",
+     "score": {
+      "errors": 4,
+      "ref_words": 38,
+      "substitutions": 3,
+      "deletions": 0,
+      "insertions": 1,
+      "wer": 0.1053
+     },
+     "keywords": [
+      "DISCARDED",
+      "RUGGEDO'S",
+      "RETURNED"
+     ],
+     "hyp": "Having returned to the royal cavern, Calico first pounded the gong and then sat in the throne, wearing rigidos discarded, ruby crown, and holding in his hand the sceptre which Ruggedo's head had so often thrown at his head.",
+     "pairs": [
+      [
+       "RUGGEDO",
+       "HEAD"
+      ],
+      [
+       "RUGGEDO'S",
+       "RIGIDOS"
+      ],
+      [
+       "KALIKO",
+       "CALICO"
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "bare_error_counts": {
+  "MISTER": 8,
+  "KALIKO": 6,
+  "QUILTER": 3,
+  "QUILTER'S": 1,
+  "SIMILES": 1,
+  "LEIGHTON'S": 1,
+  "GRAVE": 1,
+  "SITTER": 1,
+  "JOHN": 1,
+  "USED": 1,
+  "BIRKET": 1,
+  "IDYLLS": 1,
+  "EM": 1,
+  "AT": 1,
+  "GUARDS": 1,
+  "UP": 1,
+  "LINNELL'S": 1,
+  "OF": 1,
+  "THEY": 1,
+  "THE": 1,
+  "MANTEL": 1,
+  "TUPPER": 1,
+  "POOR": 1,
+  "WHILE": 1,
+  "WITHOUT": 1,
+  "SLEEPING": 1,
+  "WERE": 1,
+  "YOU": 1,
+  "RAPS": 1,
+  "IN": 1,
+  "FLED": 1,
+  "RETURNED": 1,
+  "SHAGGY": 1,
+  "METAL": 1,
+  "SURE": 1,
+  "QUITE": 1,
+  "IT": 1,
+  "WORKED": 1,
+  "HAVE": 1,
+  "SHE'D": 1,
+  "ANN": 1,
+  "RUGGEDO": 1,
+  "RUGGEDO'S": 1
+ },
+ "rtf": 20.15
+}

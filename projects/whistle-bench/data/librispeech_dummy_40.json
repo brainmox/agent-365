@@ -1,0 +1,522 @@
+[
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0000.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/0/audio/audio.flac?Expires=1791630210&Signature=rYOFsKIaye8u4UpEhKtwL1nnbQliRlfkDboBz8fUtTzWwtl6h~m1dlqCxXJRd5hM5qZJjAmw5YniqHIr0vQPhwzrGK5~pTagoQW4d4eHeQFWYx0idAQkoJmlZ0-u3jOF5H84FNrRObMIuiLnZVw2xwaGZ0WKgTRjgH5pF4D4-9AB8fQXF7NUlAiIcm0185CXftcuRZFJwEsO4wmOYsT3JKWuphEVqkMshrOcu8UW69r9bJ5zKV22ByDnGwzm7Id6ckxgGBOG8fLAPLcYz4hKhrYGYldYtXXUDexhreZC0dJdi~b6MhZfdFscMvIz9ohtcOU0t6VGioR6YsA~D2IUXw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "MISTER QUILTER IS THE APOSTLE OF THE MIDDLE CLASSES AND WE ARE GLAD TO WELCOME HIS GOSPEL",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0000"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0001.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/1/audio/audio.flac?Expires=1791630210&Signature=PLbWybFoKQs5PlI2S~FE44Y9NjmNjp7BPUOTfiZYdMWoA0DN0jakQG~T8Nqz6-i2RLYGsRuwuPB8ffCM8VWBt3Arvey9AqnXKG23fiwS8x804stTc89noxegx5Y4JV195BnkS4DoDThTpkISX2m~ABELhT7iksyRTtVlDLu6yVMsnxIypOCVErIeV~0cYdabhBSKpX8bANQ8MGA0LZF4x2faDOQBqs3JCCBL0oI2KZCDlX6Y8JtzL5m3ngeFXEY~QsLyA7KVjLY7Wns8B0d9HWzfVeYo7rQBWv1gkkzDGM758Y9bO2JNMUOKv7lZGNZ7DZ72OokalnV6BpeG2glc8w__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "NOR IS MISTER QUILTER'S MANNER LESS INTERESTING THAN HIS MATTER",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0001"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0002.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/2/audio/audio.flac?Expires=1791630210&Signature=i9plvdb9ZWohjG5~YGkOKxYfrDy2~WrrV28FGj-2Qb4qwWo8g7B3gWL45MFdfLiMW4mKoPF5iMwqj0rwlcyK~~vasreqWb~903cKYBzCC-EhRwTSfQngCbl-~hjdDK~d2~Yq9LKKSFIwyWHvNP1TRgYOJpfpUdiP8iVqJovnJ1mEvHWeJ0NgjJ2AM9UVD6j29J0Hwpxh8-UajVt9DkNV48puKHunxHL6FeQLG2z1F5yJGX2M3xsGQybBudbOuL4rlHszzMb2TK3LKAnK6Kcn0Rojczh9DauapYHD~dLxoAvmKaxQPYW7qu5IasGyUljR4EPvawAD3a8gkP1q345aRA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE TELLS US THAT AT THIS FESTIVE SEASON OF THE YEAR WITH CHRISTMAS AND ROAST BEEF LOOMING BEFORE US SIMILES DRAWN FROM EATING AND ITS RESULTS OCCUR MOST READILY TO THE MIND",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0002"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0003.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/3/audio/audio.flac?Expires=1791630210&Signature=RiBS54leEXzip9ZQRvb6lh0x8FbGNh~xgSwjjGNIOPHFZ-3o4m65vqam4e4UOedu2fDzJr7XHU3xKLNNf4aihrdQt1maSUIneCdibCL26b5~Ih3tIolgjpMZnofzlDPTUa~MEymmq4XBGroF9SUa64ERSMfM10ueHzY1TciNpvO7R7amV4TqJ5Gt86L71wnoxrLOYNkES7cmHtjriQwJhC~mhSPle-fq~lsqEgmm7umJnZfAvkWCfjuuknLkdT43djgavTE8SJTz2vuQl5a~x6PCsfLMS4aT6E1vykFj40j4qpV6q9aTLmY5dDiRdb2K0M~omMjkGRd0F9KEBG5OBg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE HAS GRAVE DOUBTS WHETHER SIR FREDERICK LEIGHTON'S WORK IS REALLY GREEK AFTER ALL AND CAN DISCOVER IN IT BUT LITTLE OF ROCKY ITHACA",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0003"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0004.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/4/audio/audio.flac?Expires=1791630210&Signature=V35BIDycdxTlWdTLFO~bbQZgnBUV~FpBrcaAlQQs-Hd6WSncGm~aYePFdtSonl8i3X6UmbOu9u7pUOvcB~38O0~FBF6jBbrorf826D~IDYInyyAlzVX7ygSAP6g-yRdDLjJjOMwhx0ajieYknbSqN0qPU8EkhDBqRIyI6dw52PHavnYbJ-nnO9eohAkX-NepzZ929MRH0TQjVMY1pNxhIUM5qG3~y9pY1mXhgc~D3EhaUK6NGlb5FMoBAUzy2RGOc4x8Gcdm0UbCAOz-kA~jZksmsjsHZqPZamsjXc6MdV34xAivCRNZmgKa7Xq4VbVunrgYsNZgKKGnFLbH0TDv-w__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "LINNELL'S PICTURES ARE A SORT OF UP GUARDS AND AT EM PAINTINGS AND MASON'S EXQUISITE IDYLLS ARE AS NATIONAL AS A JINGO POEM MISTER BIRKET FOSTER'S LANDSCAPES SMILE AT ONE MUCH IN THE SAME WAY THAT MISTER CARKER USED TO FLASH HIS TEETH AND MISTER JOHN COLLIER GIVES HIS SITTER A CHEERFUL SLAP ON THE BACK BEFORE HE SAYS LIKE A SHAMPOOER IN A TURKISH BATH NEXT MAN",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0004"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0005.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/5/audio/audio.flac?Expires=1791630210&Signature=br-5OD~5-OcEyYCjodctKIzBnswLwNGE-9AQm42BLTHFnHdreuWP4dfPmEUfd04apVZFMfSn4dq8hlQiPME4v~G6ulhcS26O2Ushd8kwVN0kFrwHGs1-7XCBhJoZLZ-1uw-~eC2qtgy6c27yv6QW870Aslojacq~Fl9DnfyIe0tfdQRhRDqSfDD8v-tscr2qpEodkL7ttc4Gj0CI1P7XSWPrjlkYJezzW~gl3VCwrOyJ57x~Io3ym741D~mixhwTPNtiP-rsKFnf2INYKEbKOphlB0oEX071Xv13RJ7Vx4zuV6VIBwAGKwEX8OYbHIoDgDgcl46NYNQzmizHg10HEQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "IT IS OBVIOUSLY UNNECESSARY FOR US TO POINT OUT HOW LUMINOUS THESE CRITICISMS ARE HOW DELICATE IN EXPRESSION",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0005"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0006.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/6/audio/audio.flac?Expires=1791630210&Signature=L~PY1WIQL6~C1Tt-EF4xqa1QeWCeHRXLWyGA3zL3qt8yW4pq-9qUuWewQlLJsLUCRXnDWB3mQW9zBkWrkvTs99uu~7eNaUhefrAM71f78Fb7u0TLMT18vN98SrHXh-asDKzRMEebdnzaiOpyKqT37Ul8MuOSJcXLPQ8hwOnBnqIq34U-WM0IuqYF9C~Pfj6DojexnQ3q-hblCq-RBp7bT67QA9uCncpDLQP4xUC3guGNY9MpxZvWFpVWg3uwB51gb5KqfhWT4n8qf4bWhoIvaHrQbVhrMERIBUknhADoG6GsXb3u7aPcKcaM9qHC9Pe0hocHICz9xU6hYLHC3f5~cw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "ON THE GENERAL PRINCIPLES OF ART MISTER QUILTER WRITES WITH EQUAL LUCIDITY",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0006"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0007.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/7/audio/audio.flac?Expires=1791630210&Signature=wlte9BcfwmGDe2ycyb3tya7Y8JaIeptZRFEhKls3NLvlV1Y-Z4sKwnjYYho1ZEEFa4N71I3IkA8nBZjknO~nCu7PCzZRpIK507uyZQNlMVgGQOxOxsk7uJiGD-H5LId8G0nJri9zcS1lQoZxjI3ZP9k9j19PFQqp1zv48iyaWMN28LFsH2TaPw3l9RhYma~MPrkxlTWxfUb1l2DCIhKqphnB4PHI9HYDGu2A2pS5gCfUFyGZSRjemRFaIzda7PNqgZswCBiOheiViP0X0VhDrflMXvJJW6OZbshelutXIp~pRHnBPlq9Pg-lKcP3xQ-~2oUsUAirSj3T8LSaO8QXrQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "PAINTING HE TELLS US IS OF A DIFFERENT QUALITY TO MATHEMATICS AND FINISH IN ART IS ADDING MORE FACT",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0007"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0008.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/8/audio/audio.flac?Expires=1791630210&Signature=ozGmk8lIk86H11xv-W5n51B1~I~lv3s69Yb9-segugJcR95jrIKUkZIPio~Gh5q7lNk9rtvGCQTRjgKKKZwF1eDnPwwNKSCgubFcNhnqfo6flToXpMvQ8beKwWcTsz9CKXp4pR2O98HnJ-nMaiDKPuAQ1pb3XRAITEBrgxracMi7Zr4Bnm1uZEAWeFY3VPBcYLLUP418qKVSAvlKY6C0LvTi-EIvTz2L2uf9LDdWkUUTRd05A5I~f~exHZkKC7FMB99TQyvhdaufWteMCzOLtO975aVvCdP4tGwiGRVKfV6PoO4waCmSmAUUnBzUXw9THZP4wp0wumc1~znMOH-wkQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "AS FOR ETCHINGS THEY ARE OF TWO KINDS BRITISH AND FOREIGN",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0008"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0009.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/9/audio/audio.flac?Expires=1791630210&Signature=LiFqX1lT8ea8c3jnUXiSS3l8clShLLo9F2-RcMvkWtpytG4XhWgwibalSguvuu~5dBgIg0-6x3J5Ae~BRrU6Du~yLcx82ITwDD4EfwmIFNJ6MaXiAbezxQ7nK8rfaksRkBFnAsuy1QVGa8duFwi7QzAB46gh6MUO0hitTr8U81huGRtzXdba~oZVU7mLP0Z6QqMriDn41CPNE89o2S5mLDlMYFwJoEBiMTQEFSzb-pg2IYc6hSWMQQ3n9aXCYkngJXupwrVr-FxmyG71Xk4JGx9aJKzhrophFc-l8J6V1avFXtUSjVMC26aL0-ZqAyCtBgcqPRgJBabnMhRF4y-UTQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE LAMENTS MOST BITTERLY THE DIVORCE THAT HAS BEEN MADE BETWEEN DECORATIVE ART AND WHAT WE USUALLY CALL PICTURES MAKES THE CUSTOMARY APPEAL TO THE LAST JUDGMENT AND REMINDS US THAT IN THE GREAT DAYS OF ART MICHAEL ANGELO WAS THE FURNISHING UPHOLSTERER",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0009"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0010.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/10/audio/audio.flac?Expires=1791630210&Signature=NVlC7VRO2pHtA8Mq-FxoqDcYC-0y99XeYpzh6TIzYYXcWiVWUz6SxieOoWhCIIoHPOR~j0i2yQRd1rj56a-H2EF4fSVyVG93I~VjiG0atB2y4S1ohKTCSPpuBPyAVtG9xia5Frzy1iy113qEYwNuWxHFAq9UQF1yAk6oRfklKOqWZUxg0POLvfpz3sjK17rvtKD~aHk~U-9gWqrT0IMPZ36xjn1L-dunJ0Ygqeja1Kgsbz50JziCr2GIyfnQyLgXMDFWuLbRgSA9L2N9zV06g8cKIdSgWPkKhBz4qyUMvSMmgoc-HumPHx3EqppCC5PwOuAYUAqV2r2aMFgf5Cc3eg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "NEAR THE FIRE AND THE ORNAMENTS FRED BROUGHT HOME FROM INDIA ON THE MANTEL BOARD",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0010"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0011.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/11/audio/audio.flac?Expires=1791630210&Signature=rrs~uOm713P116zlqnHF6anQUswPeRAEN6P68O2vTPNvjp8Can59hYT6lrrLmaBT6cHmEDHbcNHBD4zRQy0MU58t3TR4ddr2Y5GoNK03LW7FlpLPcyBYxuaN6Zj~VA-m~zCBf1sRmpOT0ZdOlfxNgE0coxzjKNB8~w-9pgHHQKRwAsRaIamUrJ4Kzjw9zCiXdVexRkcKfws1rIVbsLC9IeQSSbYdHmu54b4ftVdEMtXvZqI4Xho7bfzY81D7cFV0EjCegriQUfMT9eAQFWn5yFzm0SutOfTd-tqi1iyo6jG3nWv-pV-fv6S-pmrQCwmMjkKwJ7cjQ1gotKUBHLkn7A__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "IN FACT HE IS QUITE SEVERE ON MISTER RUSKIN FOR NOT RECOGNISING THAT A PICTURE SHOULD DENOTE THE FRAILTY OF MAN AND REMARKS WITH PLEASING COURTESY AND FELICITOUS GRACE THAT MANY PHASES OF FEELING",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0011"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0012.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/12/audio/audio.flac?Expires=1791630210&Signature=KQdbT2B4rtljBS42xWbSJluu6FMdQ9nMx-T-bo1lFZ6qj4AyasC076aAZLFjdPfXTnNJnK2SG34qHSmWQrhjJmThBjy1ivkCXGm83mM-Ay-TeGCvzE~I1uwVS8iq7EU2Vsi7uY2gXSqNSRYKfIzzGaWB-6Bpj~8INR5S71aKMYfI6dT~iH~5Zw48-oML1LhRLLYTwTN5RFBE0jQ1eFlFkOvnxR~C7DPDk209hOxD3satJnuD3Av2uqchre7eoQ1gRd3KZtTYWyi8hDYBr8lmPPiKJ71nofSRe1SNbx~Oo~jwHx9mvr9LcrfdoRNflAX5DB21A3GSYGATFw0J2WG7Lg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "ONLY UNFORTUNATELY HIS OWN WORK NEVER DOES GET GOOD",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0012"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0013.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/13/audio/audio.flac?Expires=1791630210&Signature=lnB7hiQz4pHY2rPDLVai8JtzPGw~DqiwvxOwvYi7HOEfrm2LIsWKL06bxeBuz5FX64CTlnzWHXeTt3uQTaqDoeH5zoK9kjNY0eFstGg9PNbRLYUlY3TZOLf3a5q3R7Wyd2bqMufd-OFBf6CWS9a7z0uF9KxAV2LVFPev81lbZijPj2p~Rt6WgT1eh-mo69b-PgaGbOh5XLGA19CtxSkVo8xoMiQsrTItlhYjInq7DCSq7-pAFF~a8ln5gtamCPActTJrqpdlqBf0t-ayamwtVYJN5cKHL0YnDxKQgJfFsRJfd-wVePTAgDBrfhL3dQrFrFVZ2dL2xHGxd1-eI0gF5A__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "MISTER QUILTER HAS MISSED HIS CHANCE FOR HE HAS FAILED EVEN TO MAKE HIMSELF THE TUPPER OF PAINTING",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0013"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/128104/1272-128104-0014.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/14/audio/audio.flac?Expires=1791630210&Signature=A3FZumVhTycKp-H2bBl3512EVb6kYEoEN7UtiUmZHP0gQl0uwfTdiHNl1KI9df-4wxkvBqUDwJIYaHt6VfnnYM599AvDfdsvzuzYXO11CgUhtrZ9xY0QMBo1-fYA2-ByNAXNGS2AVXrFq9IB7OWK2ONh~eXxJoY1uLFtO6VF2WKoFFYJcKZksDLWdbdSvCwqrrSTln2f3Pv4P7hsWbFCLs7V86~XMMLBFbbvzE~UUINVn5KLe04FsVKV3Q80~6wqbtAZQWn5wDCiDSfu8xN-D37glt-j8lpIiNDKM2nhCDZHlYjSS2uZX~J5hQkNvjxQJjFttaylu2ED55Aogf3D~Q__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "BY HARRY QUILTER M A",
+  "speaker_id": 1272,
+  "chapter_id": 128104,
+  "id": "1272-128104-0014"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0000.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/15/audio/audio.flac?Expires=1791630210&Signature=bbU6-AipA0ScJIbxuikWEPNvhsYaLIln2COvB1U8q6nM8M9yfGii5TE7pTGyHTpjgdWh8oDTLIhl2ANqkVfWXP4QjcloQWJzVR~kZ8DRMZvsWcQV97s94t8qe3nanNNnSbjDLq57CfRs9JZLwxmAN67mf2Igb59VPlwpm-pQrG5Go9A2CAyPlPYytVOqlqZbIOqVMzGITJVVEy-pLrcseHh3iZrFMoXG2GrqlB2J0jCzdbsoVNAJCEBQTJNzNr7PKNrgHCsWdt9skCNcJsVNMI1C7KfCQftnVMRjgYapQFWvyUF1er-ZTWK-ItBa0LMOvE0tO75J7liIXlN2OV-uWA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "BECAUSE YOU WERE SLEEPING INSTEAD OF CONQUERING THE LOVELY ROSE PRINCESS HAS BECOME A FIDDLE WITHOUT A BOW WHILE POOR SHAGGY SITS THERE A COOING DOVE",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0000"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0001.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/16/audio/audio.flac?Expires=1791630210&Signature=dlYR788kZAZ0prHGrJuupMzDXYpZZO3yPx2hW0JKAy9LsKJNCZEF-~~O0ZGCulSOwNDxShiQCJBXiTTyKNvT41-LvuYBjuXIX8kPfd-56XhksWLHi~mOKW5-QjLVsjbdwrlv1kFB6LfUPwhFsSTCPlQnrgt27BHxdrHnHY1x3ljjxz47l5vErfvwyjAPQxt5Z2eiC8RHjrZUqPZTFIleTMeIPpN-cQwS0g6FyDNX3cZNCnlGJ0EGHiDqUuS7CL7fwYRY3LCPcuRatkA3ATHEMwveiASsH7eN~KJJh8vR7cHYIFRKXBLjWj2EWzbpCUybkLgqPtRmFz6ADJLytwUrwg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE HAS GONE AND GONE FOR GOOD ANSWERED POLYCHROME WHO HAD MANAGED TO SQUEEZE INTO THE ROOM BESIDE THE DRAGON AND HAD WITNESSED THE OCCURRENCES WITH MUCH INTEREST",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0001"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0002.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/17/audio/audio.flac?Expires=1791630210&Signature=o4dFZJ0CgwNHEMktjebem7Akg~hpkh84tEFttbRMM-9wPa9FCC2YKqMC9kmNCoPCpUBpLyzVRURibmIdE8KQ-vDw4X4TwSwTXt5byeqRvNqGhnOBjjLb7zf1RBuZQc~EaHLSsJRdrpgLiVTe4Zxyz0mcZPpdZGax42prtUw7rCnev3s~RbnMz~~HsmzxKYSXSg7sGx2v0R3-A2S8KxBzckegVokXmx3N2BhfNAzv0V5iEm~nG5TVXT5hsgOg1oDXqwXUWl99dm0eBbR13-tq0EUY1fR9HpXvExEK3dKp0tIL705AHXGpD2tuLuUIQG4CkLurEZqLk8QfVLeE~l6rMA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I HAVE REMAINED A PRISONER ONLY BECAUSE I WISHED TO BE ONE AND WITH THIS HE STEPPED FORWARD AND BURST THE STOUT CHAINS AS EASILY AS IF THEY HAD BEEN THREADS",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0002"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0003.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/18/audio/audio.flac?Expires=1791630210&Signature=ngAM0ryfAUeMbvW-B3k6AR0qIbAyuRQUhyHWvLia6SLKCv0E2dSVAMA27lqPaI1DjBNrSAjLMCDfg-90gapPyC2FLgU4XUHlZFpU133QP1f7NFxhoC9IF5ZF34j6nZfOEXloVED7QyPURMmfumx0RwQ8DhAwKx3-Eg6lUe6Q2QUV-1aLLi6G13-bNMNJx-M4dk~Z4xoHN0LKXfkAaqWZFHOgboYCWT2psQ5QbqYb1dnnkEuTwJIDkkJhz5EBBjU4yMlETstHGykkm2GGM6RGSm65aaOY3YqA656019DYIuWTU07YKVQqb9R6tEzMl3bTl5xMuBn3R8hsgzH7IuR5zQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "THE LITTLE GIRL HAD BEEN ASLEEP BUT SHE HEARD THE RAPS AND OPENED THE DOOR",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0003"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0004.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/19/audio/audio.flac?Expires=1791630210&Signature=Bnadysz7ZyIpGNlpDWN1lDjI2jutpp23mao-M4TM6RmcNAlWDisYBR2QzOKzC7SaOwSCeYHX05RxQTzGQw0kcsumfJXCjb-~AnxqtrVmWHhYn~Mo~3ytXO1FxiivFvDia8C8GChrEsYbotBSvLkxIIXkyWLoXgP~AnHv4~hHG4SPG8pNKf6IjUFOuPzvRxRmCBQz~wGSIDtIGi1C49YsjELblascnnHDLqKaP9bR~h3J4bKgGOQTXkG7ESFw7acThqsrJvdL7PQA3YceqnvKEufxEnUho8DQjr~8OiXEkhNN9Fmu9X1jBObsUA9qmIDd1eficPc7m~ZtxnhikSKIBA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "THE KING HAS FLED IN DISGRACE AND YOUR FRIENDS ARE ASKING FOR YOU",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0004"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0005.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/20/audio/audio.flac?Expires=1791630210&Signature=UdJEpUJkDXVPk2bfAHmhoMpRFc6SYnF1yXIQSWWDI-g1bVMNLj2ss2xp9BdatM7DYGkCEXs3JLaE-0PdazBRzDi2zospFdCNTsYzbiDaTGzVhIcRCCF4dPSJn-yJulHsLjW9kn5GEBh5uihoYxHsoM5xF9HMgaexBQrJij8IBHyL6pvqNUcXZwff5Z4iGUEpfyCpYBTnkFWwKA9T5Kh6ll7tcuJxDWpTjRdK~~S2u7KrMNz9mHHjad4HI2C8jDifSvhcIY2mw2TtPlPCoEgIL0P~6Jr7rEhkklfRMXqCxNg9h5GPjxe2pnNqVPBK0fU3DPBzjpasEWM4NI5OydBRmw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I BEGGED RUGGEDO LONG AGO TO SEND HIM AWAY BUT HE WOULD NOT DO SO",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0005"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0006.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/21/audio/audio.flac?Expires=1791630210&Signature=QPZKkC7XxJz7xpGOsZFqpB8HFmhaL8sxSu4hJdQGta1jocUQNqIJ250k9nHsn0K1zRPJcPzdQclPMSCLlEUe5nsPeCHRlLWmxc2OXSwlXivSswBpTb8A~kj3jIrXu3OtkYA~shrUQsZ5uX6Bboh4vRgb3YEdZzSSOPyTkwD1AKzvOaAsWnRc1PrsC2CM0Q-dYo6ee8hbO6Z94ES5025GcKSg~seI8aO~FBzQpE7qJkQbha9lZqxJFEQRhowLBSwN9tbIK2rEVoSOFRZ64Z4PLFVSmvovuShqzGbUv7isgAyWZUJZE4HCC2NxGeJ5qG5TZ85bCW6Gq7b~Eto8DaDNnw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I ALSO OFFERED TO HELP YOUR BROTHER TO ESCAPE BUT HE WOULD NOT GO",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0006"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0007.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/22/audio/audio.flac?Expires=1791630210&Signature=kcsbc9QtzjLzEtdcWfsfmGkMz6ThlN4aQeaRk4EllE2Tyq3KkqdK~g0VioinkG5BCpwFMoRundqa966ZZ1P873gVFUOTG9EXK1oj2FBI3wjV0rJTXlVoR532E8ob-EFWkV8FLuGBLLbtBoaggil0NCM220yj9DQ1hmiR9uHpngrzewI4cagUDGQ1UVOcOEj40d6l5q1mj8CpoxoHceOPxdkWuYQAzPq~ZNu0Eb1IZRlQLX5TotNogAMLK92rcEUB7CqQiEgHJoSyTEi8JFGvk74I8i8uIJOvTQMu~duSEN96xVPs-Kdw0J5I~0bjWEEx9Zn2Ng7idfRTCe5kUSTLvA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE EATS AND SLEEPS VERY STEADILY REPLIED THE NEW KING",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0007"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0008.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/23/audio/audio.flac?Expires=1791630210&Signature=Cyg~bHF~bUQRsHz9r5BvZeRTicJzhiyhcNMAehVwauE1z8g~41LscSGeSrL3Vxj1G-J0meZDfxvj8a~1loq~NkDEK1LCO46Ez5-bV527CvD9PKHPMJZMVs7XKevUFUi~fWXr3ZLyUaOQm5eOvftZr9VhBPa1cI82SX83n3~ZgNRM11pODwxjHUXgTFd1MW7Z-C5EriOu7V~71b0lyWgSKKxsp54aha2Lqc7VOoVJtl8m3HHllyeCJ6B-0FbWRZrXrtlM6zjeb1-9XxOxHjZFwYTA-5z3k8NS0QpUmE-MHuY5XhEFG5T19c02AyoU6x14ziCkWjYyosgpAXJm9u7yqA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I HOPE HE DOESN'T WORK TOO HARD SAID SHAGGY",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0008"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0009.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/24/audio/audio.flac?Expires=1791630210&Signature=bkI2JXQKbXguHCZDcQ6PaQ7b2Ssy9P1rgDSQB5wz~mCdGoWsfHxMwHyRZYuu2OA6rpu1TFVxcjPi7Gi~S0Y8DUy9Wwkos7tynB-~qWBCkho7w8lKX-Gi2S9Ra1XC33G6upVZmyfvaqqXvaA4zVkJtmaydjwR0o-yslczvaPRy87-DuNG-1ykEYEjZ7~9GB2~-YDjIbVxNt3ATRH6CYlnysG-W~Dpqe9jb1od4rNY~IFQ4FQQYYtsEC5ATTjvhPCVqJF8z7mfVpBZU2w1azMbrJF1kiCLrkwGuUA47x8FbuM0fwrSvfCOqb9UbQk5gOrIXrJXkWlHIaesK-WEogRB6w__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HE DOESN'T WORK AT ALL",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0009"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0010.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/25/audio/audio.flac?Expires=1791630210&Signature=IuMkInELWuANP~RPmttYV9jeYasVQIEduu4YPxfE7gZg2NzWAzcLv3PR~E-R4uSUQ9mwUT48tHjdpBJYEi131463VQ1~2vvHyKPkQbIq37Js8fOMMKdvXJotwcETbW8M3Ykt0GLNX8sAf3KUxL7WHciMIm~uuIM9242O-3AY7ydeyoLGAisEsYywla8zmmZ7LoEyPuZsKqkgpF2YdzeakEPN~pMQN24dOZJrfUsTt37Os3fm3cybzmKZwnCEbrljqyEctJFKPsojGEXIop-fty4~houDUIh548w2-OmMouAj1bdSVd~y3Z9IRnmoDvvzeDfuwm4w0DJjfrR-wGU86w__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "IN FACT THERE IS NOTHING HE CAN DO IN THESE DOMINIONS AS WELL AS OUR NOMES WHOSE NUMBERS ARE SO GREAT THAT IT WORRIES US TO KEEP THEM ALL BUSY",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0010"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0011.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/26/audio/audio.flac?Expires=1791630210&Signature=v2j5rdd-Q5xmP7gk1QKxJ-GNjqzQ3JFL7KR3Z78ZEYENU4vQvKqVUFp7PEy0GQSzouAVI-9SrGUZB7tzs4dhmHP5pe07bK8HFsfjdRqSH7q8QEksuzJoXpViC8Ntow-YzrR~yxffa40cBesV-gpcloyIGKR~QCuOBA8kwqqpH2vy66PjG3XNituJ6VjOnLnmf7ardwdekeGfcz5OILN1BNeY12VQIteiG2ldcLiVR2n9~7j-5IEqiF7lVc9IQiaqiD4e0OdWtWgVvuJPmK0JtKTTHz44WYUIwZR3NV-YQfqIcLan7bn1Epb39q3IIbda3DffHLFh3bP-IOWkCSn5Lg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "NOT EXACTLY RETURNED KALIKO",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0011"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0012.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/27/audio/audio.flac?Expires=1791630210&Signature=OUkRQVw20~btfR0vKwJpKgrAOSc3VqGm7DzMvNGmtyhIfgh8PTZVISIo0sd0lOlsV2RgBhzIARpQS0rNHxhO8PBivkU00d310rMMBdeZvwP7ftFjuHgjP8iTUeiEZqUF8iCj6q0CsUuf2z20mkdPR6rXOy9Dxghb2dwUDhabxGErDsMTVDWggOON39-cwh19Pio1VX3H5M6g3UO06vswjVVht967mkzuuN9sAvOT-f1MhpVlJiV-~dBThvLXj3m7O9DQi9DoJtUQ5uW3-s-Q-QRdqsXfoHxff1sQsEbwVGPRdUCZ6wFBXEQ6ounD~1y8-Un4jqiNb7t5W4aHY3tKKA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "WHERE IS MY BROTHER NOW",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0012"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0013.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/28/audio/audio.flac?Expires=1791630210&Signature=NE9gf6r8uaAFFNTZUZ2xC5cCK7V223m8h5YllLsmuIrYU-iC-6moM1YTr7ZiB52Vbo7DMUzipL7SFafQTVlhdWbDptMiqaBXej2GDbPNMk7n0l-Flx4XcRbCRMkfDD4zi8hOn3xiMYj9AmZI9N7qyz0lnv74fs6c6wLwfaLZjcQ17MvHa-kJiBZ~Pj6RMT0FRm6VBFOC8V9F-xrsjS8vQiDa04N~ezDqI~0Orh5gUCCkb3iiUGrvJRUR2LGt1f6flTNdBI~G1Q-ERr617nfF5l1XUFlh0Y86byojrD1r30wT-wi9PoseS2BErMiroV6V-Im0v3PpQmSo1~C3MIVqWg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "INQUIRED SHAGGY IN THE METAL FOREST",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0013"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0014.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/29/audio/audio.flac?Expires=1791630210&Signature=oE8e2mB4idsrcYNeByL7OpnWY2Cdg~xvBFa4AvpC27tVnko4n55khzfni9zH58YZk8Eufdr-SDUyVPBfQmMxcqjEDvKJIusCLTDgPDW7rCY1oy--Tupsgs4e9RivKA81bpEtJIpDfW6HKTam3Gp4ZGPcuA7A7IWaN6Ypg3yfIFDInvupMMs8-efFuqCtORCxWG9YUVkGRVknrxe32SC2Us~FfmQc9AVGnoovsuKUykLAE~23sI7PXdVdLzhOAhB9~uZ4BL6HDCudGUDFPha0D~VTNvBdjFhiH-cLF96z0biJfCk5Bv3eg00fP0PAUXxhe55Qat2WF1thz0IsP4vLEw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "WHERE IS THAT",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0014"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0015.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/30/audio/audio.flac?Expires=1791630210&Signature=Ac7ozbWMNO4IDzr9LK0qpK6--xPAFQxmbAoOJd9iLFdVKnECHe1L2aIbSLqxTxgT7NTTxCELoZXEMginvA5VsuVZaf~Y4ShfkvOJxFJ1UQjYAM1IBZ0CeG8uS1~-DLf-cspZFQcPdVm2oe-nDObPbA13R5fYHoz4nyjd-~mkl5JuXjb6tXmtNlbBq~eKdswkpZEACnXAXKsSqi6d4VS4BkInKdgAFxPU6J8ROkz9PdHaa78esRWIim98BE6PiqScT3t7d8TkPDcluCzEOWW0TWVvb3Kdr3UVOx5mJPJBxLuWEoirUHVN7g345xH-gTh2E1FYYzULb6YlQQSgYzZjRA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "THE METAL FOREST IS IN THE GREAT DOMED CAVERN THE LARGEST IN ALL OUR DOMINIONS REPLIED KALIKO",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0015"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0016.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/31/audio/audio.flac?Expires=1791630210&Signature=GKUhno9Io8KyN7~x17h5bxh2a6GNLVpd16XfO2nbbOU2vsep41UdRneFPKfs~ZEby3GzILwY~TuHRiUhqAjS0aN4gCp9DDlW1LPXHwARY3weg4CZY5oIiiBAKBtizfwzTjuag-PbTNvmcOtT41T2sVbCT7757ajIl9SXzaZoDcn~MNM6tteyP5rquFdoTQNknM3Vt~Jyv6k-9E2LvLHwnubIDTgJ9KD4lHK~G~9BlP4DTwe0z3ZnIXqu219gdbVQyq8GmAHar7TQ1N2~sZy1pLwzT4D4CE9t09KpXU6EG9XKo5Wm-5JMKbiTysJoEIuL1qf4HNL5VODIcXkbAa74jg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "KALIKO HESITATED",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0016"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0017.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/32/audio/audio.flac?Expires=1791630210&Signature=BVKlt835ctpQZjIqX86asHeqRFXxeo5a~Pz0yVMOUHjEcO9YcnII1Zcnwl4Xrm04-r06E0h7u6UjnrYFsca06qO3JtwMwTFHCPFCQARwwu3qDtPJpilBjebvv3oJakk0emAILAm8yoAbIh-cq4onM985kzEuY~azI~g-KyOm7o4qPIPgzJ3c9iC8MkLlpelaSdzLJ74RazI2roKVTJGzbcke~mORveey31UMyzepDUsBPiLWpkUwLHENoIBqFwOHQTul7AgDt1l5fRPev7urCcC8LOZvOF-7RnWCVFFLpAoVmewi5e6JeULzF96ddR2WoE5cnEyEyt4v4oz3jBe4kg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HOWEVER IF WE LOOK SHARP WE MAY BE ABLE TO DISCOVER ONE OF THESE SECRET WAYS",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0017"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0018.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/33/audio/audio.flac?Expires=1791630210&Signature=U-cWtQgl6p6xzjvTnwSr85u84ivLXpxbjyADXGteZJ6wjwmFO3gV~pbwrbudjYbylNDFdOAqC9nfhuTh7MlHW8AZBPUndeYNJuQw4cAmp64tYL4t56uupjTuj-16aR9ht6EkfFaDmDywV6kxZdEnFADvH1SltUCUBvBTq7SGJNZusi4vYVAp56Ux0oRh~2fjG8KvRE5I-IEFGvP7uJF5ZJEFmGaO0qN0IgTc1Q44ukzgCPaZyDMfFcx59rDrUIVIN4Je4672UBQlZ3DA22ropJySD0zJcCRegRtXhbkZD59w-8UHsww1DKd-JXRwqoXqZ8MWgkAVeyRHxiO5zvS1GA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "OH NO I'M QUITE SURE HE DIDN'T",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0018"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0019.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/34/audio/audio.flac?Expires=1791630210&Signature=q3Rt1mADk~wB337-c2EuB~67QG~e8VFkAz4IHCmyYDFIAjlJx6xrqeMaozSnwq1gXH~3-XqaIyUKsXffFgoGo~tdqEJpAlo9yDsQpaWUchi0pGm29IvctzZ7O48tcpQ8r~sex6TriOossL5Z6wWCIdEBDf8yEC-mOX07x~iWg6XFnr7ceQgPdX-BD69goLaNxYRTMSg34BZf2evrvfeUJAhcYJQLqHYKxzae~b2SvmmjEFdKBGJG5xh6kELCajpqlHC3CoMEvX4shY2jDvxwgeUwu1kSvW7L080ryy6rYYG2wNgWu4Za5x0MJ0datR3W-zUtBvKIPeKLcZtekP~cIg__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "THAT'S FUNNY REMARKED BETSY THOUGHTFULLY",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0019"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0020.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/35/audio/audio.flac?Expires=1791630210&Signature=sLh20Bjx9Z3wznqExH7r~nQVP5MG9an9APnJkeWhBEmWbK0D~ohn-MB8hC7IeVKkiB~5Gz~2wfl-AnyswwV81~OTjdS1kEZWB6Ev7dIpN1VnJ-dbL~LRDB6sxKOf3SvoUiRrpQEYNpP34Ha9NB4Eoe3WGe5iJSA1SFFGTWaxwq~tbDcK4SBEGLvvBEtbk76XIgz6tu9BYzMfl3keibLF412rqRBT8BlvP77lkQqbTjyOswqw5dCeenyHwTAArmviPovO78Ec9hvgdLLh~aRVVC60LzqBBLwsXCNrqzHW-KxMg6M1NYfOdC7DFXpEQAbbWXN94RyOibh7uhDDpxQTQQ__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I DON'T BELIEVE ANN KNEW ANY MAGIC OR SHE'D HAVE WORKED IT BEFORE",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0020"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0021.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/36/audio/audio.flac?Expires=1791630210&Signature=QLvnEiLh0qX5x2RLbgORv8X~HEPLMfhtmceHsDMtsY3nfNOKihDieAmYnDLvddVxecVXG7blXiA37acEjpWJe80xrraOIi-pPqMT4rwEvEo5JL18zc6LsCx~9NmPAhsFsWZ5Q-yo3rMOUMcUJWs6z3b8gFI2yKxQKL1czH6cczBneJRRRZVK2v-mulPicYWNu77hvPUeJDqXKo7OEblgs-f2Rw1ScVtZwOahVMD3fnPIVDgv~7hlALglvbMSnlFfVShtGF0NTSWpv-thy~w3v7VbsY7TJTyaLKlQ-H3HDzNETkIH6ULq9nJ6BAFiX7NRyVPYNGT02ELD-hyYgn~mkw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "I DO NOT KNOW CONFESSED SHAGGY",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0021"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0022.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/37/audio/audio.flac?Expires=1791630210&Signature=gStYJksPT~TlMHEdVB6id1V8f~zXWvkIPwIMZ1IvMT82gKrmrcPjVV8vzUEYpFgVjEYqmVc~1bGJnqlSE-3NOmgQjM7Ok-e~oVxgmf2IZYMol8rYMLsRxKXQZv5V5qwHz6bDMCLMvhXwU4tUaYdAFU8KbShTO1~LQBrFpnoIDgQ0kJ9mHuBn6rQktcAC7EJsm7JHDNSCS6OGZeLThubiGo7migKrgiwKkTPdTxcC8fTrIsfVfCdxWIzOKEsGdducYFelSOzRb9k43Ir6aNfKZzhEAUSIlWDCdDtqP8fCRytpYZA7S1wHElU6bMbtfOmze7A9lMaJ4LI-f4p8ZpGLOw__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "TRUE AGREED KALIKO",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0022"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0023.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/38/audio/audio.flac?Expires=1791630210&Signature=Cz-R1Rz7dJLMJw7RDWTg~SzvTgrszgdaeWxL1MEtHOYkEymWDiOyJyOrmxdDnHarq-5JFopeOHkfSrHqSprDPwz33n-NwDwVRux61SW4REt8JvyqSvE2p6y0TT5-MChDKJUzFD~bwuPyH1i1dz4de47MY0TO5ezzCBLYm0U2tO~prykqOhdeRKQpbLKc4rOEa9ebqoNoJSfr4ZuinI9cKU-EUxJ5XYJ7FCMt5RtUnYEsjoXkj1Ii6x1qpoAwNgpOQ6ZWzcgi~3E78QKpyMH9c2vDEAMr4y66T3FLwT0ZZcN8ebI~ACmxJfJ~rt7i1IK~FP8zQvpLq~o4NggSr40M7g__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "KALIKO WENT TO THE BIG GONG AND POUNDED ON IT JUST AS RUGGEDO USED TO DO BUT NO ONE ANSWERED THE SUMMONS",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0023"
+ },
+ {
+  "file": "/Users/sanchitgandhi/.cache/huggingface/datasets/downloads/extracted/aad76e6f21870761d7a8b9b34436f6f8db846546c68cb2d9388598d7a164fa4b/dev_clean/1272/135031/1272-135031-0024.flac",
+  "audio": [
+   {
+    "src": "https://datasets-server.huggingface.co/cached-assets/hf-internal-testing/librispeech_asr_dummy/--/5be91486e11a2d616f4ec5db8d3fd248585ac07a/--/clean/validation/39/audio/audio.flac?Expires=1791630210&Signature=o5dysx3CzNbhSiNNoiULizV4J3kdA28yn4tn1OdMljohB6hBUN1BtVN~aaL8VF3WFD5y14NifC09j0wZ6a~v9tRia2FY~mFuRBA2hvJdGFHMHM8f69nem3ctIO04I4d7b6vSG1kY-1R3qHVI-wdlxayJcn24q93V2WlDNEe8ea36d2Fx6wSV29fB22wBzvo3iZnNCD3YWSnFCUh8jio4g5K1n45v8kFMrmAEKLWh3LOiEPsSJr8dBUT4XJkHPShhYJcU2LjDDvOaXWwW1iPfUUoHxkW7FEVOaJzrR3F3dVrSFBRZ3yOJlcS4qDALmQN4mDHaVqRVKaykp3ZUpEZLtA__&Key-Pair-Id=K3C0L9WB6U5DUC",
+    "type": "audio/flac"
+   }
+  ],
+  "text": "HAVING RETURNED TO THE ROYAL CAVERN KALIKO FIRST POUNDED THE GONG AND THEN SAT IN THE THRONE WEARING RUGGEDO'S DISCARDED RUBY CROWN AND HOLDING IN HIS HAND THE SCEPTRE WHICH RUGGEDO HAD SO OFTEN THROWN AT HIS HEAD",
+  "speaker_id": 1272,
+  "chapter_id": 135031,
+  "id": "1272-135031-0024"
+ }
+]

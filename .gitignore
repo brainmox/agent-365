@@ -20,3 +20,6 @@ __pycache__/
 dist/
 build/
 .browser-profile/
+
+# fetched upstream board copies (ruler-audit: fetch your own per its README)
+projects/ruler-audit/data/

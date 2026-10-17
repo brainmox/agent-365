@@ -86,6 +86,72 @@ def test_select_keywords_deterministic_ties():
     assert a == b == ["AA", "BB", "CC"]  # equal length -> alphabetical
 
 
+# ---------------------------------------------------------------- realistic modes
+
+def test_select_keywords_from_vocab_longest_unique():
+    vocab = ["THE", "QUILTER", "THE", "MISTER", "QUILTER", "EXTRAORDINARY"]
+    assert wb.select_keywords_from_vocab(vocab, 2) == ["EXTRAORDINARY", "QUILTER"]
+
+
+def test_build_vocab_loo_excludes_only_target():
+    refs = ["alpha bravo", "bravo charlie", "delta alpha"]
+    vocab = set(wb.build_vocab_loo(refs, 1))
+    # BRAVO stays: it also occurs in clip 0, so it is domain vocabulary,
+    # not a read of the held-out transcript. CHARLIE is unique to clip 1.
+    assert vocab == {"ALPHA", "BRAVO", "DELTA"}
+    assert "CHARLIE" not in vocab
+
+
+def test_build_vocab_loo_keeps_duplicate_refs():
+    """Two identical references: excluding one clip removes exactly one of
+    them, the duplicate's words stay (that repetition is domain signal)."""
+    refs = ["alpha bravo", "alpha bravo", "charlie"]
+    vocab = set(wb.build_vocab_loo(refs, 0))
+    assert vocab == {"ALPHA", "BRAVO", "CHARLIE"}
+
+
+def test_build_glossary_fixed_size():
+    refs = ["one two three four five", "six seven eight nine ten eleven"]
+    g = wb.build_glossary(refs, 4)
+    assert len(g) == 4
+    assert g[0] == "ELEVEN"  # longest first
+    assert "ELEVEN" in g
+
+
+def test_keyword_hits_counts_presence():
+    assert wb.keyword_hits(["ALPHA", "BRAVO"], "alpha and alpha") == 1
+    assert wb.keyword_hits(["ALPHA"], "nothing here") == 0
+    assert wb.keyword_hits([], "alpha") == 0
+
+
+def test_loo_keywords_never_contain_target_words():
+    """Leakage guard: for every clip, the LOO keyword list must be built
+    from a vocabulary that does not include that clip's own reference."""
+    refs = ["mister quilter is the apostle of the middle classes",
+            "norbury and wharton were energetic and precise",
+            "quilter watched the kaleidoscope with extraordinary care",
+            "the quail sang plainly before sunrise"]
+    for idx, r in enumerate(refs):
+        vocab = wb.build_vocab_loo(refs, idx)
+        kw = wb.select_keywords_from_vocab(vocab)
+        leaked = set(wb.words(r)) & set(kw)
+        assert leaked == set(), (r, kw, leaked)
+
+
+def test_glossary_keywords_same_for_every_clip():
+    refs = ["mister quilter is the apostle", "norbury wharton energetic"]
+    g = wb.build_glossary(refs)
+    assert wb.build_glossary(refs) == g
+    assert len(g) == wb.GLOSSARY_SIZE or len(g) < wb.GLOSSARY_SIZE  # capped by corpus
+
+
+def test_oracle_keywords_match_vocab_path():
+    """The oracle path must equal building vocab from the clip's own
+    reference, so oracle vs realistic differ ONLY in the vocab source."""
+    r = "quilter watched the kaleidoscope with extraordinary care again"
+    assert wb.select_keywords(r) == wb.select_keywords_from_vocab(wb.words(r))
+
+
 # ---------------------------------------------------------------- end-to-end on synthetic audio
 
 def _make_wav(tmp_path, seconds=1.0, freq=220):

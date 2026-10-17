@@ -19,6 +19,8 @@ from pathlib import Path
 
 MANIFEST_DEFAULT = Path(__file__).parent / "data" / "librispeech_dummy_40.json"
 KEYWORDS_PER_CLIP = 3
+GLOSSARY_SIZE = 10
+REALISTIC_MODES = ("loo_keywords", "glossary_keywords")
 
 # ---------------------------------------------------------------- normalization
 
@@ -111,13 +113,46 @@ def select_keywords(ref_text: str, k: int = KEYWORDS_PER_CLIP) -> list:
     """Oracle keywords: the k longest unique normalized reference words,
     ties broken alphabetically. Upper bound by construction: read from the
     reference the model is about to be scored against."""
+    return select_keywords_from_vocab(words(ref_text), k)
+
+
+def select_keywords_from_vocab(vocab: list, k: int = KEYWORDS_PER_CLIP) -> list:
+    """The k longest unique words of an already-built vocabulary, ties
+    alphabetical. Shared by the oracle (vocab = this clip's reference) and
+    the realistic modes (vocab = sources that never read this clip)."""
     seen, uniq = set(), []
-    for w in words(ref_text):
+    for w in vocab:
         if w not in seen:
             seen.add(w)
             uniq.append(w)
     uniq.sort(key=lambda w: (-len(w), w))
     return uniq[:k]
+
+
+def build_vocab_loo(refs: list, exclude_idx: int) -> list:
+    """Union of normalized words over every reference except refs[exclude_idx].
+    The vocabulary a domain operator could hold without ever having read
+    the clip being transcribed. Exclusion is by position, so a clip whose
+    text duplicates another's keeps the duplicate's words (that repetition
+    is legitimate domain signal, not leakage)."""
+    vocab = []
+    for i, r in enumerate(refs):
+        if i != exclude_idx:
+            vocab.extend(words(r))
+    return vocab
+
+
+def build_glossary(refs: list, k: int = GLOSSARY_SIZE) -> list:
+    """Fixed deployment-style glossary: the k longest unique words across
+    the whole corpus. Built once, applied unchanged to every clip."""
+    return select_keywords_from_vocab([w for r in refs for w in words(r)], k)
+
+
+def keyword_hits(keywords: list, ref_text: str) -> int:
+    """How many of the given keywords actually occur in this clip's
+    reference. Measures how well a mode that never read the clip aims."""
+    ref_set = set(words(ref_text))
+    return sum(1 for w in keywords if w in ref_set)
 
 
 # ---------------------------------------------------------------- audio
@@ -181,15 +216,28 @@ def run(manifest_path: Path, results_dir: Path, modes: list, limit=None):
     run_out = {"manifest": manifest_path.name, "clips": len(clips),
                "audio_seconds": round(total_audio, 1),
                "modes": {}}
+    all_refs = [c["ref"] for c in clips]
+    glossary = build_glossary(all_refs) if any(
+        m in REALISTIC_MODES for m in modes) else None
     import time
     for mode in modes:
         per_clip = []
         agg = {"errors": 0, "ref_words": 0, "substitutions": 0,
                "deletions": 0, "insertions": 0}
+        hits_total = 0
+        kw_total = 0
         t_first = []
         wall_start = time.monotonic()
         for c in clips:
             kw = select_keywords(c["ref"]) if mode == "oracle_keywords" else None
+            if mode == "loo_keywords":
+                kw = select_keywords_from_vocab(
+                    build_vocab_loo(all_refs, clips.index(c)))
+            elif mode == "glossary_keywords":
+                kw = glossary
+            if mode != "bare":
+                hits_total += keyword_hits(kw, c["ref"])
+                kw_total += len(kw)
             res = transcribe(model, c["wav"], keywords=kw)
             t_first.append(res["ttft_ms"])
             score = wer(words(c["ref"]), words(res["text"]))
@@ -197,16 +245,23 @@ def run(manifest_path: Path, results_dir: Path, modes: list, limit=None):
                 agg[k] += score[k]
             per_clip.append({"id": c["id"], "score": score,
                              "keywords": kw,
+                             "keyword_hits": (keyword_hits(kw, c["ref"])
+                                              if kw is not None else None),
                              "hyp": res["text"],
                              "pairs": alignment_pairs(words(c["ref"]),
                                                       words(res["text"]))})
         wall = time.monotonic() - wall_start
-        run_out["modes"][mode] = {
+        mode_out = {
             "aggregate": dict(agg, wer=round(agg["errors"] / agg["ref_words"], 4)),
             "median_ttft_ms": sorted(t_first)[len(t_first) // 2],
             "wall_seconds": round(wall, 1),
             "per_clip": per_clip,
         }
+        if mode != "bare":
+            mode_out["keyword_hits"] = hits_total
+            mode_out["keywords_given"] = kw_total
+            mode_out["hit_rate"] = round(hits_total / kw_total, 4) if kw_total else None
+        run_out["modes"][mode] = mode_out
 
     # taxonomy over substitutions and deletions of the bare mode
     if "bare" in run_out["modes"]:
@@ -221,8 +276,11 @@ def run(manifest_path: Path, results_dir: Path, modes: list, limit=None):
     run_out["rtf"] = round(total_audio / bare["wall_seconds"], 2)
     out = results_dir / "results.json"
     out.write_text(json.dumps(run_out, indent=1))
-    print(json.dumps({m: {"wer": v["aggregate"]["wer"], "errors": v["aggregate"]["errors"],
-                          "ref_words": v["aggregate"]["ref_words"]}
+    print(json.dumps({m: dict({"wer": v["aggregate"]["wer"],
+                               "errors": v["aggregate"]["errors"],
+                               "ref_words": v["aggregate"]["ref_words"]},
+                              **({"hit_rate": v["hit_rate"]}
+                                 if "hit_rate" in v else {}))
                       for m, v in run_out["modes"].items()}, indent=1))
     print(f"wrote {out}")
     return run_out
@@ -232,7 +290,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manifest", type=Path, default=MANIFEST_DEFAULT)
     ap.add_argument("--results", type=Path, default=Path(__file__).parent / "results")
-    ap.add_argument("--modes", default="bare,oracle_keywords")
+    ap.add_argument("--modes", default="bare,loo_keywords,glossary_keywords,oracle_keywords")
     ap.add_argument("--limit", type=int, default=None)
     a = ap.parse_args()
     run(a.manifest, a.results, [m for m in a.modes.split(",") if m], a.limit)

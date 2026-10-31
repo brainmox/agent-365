@@ -34,7 +34,7 @@
 </head>
 <body>
 <h1>Ruler Audit</h1>
-<div class="tag">A leaderboard is a claim. This tool reads the claim's paperwork: who ran it, on whose numbers, when, and against which upstream. Handles the upstream's 0.2.x, 0.3 and 0.4/0.4.1 board editions, the formula files, and the vision board.</div>
+<div class="tag">A leaderboard is a claim. This tool reads the claim's paperwork: who ran it, on whose numbers, when, and against which upstream. Handles the upstream's 0.2.x, 0.3 and 0.4/0.4.1 board editions, the formula files, the vision board, and — since v4 — the methodology file: its published pipeline constants drive a per-benchmark recompute of every area score.</div>
 
 <p>
   <strong>Paste JSON</strong> — primary mode, works offline. Blob <b>A</b>: a forked leaderboard copy (e.g. a vendor's own copy of a community index).
@@ -47,12 +47,13 @@
 
 <textarea id="blobA" placeholder="Blob A — forked leaderboard JSON (required).&#10;Detects the copy schema: top-level generated_utc, upstream{}, areas[], benchmarks[], models[] with areas/scores/closed/self_reported/panel_coverage."></textarea>
 <textarea id="blobB" placeholder="Blob B — upstream index JSON (optional).&#10;Detects the upstream schema: suite{}, jev{} with calibration, models[] with categories[].skill/coverage — the 0.3 and 0.4/0.4.1 shapes: models[] with v03{} composite rows.&#10;Used for: fork diff (added/reworded rows), upstream snapshot date, the upstream ruler's calibration block, and the v0.3 composite audit."></textarea>
-<textarea id="blobC" placeholder="Blob C — formula JSON (optional).&#10;The composite constants (editions 0.3 and 0.4/0.4.1): weights{} + formula.equating{} (the private-blend weights and the z-score mapping bases; 0.4 puts the public index weight at 0).&#10;A methodology file is detected and slotted here too, but only the composite constants drive computations today."></textarea>
+<textarea id="blobC" placeholder="Blob C — formula or methodology JSON (optional).&#10;The composite constants (editions 0.3 and 0.4/0.4.1): weights{} + formula.equating{} (the private-blend weights and the z-score mapping bases; 0.4 puts the public index weight at 0).&#10;Since v4 the methodology file (edition{} + index{} + benchmarks[]) drives the per-benchmark area recompute in board mode: published chance levels, gold ★ weights and the clip() rule replace the old hypothesis recompute."></textarea>
 <div>
   <button id="go">Audit</button>
   <button id="demo" class="ghost">Load demo data</button>
   <button id="demo03" class="ghost">Load v0.3 demo</button>
   <button id="demo04" class="ghost">Load v0.4 demo</button>
+  <button id="demometh" class="ghost">Load methodology demo</button>
   <button id="demovis" class="ghost">Load vision demo</button>
   <button id="clear" class="ghost">Clear</button>
   <input id="fetchUrl" placeholder="https://…/leaderboard.json" style="width:340px; padding:7px; border:1px solid var(--line); border-radius:6px;">
@@ -135,6 +136,116 @@ function recomputeAreas(copy) {
   const summary = Object.fromEntries(Object.entries(agg).map(([a, v]) =>
     [a, { mean: v.reduce((s, x) => s + x, 0) / v.length, max: Math.max(...v) }]));
   return { rows, summary, inIdxCount: inIdx.length };
+}
+
+/* ---------- methodology-driven area recompute (v4) ---------- */
+// The upstream's methodology file publishes the actual pipeline constants: per-benchmark chance
+// levels (index.chance_levels), gold ★ benchmarks weighing 1.2 inside their area (index.areas[].panel[].gold),
+// the areas' own benchmark lists (index.areas[].panel), and the normalization rule as formulas:
+// skill = clip((raw - reference) / (1 - reference)) with clip = min(1, max(0, z)).
+// Running those published constants over the board's published per-benchmark results reproduces
+// the published category.skill values on fully covered rows to <=0.0001 — the "undocumented step"
+// the v1 hypothesis recompute reported is largely DOCUMENTED once the methodology file is read.
+// What the methodology does not document: the partial-coverage row convention (partial rows'
+// published values sit above the coverage-weighted mean of the scored benchmarks — the gap grows
+// as coverage shrinks). The tool reports both, with the split.
+function methodAreaAudit(upObj, meth) {
+  const idx = meth.index || {};
+  const chance = new Map((idx.chance_levels || []).map(c => [c.id, c.chance]));
+  const gold = new Set((idx.areas || []).flatMap(a => (a.panel || []).filter(p => p.gold).map(p => p.id)));
+  const panel = new Map((idx.areas || []).map(a => [a.id, (a.panel || []).map(p => p.id)]));
+  const weight = new Map((idx.areas || []).map(a => [a.id, a.weight]));
+  const benchName = new Map((meth.benchmarks || []).map(b => [b.id, b.dataset || b.name || String(b.id)]));
+  const clip = z => Math.min(1, Math.max(0, z));
+  const all = [...upObj.models];
+  if (upObj.jev && upObj.jev.categories) all.push(upObj.jev);
+  const perArea = {};
+  let nGold = 0, clipCells = 0, scoreCells = 0;
+  const missingInMeth = new Set();
+  for (const r of all) {
+    const cats = new Map((r.categories || []).map(c => [c.id, c]));
+    for (const [area, ids] of panel) {
+      const vals = [];
+      const detail = [];
+      for (const bid of ids) {
+        const res = (r.results || {})[String(bid)];
+        if (!res || res.score === null || res.score === undefined) { detail.push({ bid, name: benchName.get(bid) || ("#" + bid), state: "no score row" }); continue; }
+        const ch = chance.has(bid) ? chance.get(bid) : 0;
+        if (!chance.has(bid)) missingInMeth.add(bid);
+        const raw = res.score;
+        let sk = ch < 1 ? (raw - ch) / (1 - ch) : 0;
+        const unclipped = sk;
+        sk = clip(sk);
+        if (unclipped < 0) clipCells++;
+        scoreCells++;
+        const w = gold.has(bid) ? 1.2 : 1.0;
+        if (gold.has(bid)) nGold++;
+        vals.push({ sk, w, bid });
+        detail.push({ bid, name: benchName.get(bid) || ("#" + bid), score: raw, chance: ch, skill: sk, gold: gold.has(bid), state: "scored" });
+      }
+      if (!vals.length) continue;
+      const W = vals.reduce((s, v) => s + v.w, 0);
+      const calc = vals.reduce((s, v) => s + v.sk * v.w, 0) / W;
+      const pub = cats.get(area);
+      const covered = detail.filter(d => d.state === "scored").length;
+      const rec = {
+        name: r.name || r.engine || "?", area,
+        calc, published: pub && pub.skill !== undefined ? pub.skill : null,
+        coverage: pub ? pub.coverage : null,
+        resid: pub && pub.skill !== undefined ? calc - pub.skill : null,
+        scored: covered, total: ids.length, cells: vals.length, clipActive: clipCells
+      };
+      (perArea[area] ??= { rows: [], weight: weight.get(area) ?? 0, benchmarks: ids.length }).rows.push(rec);
+    }
+  }
+  // aggregate: split full-coverage vs partial-coverage rows
+  const agg = {};
+  for (const [area, rec] of Object.entries(perArea)) {
+    const full = rec.rows.filter(r => r.scored === r.total).map(r => Math.abs(r.resid));
+    const part = rec.rows.filter(r => r.scored < r.total && r.resid !== null).map(r => Math.abs(r.resid));
+    const mean = v => v.length ? v.reduce((s, x) => s + x, 0) / v.length : null;
+    const worstOf = v => v.length ? Math.max(...v) : null;
+    agg[area] = {
+      weight: rec.weight, benchmarks: rec.benchmarks,
+      n: rec.rows.length,
+      full: { n: full.length, mean: mean(full), max: worstOf(full) },
+      partial: { n: part.length, mean: mean(part), max: worstOf(part) },
+      allMean: mean([...full, ...part]), allMax: worstOf([...full, ...part]),
+      worstRow: rec.rows.reduce((a, r) => Math.abs(r.resid ?? 0) > Math.abs(a.resid ?? 0) ? r : a, rec.rows[0])
+    };
+  }
+  return { agg, perArea, chanceSize: chance.size, goldCount: nGold, clipCells, scoreCells, missingInMeth: [...missingInMeth], models: all.length };
+}
+
+function methodAreaHtml(ma) {
+  let html = `<h2>Area recompute, methodology-driven (v4)</h2>`;
+  html += `<div class="summary-line">Running the methodology file's own published constants over the board's published per-benchmark results:
+  skill = clip((raw − chance)/(1 − chance)) per benchmark, gold ★ benchmarks weighing 1.2 inside their area (${ma.goldCount ? "gold cells seen: " + ma.goldCount.toLocaleString() : "none"}, chance levels: ${ma.chanceSize}, scored cells: ${ma.scoreCells.toLocaleString()}).
+  <br><b>Full-coverage rows:</b> ${Object.entries(ma.agg).filter(([a, s]) => s.full.n).map(([a, s]) => `${esc(a)} max |resid| <b>${fmt(s.full.max, 4)}</b>`).join(", ")} — the published area arithmetic reproduces from its own documented constants.
+  <br><b>Partial-coverage rows:</b> ${Object.entries(ma.agg).filter(([a, s]) => s.partial.n).map(([a, s]) => `${esc(a)} max <b>${fmt(s.partial.max, 3)}</b>`).join(", ") || "none"} —
+  rows scored on only some of an area's benchmarks publish values above the weighted mean of what they scored, and the gap grows as coverage shrinks. That row convention is the one step the methodology file does not spell out.</div>`;
+  html += `<details open><summary>Per-area residuals: full-coverage vs partial-coverage (recomputed − published)</summary><table>
+  <tr><th>Area</th><th class="num">weight</th><th class="num">bench</th><th class="num">rows</th><th class="num">full n</th><th class="num">full mean</th><th class="num">full max</th><th class="num">part n</th><th class="num">part mean</th><th class="num">part max</th></tr>
+  ${Object.entries(ma.agg).sort((a, b) => b[1].weight - a[1].weight).map(([a, s]) =>
+    `<tr><td>${esc(a)}</td><td class="num">${fmt(s.weight, 4)}</td><td class="num">${s.benchmarks}</td><td class="num">${s.n}</td>` +
+    `<td class="num">${s.full.n}</td><td class="num">${fmt(s.full.mean, 4)}</td><td class="num ${s.full.max > 0.01 ? "flag" : ""}">${fmt(s.full.max, 4)}</td>` +
+    `<td class="num">${s.partial.n}</td><td class="num">${fmt(s.partial.mean, 4)}</td><td class="num ${s.partial.max > 0.05 ? "flag" : ""}">${fmt(s.partial.max, 4)}</td></tr>`).join("")}
+  </table>`;
+  // per-benchmark detail for the worst partial row of the worst area
+  const wA = Object.entries(ma.agg).filter(([a, s]) => s.partial.n).sort((a, b) => b[1].partial.max - a[1].partial.max)[0];
+  if (wA) {
+    const [area, s] = wA;
+    const recs = ma.perArea[area].rows;
+    const partialRows = recs.filter(r => r.scored < r.total).sort((a, b) => Math.abs(b.resid) - Math.abs(a.resid)).slice(0, 8);
+    html += `<details open><summary>Worst partial-coverage rows in <b>${esc(area)}</b> (weight ${fmt(s.weight, 4)})</summary><table>
+    <tr><th>Model</th><th class="num">published skill</th><th class="num">recomputed</th><th class="num">residual</th><th class="num">scored</th><th class="num">coverage</th></tr>` +
+    partialRows.map(r => `<tr><td>${esc(r.name)}</td><td class="num">${fmt(r.published, 4)}</td><td class="num">${fmt(r.calc, 4)}</td>` +
+      `<td class="num flag">${r.resid >= 0 ? "+" : ""}${fmt(r.resid, 4)}</td><td class="num">${r.scored}/${r.total}</td><td class="num">${fmt(r.coverage, 4)}</td></tr>`).join("") +
+    `</table><div class="note">These rows publish an area skill above the gold-weighted mean of the benchmarks they actually scored. Whether the missing benchmarks are imputed at chance, at a prior, or excluded differently is not derivable from the published files — the tool reports the gap and does not guess the imputation.</div></details>`;
+  }
+  html += `</details>`;
+  if (ma.missingInMeth.length) html += `<div class="note">Board benchmarks with a score but no published chance level (normalized against 0): ${ma.missingInMeth.map(b => "#" + b).join(", ")}.</div>`;
+  return html;
 }
 
 /* ---------- fork diff ---------- */
@@ -446,6 +557,13 @@ function renderBoard(Up, C) {
       html += `<div class="note">Paste the formula JSON (weights + formula.equating) as Blob C to audit the composite arithmetic: the equating maps, the floored parts and the rows where the published decomposition does not sum to the headline.</div>`;
     }
   }
+  // methodology-driven area recompute: needs the board (Blob A or B upstream) + methodology file as Blob C
+  const methBlob = (C && C.kind === "methodology") ? C.obj : null;
+  if (methBlob && obj.models.some(m => m.results && m.categories)) {
+    html += methodAreaHtml(methodAreaAudit(obj, methBlob));
+  } else {
+    html += `<div class="note">Paste the methodology JSON (edition + index + benchmarks) as Blob C to recompute every area score from the published pipeline constants: per-benchmark chance levels, gold ★ weights, the clip() rule, and the split between full- and partial-coverage rows. Without it, the area-level pipeline stays a black box.</div>`;
+  }
   // calibration block
   if (obj.jev && obj.jev.calibration) {
     const cal = obj.jev.calibration;
@@ -581,6 +699,87 @@ $("demo03").onclick = () => {
     formula: { id: "v0.3-final", equating: { bases: 21, public: { mean: 23.5, sd: 16.54 }, same_skills: { mean: 24.27, sd: 16.35 }, new_domains: { mean: 23.68, sd: 12.29 } } },
     models: []
   });
+  $("go").click();
+};
+
+/* ---------- methodology demo fixture (synthetic, self-consistent by construction) ---------- */
+// Areas: k (2 benches, one gold 1.2) and r (2 benches). Chance levels published per benchmark.
+// skill = clip((raw - chance)/(1 - chance)); area skill = gold-weighted mean.
+// Full-coverage rows reproduce exactly; one partial row publishes above its scored mean (the
+// undocumented convention the tool flags); one below-chance cell exercises the clip.
+$("demometh").onclick = () => {
+  // fixture constants, computed here so the demo can't lie
+  const CH = { 1: 0.25, 2: 0.5, 3: 0.125, 4: 0.333 };
+  const sk = (raw, b) => Math.min(1, Math.max(0, (raw - CH[b]) / (1 - CH[b])));
+  // model Alpha (full coverage): published = weighted mean of skills
+  const a1 = sk(0.85, 1), a2 = sk(0.90, 2), a3 = sk(0.65, 3), a4 = sk(0.70, 4);
+  const alpha = { k: (1.2 * a1 + 1.0 * a2) / 2.2, r: (1.0 * a3 + 1.0 * a4) / 2 };
+  // model Beta: below-chance cell on bench 4 (clip -> 0), full coverage
+  const b1 = sk(0.60, 1), b2 = sk(0.55, 2), b3 = sk(0.30, 3), b4 = sk(0.20, 4); // b4 < 0 -> 0
+  const beta = { k: (1.2 * b1 + b2) / 2.2, r: (b3 + 0) / 2 };
+  // model Gamma (partial): only bench 1 of area k, publishes ABOVE the scored mean (undocumented)
+  const g1 = sk(0.70, 1);
+  const gammaK_published = g1 + 0.15;
+  const mkRow = (name, engine, areas, results, covs) => ({
+    engine, name, meta: {},
+    categories: [
+      { id: "k", raw: 0.8, skill: areas.k, combined: areas.k, coverage: covs.k, n: 2 },
+      { id: "r", raw: 0.7, skill: areas.r, combined: areas.r, coverage: covs.r, n: 2 }
+    ],
+    results
+  });
+  const board = {
+    generated_utc: "2026-10-30T18:20:00Z",
+    suite: { requests: 500, scoreable: 495, benchmarks: 4, panel: 4, categories: 2, hardware: "1 x GPU" },
+    jev: {
+      engine: "jev", name: "Jev", version: "jev-1.14.0",
+      calibration: { acc: 0.7393, conf: 0.8115, ece: 0.074, brier: 0.3558, over95: 0.0207, n: 72594, benchmarks: 4 },
+      categories: [
+        { id: "k", raw: 0.85, skill: (1.2 * sk(0.90, 1) + sk(0.80, 2)) / 2.2, combined: 0.8, coverage: 1, n: 2 },
+        { id: "r", raw: 0.75, skill: (sk(0.70, 3) + sk(0.75, 4)) / 2, combined: 0.75, coverage: 1, n: 2 }
+      ],
+      results: { 1: { score: 0.90 }, 2: { score: 0.80 }, 3: { score: 0.70 }, 4: { score: 0.75 } }
+    },
+    benchmarks: {},
+    models: [
+      mkRow("Alpha 27B", "alpha-27b", alpha,
+        { 1: { score: 0.85 }, 2: { score: 0.90 }, 3: { score: 0.65 }, 4: { score: 0.70 } }, { k: 1, r: 1 }),
+      mkRow("Beta 9B (below-chance clip)", "beta-9b", beta,
+        { 1: { score: 0.60 }, 2: { score: 0.55 }, 3: { score: 0.30 }, 4: { score: 0.20 } }, { k: 1, r: 1 }),
+      mkRow("Gamma 3B (partial)", "gamma-3b",
+        { k: gammaK_published, r: (sk(0.50, 3) + sk(0.60, 4)) / 2 },
+        { 1: { score: 0.70 }, 3: { score: 0.50 }, 4: { score: 0.60 } }, { k: 0.5, r: 1 })
+    ]
+  };
+  const methodology = {
+    generated_utc: "2026-10-30T10:00:00Z",
+    edition: { id: "v0.4", label: "Decision Index 0.4.1", date: "2026-10-21", panel_id: "decision-index-0.3" },
+    index: {
+      panel: 4,
+      chance_levels: [
+        { id: 1, name: "BenchA", area: "k", chance: CH[1] },
+        { id: 2, name: "BenchB", area: "k", chance: CH[2] },
+        { id: 3, name: "BenchC", area: "r", chance: CH[3] },
+        { id: 4, name: "BenchD", area: "r", chance: CH[4] }
+      ],
+      areas: [
+        { id: "k", label: "Knowledge", weight: 0.6, panel: [ { id: 1, name: "BenchA", gold: 1.2 }, { id: 2, name: "BenchB" } ] },
+        { id: "r", label: "Retrieval", weight: 0.4, panel: [ { id: 3, name: "BenchC" }, { id: 4, name: "BenchD" } ] }
+      ],
+      gold: { weight: 1.2, text: "Gold ★ benchmarks weigh 1.2 inside their area.", benchmarks: [{ id: 1, name: "BenchA", area: "k" }] },
+      formulas: [{ id: "balanced_skill", normalization: "skill", formula: "Public index: 100*(0.6*category[k] + 0.4*category[r])" }],
+      functions: { clip: "min(1,max(0,z))", skill: "clip((raw-reference)/(1-reference))", category: "weighted mean of the area's benchmark scores (gold ★ benchmarks weigh 1.2, the others 1.0)" }
+    },
+    benchmarks: [
+      { id: 1, dataset: "BenchA", area: "k", in_panel: true, metric: "accuracy" },
+      { id: 2, dataset: "BenchB", area: "k", in_panel: true, metric: "accuracy" },
+      { id: 3, dataset: "BenchC", area: "r", in_panel: true, metric: "accuracy" },
+      { id: 4, dataset: "BenchD", area: "r", in_panel: true, metric: "accuracy" }
+    ]
+  };
+  $("blobA").value = JSON.stringify(board);
+  $("blobB").value = "";
+  $("blobC").value = JSON.stringify(methodology);
   $("go").click();
 };
 

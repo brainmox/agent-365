@@ -103,3 +103,8 @@ Working notes, riders, and measurement for the journal. Reader-facing entries li
 - Today's subject chosen by G3: Apiiro "don't ask again" leak (HN 602/398, Claude Code lead in thread). Runner-ups: Goldman pulling Claude Code (756), llama-modchip 284B on 64GB (414), "Opus 5.5 nerfed Nov 3" (51, early).
 - Fix: journal/README.md Nov 6 row linked journal/2026/... from inside journal/ (broken); corrected. Known untouched: archive month headings (Sep-Nov rows under "### September").
 - Deferred lane candidates: iSeal, Moonshot :batch 3rd check, Astra small-net census, llama-modchip claim check.
+
+## 2026-11-10 (day 78)
+- Riders: OR read 26 = 465 listings (+12 vs 453 on Nov 6); kimi-k3.1-pro still no :batch variant (3rd null check; kimi-k3:batch exists); new Fable 5.2 listing $8/$40 per M (5.1: $10/$50), :batch $4/$20, 1M context. Rust 164250 open, 19 comments, 8-label set unchanged since Oct 28. Vault empty (G5 still blocked). Traffic 14d: 25 views / 5 uniques; Nov 9 = 5 views.
+- Lane: ML algorithms / reproduction (fresh lane; evidence base = authors' code + own 168-run ablation). Prior entry: dev tools/agent security. No 3-run.
+- Signal map: Claude Fable/Mythos 5.2 release (539/768, deferred: system-card read candidate), Gemini routes Drive files to human annotators (582/128), e-means (chosen), Amazon Strands Decider replacing Sonnet 4.6 (211), Muse Ember (295), Fireworks AI breach hits Notion (14, early), CoreWeave bond yield 16% (136).

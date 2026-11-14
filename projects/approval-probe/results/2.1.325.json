@@ -1,0 +1,1209 @@
+{
+ "package": "@anthropic-ai/claude-code-linux-x64",
+ "version": "2.1.325",
+ "reported_version": "2.1.325 (Claude Code)",
+ "integrity": "sha512-BqZzMvP/zgLLL34S+7OzbG+cyoFp7gwWHU5koVwsyMlTAz+0zZAmbY+UkzvtN2RXxp6AcMenbYIjQJxoXfUY3w==",
+ "run_at": "2026-11-14T10:23:47+00:00",
+ "summary": {
+  "credential_cases": 17,
+  "credential_leaks": 13,
+  "credential_verbatim": 13,
+  "controls": 12,
+  "controls_verbatim": 7,
+  "no_request": 0,
+  "accepted": 29,
+  "accepted_rule_saved": 16,
+  "secret_on_disk": 2
+ },
+ "results": [
+  {
+   "command": "PGPASSWORD=FAKEPASS123 psql -h db.example.com -U app -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "PGPASSWORD=FAKEPASS123 psql -h db.example.com -U app -c \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "PGPASSWORD=FAKEPASS123 psql -h db.example.com -U app -c \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "pgpassword-env",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "psql \"postgresql://app:FAKEPASS123@db.example.com:5432/prod\" -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "psql \"postgresql://app:FAKEPASS123@db.example.com:5432/prod\" -c \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "psql \"postgresql://app:FAKEPASS123@db.example.com:5432/prod\" -c \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "psql-url",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "mysql -h db.example.com -u root -pFAKEPASS123 -e \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "mysql -h db.example.com -u root -pFAKEPASS123 -e \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "mysql -h db.example.com -u root -pFAKEPASS123 -e \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "mysql-p",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "sshpass",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "curl -H \"Authorization: Bearer FAKETOKEN123\" https://api.example.com/v1/status",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "curl -H \"Authorization: Bearer FAKETOKEN123\" https://api.example.com/v1/status"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "curl -H \"Authorization: Bearer FAKETOKEN123\" https://api.example.com/v1/status"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "curl-bearer",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "API_KEY=FAKETOKEN123 npm run deploy",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "API_KEY=FAKETOKEN123 npm run deploy"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "API_KEY=FAKETOKEN123 npm run deploy"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "apikey-env-npm",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "npm run deploy -- --token FAKETOKEN123",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "npm run *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "npm run *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(npm run *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "npm-token-flag",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "wildcard",
+   "leaks": false
+  },
+  {
+   "command": "docker login -u me -p FAKEPASS123 registry.example.com",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "docker login *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "docker login *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(docker login *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "docker-login-p",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "wildcard",
+   "leaks": false
+  },
+  {
+   "command": "ANTHROPIC_API_KEY=FAKETOKEN123 npm run deploy",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "npm run *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "npm run *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(npm run *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "anthropic-key-env",
+   "origin": "day77",
+   "has_secret": true,
+   "shape": "wildcard",
+   "leaks": false
+  },
+  {
+   "command": "mysql -h db.example.com -u root --password=FAKEPASS123 -e \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "mysql -h db.example.com -u root --password=FAKEPASS123 -e \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "mysql -h db.example.com -u root --password=FAKEPASS123 -e \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "mysql-password-eq",
+   "origin": "v1",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "redis-cli -h cache.example.com -a FAKEPASS123 ping",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "redis-cli -h cache.example.com -a FAKEPASS123 ping"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "redis-cli -h cache.example.com -a FAKEPASS123 ping"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "redis-cli-a",
+   "origin": "v1",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "git clone https://x-access-token:FAKETOKEN123@git.example.com/example/repo.git",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "git clone *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "git clone *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(git clone *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "git-clone-token-url",
+   "origin": "v1",
+   "has_secret": true,
+   "shape": "wildcard",
+   "leaks": false
+  },
+  {
+   "command": "GITHUB_TOKEN=FAKETOKEN123 gh pr list",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "GITHUB_TOKEN=FAKETOKEN123 gh pr list"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "GITHUB_TOKEN=FAKETOKEN123 gh pr list"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "github-token-env-gh",
+   "origin": "v1",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "git push origin main",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "git push *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "git push *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(git push *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-git-push",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "wildcard",
+   "leaks": null
+  },
+  {
+   "command": "npm run deploy",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "npm run *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "npm run *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(npm run *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-npm-run",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "wildcard",
+   "leaks": null
+  },
+  {
+   "command": "NODE_ENV=production npm run deploy",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "npm run *"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "npm run *"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(npm run *)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-node-env",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "wildcard",
+   "leaks": null
+  },
+  {
+   "command": "ls -la /var/log",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "ls -la /var/log"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    },
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Read",
+       "ruleContent": "//var/log/**"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "session"
+    }
+   ],
+   "rules": [
+    "ls -la /var/log"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(ls -la /var/log)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-ls",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "python3 -m pytest tests/",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "python3 -m pytest tests/"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "python3 -m pytest tests/"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(python3 -m pytest tests/)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-pytest",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "psql -h db.example.com -U app -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "psql -h db.example.com -U app -c \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "psql -h db.example.com -U app -c \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(psql -h db.example.com -U app -c \"select 1\")"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-psql-nosecret",
+   "origin": "day77",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "psql \"service=prod\" -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "psql \"service=prod\" -c \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "psql \"service=prod\" -c \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(psql \"service=prod\" -c \"select 1\")"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "ctl-pgpass-service",
+   "origin": "v1",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "PGPASSWORD=\"$PGPASS\" psql -h db.example.com -U app -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [],
+   "rules": [],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "pg-varref",
+   "origin": "boundary",
+   "has_secret": false,
+   "shape": "none",
+   "leaks": null
+  },
+  {
+   "command": "sshpass -p \"$SSHPASS\" ssh root@203.0.113.7 uptime",
+   "got_request": true,
+   "suggestions": [],
+   "rules": [],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "sshpass-varref",
+   "origin": "boundary",
+   "has_secret": false,
+   "shape": "none",
+   "leaks": null
+  },
+  {
+   "command": "FOO_MODE=fast psql -h db.example.com -U app -c \"select 1\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "FOO_MODE=fast psql -h db.example.com -U app -c \"select 1\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "FOO_MODE=fast psql -h db.example.com -U app -c \"select 1\""
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(FOO_MODE=fast psql -h db.example.com -U app -c \"select 1\")"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "benign-unknown-env",
+   "origin": "boundary",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "./deploy.sh FAKETOKEN123",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "./deploy.sh FAKETOKEN123"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "./deploy.sh FAKETOKEN123"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(./deploy.sh FAKETOKEN123)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": true
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "positional-secret",
+   "origin": "boundary",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "acme-cli --pass FAKEPASS123 status",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "acme-cli --pass FAKEPASS123 status"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "acme-cli --pass FAKEPASS123 status"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(acme-cli --pass FAKEPASS123 status)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": [],
+    "secret_on_disk": true
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "custom-flag-secret",
+   "origin": "boundary",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "curl -H \"X-Api-Key: FAKETOKEN123\" https://api.example.com/v1/status",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "curl -H \"X-Api-Key: FAKETOKEN123\" https://api.example.com/v1/status"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "curl -H \"X-Api-Key: FAKETOKEN123\" https://api.example.com/v1/status"
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "curl-x-api-key",
+   "origin": "boundary",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "curl \"https://api.example.com/v1/status?api_key=FAKETOKEN123\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "curl \"https://api.example.com/v1/status?api_key=FAKETOKEN123\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "curl \"https://api.example.com/v1/status?api_key=FAKETOKEN123\""
+   ],
+   "persisted": {
+    "settings_allow": null,
+    "global_excludes_has_entry": null,
+    "repo_gitignore_created": false,
+    "git_check_ignore": null,
+    "turn_completed": true,
+    "notices": [
+     {
+      "tag": "permission_rule_not_saved",
+      "level": "warning",
+      "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+     }
+    ],
+    "secret_on_disk": false
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "curl-query-key",
+   "origin": "boundary",
+   "has_secret": true,
+   "shape": "verbatim",
+   "leaks": true
+  },
+  {
+   "command": "psql -h db.example.com -U app -c \"select count(*) from password_resets\"",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "psql -h db.example.com -U app -c \"select count(*) from password_resets\""
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "psql -h db.example.com -U app -c \"select count(*) from password_resets\""
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(psql -h db.example.com -U app -c \"select count\\(*\\) from password_resets\")"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "benign-password-word",
+   "origin": "boundary",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  },
+  {
+   "command": "curl https://api.example.com/v1/token_usage",
+   "got_request": true,
+   "suggestions": [
+    {
+     "type": "addRules",
+     "rules": [
+      {
+       "toolName": "Bash",
+       "ruleContent": "curl https://api.example.com/v1/token_usage"
+      }
+     ],
+     "behavior": "allow",
+     "destination": "localSettings"
+    }
+   ],
+   "rules": [
+    "curl https://api.example.com/v1/token_usage"
+   ],
+   "persisted": {
+    "settings_allow": [
+     "Bash(curl https://api.example.com/v1/token_usage)"
+    ],
+    "global_excludes_has_entry": true,
+    "repo_gitignore_created": false,
+    "git_check_ignore": true,
+    "turn_completed": true,
+    "notices": []
+   },
+   "events": null,
+   "stderr_tail": null,
+   "id": "benign-token-word",
+   "origin": "boundary",
+   "has_secret": false,
+   "shape": "verbatim",
+   "leaks": null
+  }
+ ],
+ "workflows": [
+  {
+   "id": "wf-plain-folder-then-git-init",
+   "command": "git push origin main",
+   "rules": [
+    "git push *"
+   ],
+   "rule_saved": true,
+   "secret_on_disk": null,
+   "global_excludes_has_entry": true,
+   "ignored_after_git_init": true,
+   "tracked_file_modified": null,
+   "notices": [],
+   "turn_completed": true
+  },
+  {
+   "id": "wf-plain-folder-secret",
+   "command": "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime",
+   "rules": [
+    "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"
+   ],
+   "rule_saved": false,
+   "secret_on_disk": false,
+   "global_excludes_has_entry": null,
+   "ignored_after_git_init": null,
+   "tracked_file_modified": null,
+   "notices": [
+    {
+     "tag": "permission_rule_not_saved",
+     "level": "warning",
+     "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+    }
+   ],
+   "turn_completed": true
+  },
+  {
+   "id": "wf-tracked-settings-clean-rule",
+   "command": "git push origin main",
+   "rules": [
+    "git push *"
+   ],
+   "rule_saved": false,
+   "secret_on_disk": null,
+   "global_excludes_has_entry": null,
+   "ignored_after_git_init": null,
+   "tracked_file_modified": false,
+   "notices": [
+    {
+     "tag": "permission_rule_not_saved",
+     "level": "warning",
+     "content": "Allowed for this session only. Git tracks .claude/settings.local.json, so the rule isn\u2019t saved there."
+    }
+   ],
+   "turn_completed": true
+  },
+  {
+   "id": "wf-tracked-settings-secret",
+   "command": "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime",
+   "rules": [
+    "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"
+   ],
+   "rule_saved": false,
+   "secret_on_disk": false,
+   "global_excludes_has_entry": null,
+   "ignored_after_git_init": null,
+   "tracked_file_modified": false,
+   "notices": [
+    {
+     "tag": "permission_rule_not_saved",
+     "level": "warning",
+     "content": "Allowed for this session only. The rule looks like it contains a secret, so it isn\u2019t saved to settings."
+    }
+   ],
+   "turn_completed": true
+  }
+ ]
+}

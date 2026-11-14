@@ -1,0 +1,179 @@
+{
+  "description": "Commands the mock model asks Claude Code to run. Every secret is a fake string containing FAKE. 'secret' is null for controls. 'origin' marks whether the case was in the day-77 run (day77) added in v1 (v1), or added to map the edges of the 2.1.325 save filter (boundary).",
+  "cases": [
+    {
+      "id": "pgpassword-env",
+      "origin": "day77",
+      "secret": "FAKEPASS123",
+      "command": "PGPASSWORD=FAKEPASS123 psql -h db.example.com -U app -c \"select 1\""
+    },
+    {
+      "id": "psql-url",
+      "origin": "day77",
+      "secret": "FAKEPASS123",
+      "command": "psql \"postgresql://app:FAKEPASS123@db.example.com:5432/prod\" -c \"select 1\""
+    },
+    {
+      "id": "mysql-p",
+      "origin": "day77",
+      "secret": "FAKEPASS123",
+      "command": "mysql -h db.example.com -u root -pFAKEPASS123 -e \"select 1\""
+    },
+    {
+      "id": "sshpass",
+      "origin": "day77",
+      "secret": "FAKEPASS123",
+      "command": "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"
+    },
+    {
+      "id": "curl-bearer",
+      "origin": "day77",
+      "secret": "FAKETOKEN123",
+      "command": "curl -H \"Authorization: Bearer FAKETOKEN123\" https://api.example.com/v1/status"
+    },
+    {
+      "id": "apikey-env-npm",
+      "origin": "day77",
+      "secret": "FAKETOKEN123",
+      "command": "API_KEY=FAKETOKEN123 npm run deploy"
+    },
+    {
+      "id": "npm-token-flag",
+      "origin": "day77",
+      "secret": "FAKETOKEN123",
+      "command": "npm run deploy -- --token FAKETOKEN123"
+    },
+    {
+      "id": "docker-login-p",
+      "origin": "day77",
+      "secret": "FAKEPASS123",
+      "command": "docker login -u me -p FAKEPASS123 registry.example.com"
+    },
+    {
+      "id": "anthropic-key-env",
+      "origin": "day77",
+      "secret": "FAKETOKEN123",
+      "command": "ANTHROPIC_API_KEY=FAKETOKEN123 npm run deploy"
+    },
+    {
+      "id": "mysql-password-eq",
+      "origin": "v1",
+      "secret": "FAKEPASS123",
+      "command": "mysql -h db.example.com -u root --password=FAKEPASS123 -e \"select 1\""
+    },
+    {
+      "id": "redis-cli-a",
+      "origin": "v1",
+      "secret": "FAKEPASS123",
+      "command": "redis-cli -h cache.example.com -a FAKEPASS123 ping"
+    },
+    {
+      "id": "git-clone-token-url",
+      "origin": "v1",
+      "secret": "FAKETOKEN123",
+      "command": "git clone https://x-access-token:FAKETOKEN123@git.example.com/example/repo.git"
+    },
+    {
+      "id": "github-token-env-gh",
+      "origin": "v1",
+      "secret": "FAKETOKEN123",
+      "command": "GITHUB_TOKEN=FAKETOKEN123 gh pr list"
+    },
+    {
+      "id": "ctl-git-push",
+      "origin": "day77",
+      "secret": null,
+      "command": "git push origin main"
+    },
+    {
+      "id": "ctl-npm-run",
+      "origin": "day77",
+      "secret": null,
+      "command": "npm run deploy"
+    },
+    {
+      "id": "ctl-node-env",
+      "origin": "day77",
+      "secret": null,
+      "command": "NODE_ENV=production npm run deploy"
+    },
+    {
+      "id": "ctl-ls",
+      "origin": "day77",
+      "secret": null,
+      "command": "ls -la /var/log"
+    },
+    {
+      "id": "ctl-pytest",
+      "origin": "day77",
+      "secret": null,
+      "command": "python3 -m pytest tests/"
+    },
+    {
+      "id": "ctl-psql-nosecret",
+      "origin": "day77",
+      "secret": null,
+      "command": "psql -h db.example.com -U app -c \"select 1\""
+    },
+    {
+      "id": "ctl-pgpass-service",
+      "origin": "v1",
+      "secret": null,
+      "command": "psql \"service=prod\" -c \"select 1\""
+    },
+    {
+      "id": "pg-varref",
+      "origin": "boundary",
+      "secret": null,
+      "command": "PGPASSWORD=\"$PGPASS\" psql -h db.example.com -U app -c \"select 1\""
+    },
+    {
+      "id": "sshpass-varref",
+      "origin": "boundary",
+      "secret": null,
+      "command": "sshpass -p \"$SSHPASS\" ssh root@203.0.113.7 uptime"
+    },
+    {
+      "id": "benign-unknown-env",
+      "origin": "boundary",
+      "secret": null,
+      "command": "FOO_MODE=fast psql -h db.example.com -U app -c \"select 1\""
+    },
+    {
+      "id": "positional-secret",
+      "origin": "boundary",
+      "secret": "FAKETOKEN123",
+      "command": "./deploy.sh FAKETOKEN123"
+    },
+    {
+      "id": "custom-flag-secret",
+      "origin": "boundary",
+      "secret": "FAKEPASS123",
+      "command": "acme-cli --pass FAKEPASS123 status"
+    },
+    {
+      "id": "curl-x-api-key",
+      "origin": "boundary",
+      "secret": "FAKETOKEN123",
+      "command": "curl -H \"X-Api-Key: FAKETOKEN123\" https://api.example.com/v1/status"
+    },
+    {
+      "id": "curl-query-key",
+      "origin": "boundary",
+      "secret": "FAKETOKEN123",
+      "command": "curl \"https://api.example.com/v1/status?api_key=FAKETOKEN123\""
+    },
+    {
+      "id": "benign-password-word",
+      "origin": "boundary",
+      "secret": null,
+      "command": "psql -h db.example.com -U app -c \"select count(*) from password_resets\""
+    },
+    {
+      "id": "benign-token-word",
+      "origin": "boundary",
+      "secret": null,
+      "command": "curl https://api.example.com/v1/token_usage"
+    }
+  ]
+}

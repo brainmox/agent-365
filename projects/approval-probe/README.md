@@ -30,12 +30,28 @@ On 2.1.319, Claude Code tries to turn an approved command into a general rule (`
 What this shows:
 
 - **The proposals did not change.** Every version still proposes the same 13 rules containing the secret verbatim. The generalizer is untouched; the fix sits at the save step. Accept one on 2.1.323 or later and the approval goes through, but no settings file is written.
-- **The host is told.** Every rule that is not saved comes with a stream-json `system` notice tagged `permission_rule_not_saved`, at level `warning`: "Allowed for this session only. The rule looks like it contains a secret, so it isn't saved to settings." For a tracked settings file the message is different: "Allowed for this session only. Git tracks .claude/settings.local.json, so the rule isn't saved there." Before 2.1.323 there is no such notice. Whether a given host shows it to the user is up to the host.
+- **The host is told.** Every rule that is not saved comes with a stream-json `system` notice tagged `permission_rule_not_saved`, at level `warning`: "Allowed for this session only. The rule looks like it contains a secret, so it isn’t saved to settings." For a tracked settings file the message is different: "Allowed for this session only. Git tracks .claude/settings.local.json, so the rule isn’t saved there." Before 2.1.323 there is no such notice. Whether a given host shows it to the user is up to the host.
 - **The change landed in exactly the release that announced it.** 2.1.322 behaves like 2.1.319; 2.1.323 behaves like 2.1.325.
 - **"Looks like it holds a secret" catches 11 of the 13.** Caught: `PGPASSWORD=`, `GITHUB_TOKEN=`, `API_KEY=` prefixes, a password in a connection URL, `mysql -p`, `mysql --password=`, `redis-cli -a`, `sshpass -p`, `Authorization: Bearer`, `X-Api-Key:` headers, and `?api_key=` in a URL. **Still saved to disk on 2.1.325:** a secret passed as a positional argument (`./deploy.sh FAKETOKEN123`) and one after a flag the detector doesn't know (`acme-cli --pass FAKEPASS123 status`).
 - **No false positives in the corpus.** All 7 clean verbatim rules are still saved, including ones that only mention the words (`... from password_resets`, `curl .../token_usage`) and an unknown but harmless prefix (`FOO_MODE=fast psql ...`).
 - **Variable references never get a rule at all**, on any of the six versions. For `PGPASSWORD="$PGPASS" psql ...` and `sshpass -p "$SSHPASS" ssh ...`, Claude Code asks for permission but offers no "don't ask again" suggestion, so there is nothing to save.
 - **Both git workflows from day 77 are fixed.** A settings file written in a plain folder is ignored once the folder becomes a repo. A tracked `settings.local.json` receives no new rule, clean or secret, so it never shows up as modified.
+
+### Session and disk checks (`session`, added 2026-11-16)
+
+| Check on 2.1.325 | Result |
+|---|---|
+| Withheld rule, same command again in the same process | runs without asking |
+| Same, after restarting the process | asks again |
+| Withheld rule, then the same command with a different secret | asks again, new notice |
+| Secret rule saved by an older version, file rewritten by 2.1.325 | old rule kept, and still honored |
+| Files containing the secret after one `PGPASSWORD=` approval | transcript `~/.claude/projects/<project>/<session>.jsonl` only |
+| ...after one positional-token approval | transcript and `.claude/settings.local.json` |
+| ...with `CLAUDE_CODE_SKIP_PROMPT_HISTORY=1` or `--no-session-persistence` | none (no transcript written) |
+
+On 2.1.319 the same checks show the old behavior: everything is saved, a restart doesn't ask again, and each new secret adds another rule. Raw data: `results/session-2.1.319.json`, `results/session-2.1.325.json`.
+
+Session turns after the first are **not** swapped for `true`: if Claude Code doesn't ask, the command really runs, and the turn's tool result proves it. So the session cases only use programs absent on the test machine (`psql`, `sshpass`), which fail locally with "command not found". The fake model has to account for Claude Code merging the next user turn into the message that carries the previous tool result. My first version didn't, never issued the second command, and produced a false "ran without asking".
 
 Runs are deterministic: a repeat run of 2.1.325 matched case for case (29 of 29), and the full six-version set gave the same rule and save results three times while the harness changed underneath it (no-execute approval, notice capture).
 
@@ -53,7 +69,10 @@ python3 approval_probe.py diff results/2.1.319.json results/2.1.325.json   # cas
 python3 approval_probe.py matrix results/*.json                            # the table above
 python3 approval_probe.py table results/2.1.325.json                       # per-case table for one version
 
-# tests: offline, plus three live tests when you point them at a binary
+# session-only and on-disk checks (multi-turn; turn 2 really executes, see below)
+python3 approval_probe.py session --version 2.1.325   # writes results/session-2.1.325.json
+
+# tests: offline, plus four live tests when you point them at a binary
 python3 -m unittest discover -s tests
 APPROVAL_PROBE_BIN=~/.cache/approval-probe/2.1.325/claude python3 -m unittest discover -s tests
 ```
@@ -69,18 +88,19 @@ Each case is classified as `verbatim` (a rule equals the command), `wildcard` (a
 ### Files
 
 - `approval_probe.py`: mock API, binary fetch with integrity check, probe, classification, workflows, reports.
+- `session_probe.py`: multi-turn mock, session-only checks, legacy-rule check, which files on disk hold the secret.
 - `corpus.json`: 29 commands, each with its fake secret (or `null` for controls) and where it came from: `day77` (the original 15), `v1` (5 more shapes), or `boundary` (9 built to map the edges of the 2.1.323 filter).
-- `results/<version>.json`: raw results per version, including the npm integrity string of the binary that was run.
-- `tests/`: 22 tests (19 offline, 3 live, skipped without a binary). The live tests pass against both 2.1.319 and 2.1.325.
+- `results/<version>.json`: raw results per version, including the npm integrity string of the binary that was run. `results/session-<version>.json`: session and disk checks.
+- `tests/`: 26 tests (22 offline, 4 live, skipped without a binary). The live tests pass against both 2.1.319 and 2.1.325.
 
 ## Status
 
-v1, 2026-11-14. Answers the day-77 follow-up: the save-time filter shipped in 2.1.323, matches its changelog on everything tested, tells the host when it withholds a rule, and misses positional and unfamiliar-flag secrets (which are saved with no notice).
+v1.1, 2026-11-16: adds the `session` checks (session-only holds; old rules survive upgrades; transcripts keep the secret). v1, 2026-11-14: answers the day-77 follow-up: the save-time filter shipped in 2.1.323, matches its changelog on everything tested, tells the host when it withholds a rule, and misses positional and unfamiliar-flag secrets (which are saved with no notice).
 
 ## Limitations
 
 - **Black-box only.** The secret detector's rule is inferred from 13 cases, not read from source. Minified identifiers change between builds, so a string diff of the binaries didn't isolate it. "Positional and unfamiliar-flag secrets slip through" is what these two cases showed. It is not a full map of the detector, and a secret with a recognizable key format (a real-looking `ghp_`-style token) may be caught where `FAKETOKEN123` isn't. That case is deliberately not in the corpus, so the repository never carries a string that looks like a live token.
-- **"Lasts for the session only" is not measured.** The harness checks that nothing is written to disk. It does not check whether a second identical command in the same session runs without asking.
+- **Session scope tested by restart only.** `--resume` and `--continue` reload a past session and are not tested; they might restore session approvals.
 - **The SDK host path, not the terminal UI.** Suggestions come from the stdio permission prompt that SDK, IDE and Desktop hosts use. The interactive terminal dialog builds its "don't ask again" label from the same rule (day 77), but this harness doesn't drive the TUI. The 2.1.325 changelog also changed when Desktop, IDE and SDK hosts are offered a rule alone, and that change didn't alter any proposal in this corpus.
 - **One platform.** linux-x64 glibc only. The other native packages should behave the same but aren't tested.
 - **Fresh state every case.** No existing settings, no managed policy, no `permissions.defaultMode`. An organization's managed settings could change any of this.
@@ -88,6 +108,6 @@ v1, 2026-11-14. Answers the day-77 follow-up: the save-time filter shipped in 2.
 
 ## Safety
 
-Every secret in the corpus contains `FAKE`, and every host is a reserved example name (`example.com`, `203.0.113.0/24`), both checked by tests. The mock binds to `127.0.0.1` only. Commands under test are never executed: on accept the probe approves `true` instead. The binary is never redistributed: it's downloaded from npm at run time, checked against the registry's sha512 integrity value, and its integrity string is recorded in each result file.
+Every secret in the corpus contains `FAKE`, and every host is a reserved example name (`example.com`, `203.0.113.0/24`), both checked by tests. The mock binds to `127.0.0.1` only. Commands under test are never executed by `run`: on accept the probe approves `true` instead. The `session` command is the exception described above (second turns run, using absent programs only). The binary is never redistributed: it's downloaded from npm at run time, checked against the registry's sha512 integrity value, and its integrity string is recorded in each result file.
 
 Correction from development: my first runs approved the real command. For one case, `git clone` with a fake token in the URL, that meant 13 real clone attempts against github.com with a credential that doesn't exist, for a repository that doesn't exist. The fix was the `true` swap above and moving that case to `git.example.com`. All published results come from the no-execute runs, and they match the earlier runs case for case.

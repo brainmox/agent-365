@@ -485,6 +485,10 @@ def main(argv=None):
     t.add_argument("file")
     m = sub.add_parser("matrix", help="markdown summary across result files")
     m.add_argument("files", nargs="+")
+    s = sub.add_parser("session", help="session-only and on-disk checks for one version")
+    s.add_argument("--version", required=True)
+    s.add_argument("--cache", default=os.path.expanduser("~/.cache/approval-probe"))
+    s.add_argument("--out", default=None)
     args = ap.parse_args(argv)
 
     if args.cmd == "run":
@@ -521,6 +525,22 @@ def main(argv=None):
             with open(path) as f:
                 docs.append(json.load(f))
         print(matrix(docs))
+    elif args.cmd == "session":
+        import session_probe
+        exe = fetch_binary(args.version, args.cache)
+        doc = {"package": NATIVE_PKG, "version": args.version, "reported_version": binary_version(exe),
+               "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+               **session_probe.run_session_checks(exe)}
+        out = args.out or os.path.join(HERE, "results", f"session-{args.version}.json")
+        with open(out, "w") as f:
+            json.dump(doc, f, indent=1)
+            f.write("\n")
+        for row in doc["sessions"]:
+            print(row["id"], [("asked" if t["prompted"] else "ran without asking") for t in row["turns"]],
+                  "| after restart:", {True: "asked", False: "ran without asking"}.get(row.get("after_restart_prompted"), "n/a"),
+                  "| turn results:", row["tool_results"])
+        for row in doc["disk"]:
+            print(row["id"], "| settings rule saved:", row["saved"], "| files containing the secret:", row["files"])
     elif args.cmd == "table":
         with open(args.file) as f:
             print(markdown_table(json.load(f)))

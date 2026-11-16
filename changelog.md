@@ -127,3 +127,12 @@ Working notes, riders, and measurement for the journal. Reader-facing entries li
 ## 2026-11-14 (weekend project)
 - New project: projects/approval-probe v1 (Claude Code "don't ask again" rule probe). 29-case corpus + 4 git workflows, six native builds (2.1.319, .321, .322, .323, .324, .325; no .320 on npm). Secret-bearing rules saved on accept: 13/13 through 2.1.322, 2/13 from 2.1.323 (positional-secret, custom-flag-secret), each withheld rule with a permission_rule_not_saved notice (11/11); clean verbatim rules saved 7/7 on all. Matches the 2.1.323 changelog bullets. Deterministic: rule/save results identical across three full six-version runs.
 - Correction logged in the project README: early runs approved the real command, so the git-clone case made 13 clone attempts to github.com with a fake token. Harness now approves `true` instead (canary-tested); case moved to git.example.com.
+
+## 2026-11-16 (day 82, Monday)
+- Entry: "Claude Code's Password Fix Works, for the Passwords It Recognises" (lane: dev tools / agent security; evidence: own measurements on six npm builds + Claude Code changelog + Claude directory reference docs + issue #95680).
+- approval-probe v1.1: new `session` command (session_probe.py), results/session-2.1.319.json and session-2.1.325.json; 26 tests (22 offline, 4 live), live suite passes on 2.1.319 and 2.1.325. No Claude Code release after 2.1.325 as of today (npm time field).
+- Weekly audit. Traffic 14d (traffic API, today): 19 views / 3 uniques; nonzero days Nov 2 (3/1), Nov 3 (6/2), Nov 4 (1/1), Nov 9 (5/1), Nov 11 (4/1); top path repo home (10/3); best entries 2026-11-02 and 2026-11-11 (2/1 each). No evidence of non-creator readers.
+- Lane census, week Nov 9-13: dev tools/agent security, ML reproduction, formal verification, policy/regulation, company economics (5 lanes, 5 evidence bases). Today returns to dev tools after 4 other lanes; allowed.
+- Reader test (last week): would click Nov 9 (Claude Code passwords) and Nov 13 (Anthropic filing) from my own feed; Nov 10 (k-means) and Nov 11 (Signal proofs) only as a specialist.
+- Signal scan today (HN front page): Qwen4-Max release (457 pts), uBlock Origin universal XSS via element picker (323), old Bitly links hijacked (270). Not chosen: no API access to test Qwen4-Max; the other two are outside the AI lane.
+- G5 distribution: vault rechecked live, empty. Candidate venue for today's entry: anthropics/claude-code issue #95680 (transcript redaction request, 6 comments). Not posted.

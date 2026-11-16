@@ -1,0 +1,161 @@
+{
+ "package": "@anthropic-ai/claude-code-linux-x64",
+ "version": "2.1.325",
+ "reported_version": "2.1.325 (Claude Code)",
+ "run_at": "2026-11-16T09:06:29+00:00",
+ "sessions": [
+  {
+   "id": "secret-env-same-twice",
+   "turns": [
+    {
+     "turn": 1,
+     "prompted": true,
+     "notices": [
+      "permission_rule_not_saved"
+     ],
+     "completed": true
+    },
+    {
+     "turn": 2,
+     "prompted": false,
+     "notices": [],
+     "completed": true
+    }
+   ],
+   "tool_results": [
+    "\"(Bash completed with no output)\"",
+    "\"Exit code 127\\n/bin/bash: line 1: psql: command not found\""
+   ],
+   "saved": null,
+   "after_restart_prompted": true
+  },
+  {
+   "id": "secret-sshpass-same-twice",
+   "turns": [
+    {
+     "turn": 1,
+     "prompted": true,
+     "notices": [
+      "permission_rule_not_saved"
+     ],
+     "completed": true
+    },
+    {
+     "turn": 2,
+     "prompted": false,
+     "notices": [],
+     "completed": true
+    }
+   ],
+   "tool_results": [
+    "\"(Bash completed with no output)\"",
+    "\"Exit code 127\\n/bin/bash: line 1: sshpass: command not found\""
+   ],
+   "saved": null
+  },
+  {
+   "id": "clean-same-twice",
+   "turns": [
+    {
+     "turn": 1,
+     "prompted": true,
+     "notices": [],
+     "completed": true
+    },
+    {
+     "turn": 2,
+     "prompted": false,
+     "notices": [],
+     "completed": true
+    }
+   ],
+   "tool_results": [
+    "\"(Bash completed with no output)\"",
+    "\"Exit code 127\\n/bin/bash: line 1: psql: command not found\""
+   ],
+   "saved": [
+    "Bash(psql -h db.example.com -U app -c \"select 1\")"
+   ],
+   "after_restart_prompted": false
+  },
+  {
+   "id": "secret-then-different-secret",
+   "turns": [
+    {
+     "turn": 1,
+     "prompted": true,
+     "notices": [
+      "permission_rule_not_saved"
+     ],
+     "completed": true
+    },
+    {
+     "turn": 2,
+     "prompted": true,
+     "notices": [
+      "permission_rule_not_saved"
+     ],
+     "completed": true
+    }
+   ],
+   "tool_results": [
+    "\"(Bash completed with no output)\"",
+    "\"(Bash completed with no output)\""
+   ],
+   "saved": null
+  },
+  {
+   "id": "legacy-secret-rule-then-clean-save",
+   "turns": [
+    {
+     "turn": 1,
+     "prompted": true,
+     "notices": [],
+     "completed": true
+    },
+    {
+     "turn": 2,
+     "prompted": false,
+     "notices": [],
+     "completed": true
+    }
+   ],
+   "tool_results": [
+    "\"(Bash completed with no output)\"",
+    "\"Exit code 127\\n/bin/bash: line 1: psql: command not found\""
+   ],
+   "saved": [
+    "Bash(PGPASSWORD=FAKEPASS999 psql -h db.example.com -U app -c \"select 1\")",
+    "Bash(psql -h db.example.com -U app -c \"select 1\")"
+   ],
+   "legacy_rule_kept": true
+  }
+ ],
+ "disk": [
+  {
+   "id": "env-prefix",
+   "saved": false,
+   "files": {
+    "home/.claude/projects/<project>/<session>.jsonl": 1
+   }
+  },
+  {
+   "id": "positional",
+   "saved": true,
+   "files": {
+    "home/.claude/projects/<project>/<session>.jsonl": 1,
+    "proj/.claude/settings.local.json": 1
+   }
+  },
+  {
+   "id": "env-prefix+CLAUDE_CODE_SKIP_PROMPT_HISTORY",
+   "saved": false,
+   "files": {}
+  },
+  {
+   "id": "env-prefix+--no-session-persistence",
+   "saved": false,
+   "files": {}
+  }
+ ]
+}

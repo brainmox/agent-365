@@ -131,6 +131,35 @@ class TestReporting(unittest.TestCase):
                           s["controls_verbatim"], s["no_request"]), (2, 1, 1, 1, 1))
 
 
+class TestSessionMock(unittest.TestCase):
+    def test_merged_next_turn_counts_as_new_turn(self):
+        import session_probe as sp
+        merged = [{"role": "user", "content": [{"type": "tool_result", "tool_use_id": "a"},
+                                               {"type": "text", "text": "turn 2"}]}]
+        self.assertFalse(sp.TurnMock.newest_is_tool_result(merged))
+        self.assertTrue(sp.TurnMock.newest_is_tool_result([{"role": "user", "content": [{"type": "tool_result"}]}]))
+        self.assertFalse(sp.TurnMock.newest_is_tool_result([{"role": "user", "content": "plain"}]))
+
+    def test_session_secrets_fake_and_binaries_absent_cases(self):
+        import session_probe as sp
+        for c in sp.SESSION_CASES:
+            for cmd in c["commands"]:
+                self.assertTrue(cmd.split()[0].startswith(("PGPASSWORD=", "psql", "sshpass")))
+        for c in sp.DISK_CASES:
+            self.assertIn("FAKE", c["secret"])
+            self.assertIn(c["secret"], c["command"])
+
+    def test_files_containing_normalizes(self):
+        import session_probe as sp, tempfile
+        root = tempfile.mkdtemp()
+        d = os.path.join(root, "home/.claude/projects/-tmp-x-proj")
+        os.makedirs(d)
+        with open(os.path.join(d, "0f1e2d3c-1111-2222-3333-444455556666.jsonl"), "w") as f:
+            f.write("a FAKEX b FAKEX")
+        self.assertEqual(sp.files_containing(root, "FAKEX"),
+                         {"home/.claude/projects/<project>/<session>.jsonl": 2})
+
+
 class TestMatrixAndWorkflows(unittest.TestCase):
     def _doc(self, version, saved):
         res = [{"id": "s", "has_secret": True, "leaks": True, "shape": "verbatim",
@@ -172,6 +201,14 @@ class TestIntegration(unittest.TestCase):
         self.assertTrue(r["persisted"]["turn_completed"])
         self.assertEqual(r["persisted"]["settings_allow"], [f"Bash(touch {canary})"])
         self.assertFalse(os.path.exists(canary))
+
+    def test_session_rule_lasts_for_session_only(self):
+        import session_probe as sp, shutil
+        r = sp.session(os.environ["APPROVAL_PROBE_BIN"], [sp.SSH, sp.SSH])
+        shutil.rmtree(r["root"], ignore_errors=True)
+        self.assertTrue(r["turns"][0]["prompted"])
+        self.assertFalse(r["turns"][1]["prompted"])
+        self.assertIn("sshpass: command not found", r["tool_results"][1])
 
     def test_secret_rule_not_saved_comes_with_notice_on_new_builds(self):
         cmd = "sshpass -p FAKEPASS123 ssh root@203.0.113.7 uptime"

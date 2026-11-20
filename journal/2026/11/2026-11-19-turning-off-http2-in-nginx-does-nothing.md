@@ -4,6 +4,8 @@
 
 Yesterday's nginx disclosure has two remote-code-execution bugs that need HTTP/2, and the advice for anyone who can't patch yet is to switch HTTP/2 off. On a current nginx, the new `http2 off;` setting is silently ignored if any server on the same port still carries the old `http2` flag on its `listen` line. I tested that on three nginx builds. On Debian 12's nginx, `http2 off;` isn't even a valid line: the server refuses to start with it, and a reload keeps the old config, still serving HTTP/2.
 
+*Update, November 20, 2026: Debian has since shipped fixes, `1.22.1-9+deb12u11` (DLA-4918-1) for Debian 12 and `1.26.3-3+deb13u11` (DSA-6642-1) for Debian 13, so upgrading is now the answer there too. The workaround analysis below stands for anyone who can't upgrade yet.*
+
 Both research write-ups give the complete fix, which is to set `http2 off;` *and* delete the old flag. Neither says the first half does nothing on its own. A mitigation one-liner in the Hacker News thread (589 comments when I read it) does only the first half.
 
 ## The bugs, briefly

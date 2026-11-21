@@ -1,0 +1,205 @@
+{
+ "source": "Hexagon 2611.00174v1, Table 2 (optimal gap bound extrapolated to P = infinity); parsed from the PDF text layer (pdftotext -layout) on 2026-11-21, every row cross-checked against its printed c/Delta_1 column",
+ "columns": {
+  "c": "central charge",
+  "Pmax_over_c": "highest truncation order reached, divided by c",
+  "delta1": "Delta_1(c) extrapolated to P = infinity",
+  "sigma": "quoted uncertainty",
+  "c_over_delta1_printed": "c / Delta_1 as printed (string keeps printed precision)",
+  "method": "extrapolation method I or II (appendix H.2)"
+ },
+ "rows": [
+  {
+   "c": 24,
+   "Pmax_over_c": 25.0,
+   "delta1": 3.440977,
+   "sigma": 4.3e-05,
+   "c_over_delta1_printed": "6.9748",
+   "method": "II"
+  },
+  {
+   "c": 48,
+   "Pmax_over_c": 18.25,
+   "delta1": 6.244701,
+   "sigma": 2.6e-05,
+   "c_over_delta1_printed": "7.6865",
+   "method": "II"
+  },
+  {
+   "c": 64,
+   "Pmax_over_c": 16.0,
+   "delta1": 8.086588,
+   "sigma": 2.5e-08,
+   "c_over_delta1_printed": "7.914339",
+   "method": "I"
+  },
+  {
+   "c": 96,
+   "Pmax_over_c": 8.33,
+   "delta1": 11.736817,
+   "sigma": 6.5e-05,
+   "c_over_delta1_printed": "8.1794",
+   "method": "II"
+  },
+  {
+   "c": 100,
+   "Pmax_over_c": 8.0,
+   "delta1": 12.190911,
+   "sigma": 7.7e-05,
+   "c_over_delta1_printed": "8.2028",
+   "method": "II"
+  },
+  {
+   "c": 128,
+   "Pmax_over_c": 16.0,
+   "delta1": 15.359989,
+   "sigma": 4e-08,
+   "c_over_delta1_printed": "8.333339",
+   "method": "I"
+  },
+  {
+   "c": 192,
+   "Pmax_over_c": 6.25,
+   "delta1": 22.560582,
+   "sigma": 0.00023,
+   "c_over_delta1_printed": "8.5104",
+   "method": "II"
+  },
+  {
+   "c": 256,
+   "Pmax_over_c": 8.0,
+   "delta1": 29.724792,
+   "sigma": 1.4e-05,
+   "c_over_delta1_printed": "8.612339",
+   "method": "I"
+  },
+  {
+   "c": 288,
+   "Pmax_over_c": 4.86,
+   "delta1": 33.297942,
+   "sigma": 0.00043,
+   "c_over_delta1_printed": "8.649",
+   "method": "II"
+  },
+  {
+   "c": 300,
+   "Pmax_over_c": 5.33,
+   "delta1": 34.636636,
+   "sigma": 0.00046,
+   "c_over_delta1_printed": "8.661",
+   "method": "II"
+  },
+  {
+   "c": 384,
+   "Pmax_over_c": 8.0,
+   "delta1": 43.992503,
+   "sigma": 1.9e-05,
+   "c_over_delta1_printed": "8.728760",
+   "method": "I"
+  },
+  {
+   "c": 400,
+   "Pmax_over_c": 5.0,
+   "delta1": 45.772111,
+   "sigma": 0.00052,
+   "c_over_delta1_printed": "8.7389",
+   "method": "II"
+  },
+  {
+   "c": 500,
+   "Pmax_over_c": 3.75,
+   "delta1": 56.880799,
+   "sigma": 0.0014,
+   "c_over_delta1_printed": "8.790",
+   "method": "II"
+  },
+  {
+   "c": 512,
+   "Pmax_over_c": 6.0,
+   "delta1": 58.212412,
+   "sigma": 4e-05,
+   "c_over_delta1_printed": "8.795375",
+   "method": "I"
+  },
+  {
+   "c": 600,
+   "Pmax_over_c": 3.33,
+   "delta1": 67.970939,
+   "sigma": 0.0011,
+   "c_over_delta1_printed": "8.827",
+   "method": "II"
+  },
+  {
+   "c": 700,
+   "Pmax_over_c": 2.6,
+   "delta1": 79.047416,
+   "sigma": 0.002,
+   "c_over_delta1_printed": "8.855",
+   "method": "II"
+  },
+  {
+   "c": 768,
+   "Pmax_over_c": 4.0,
+   "delta1": 86.573118,
+   "sigma": 0.0012,
+   "c_over_delta1_printed": "8.87111",
+   "method": "I"
+  },
+  {
+   "c": 1000,
+   "Pmax_over_c": 2.0,
+   "delta1": 112.220831,
+   "sigma": 0.003,
+   "c_over_delta1_printed": "8.911",
+   "method": "II"
+  },
+  {
+   "c": 1024,
+   "Pmax_over_c": 2.25,
+   "delta1": 114.871949,
+   "sigma": 0.0028,
+   "c_over_delta1_printed": "8.91427",
+   "method": "I"
+  },
+  {
+   "c": 1200,
+   "Pmax_over_c": 2.5,
+   "delta1": 134.304424,
+   "sigma": 0.0025,
+   "c_over_delta1_printed": "8.935",
+   "method": "II"
+  },
+  {
+   "c": 1400,
+   "Pmax_over_c": 2.14,
+   "delta1": 156.370479,
+   "sigma": 0.0052,
+   "c_over_delta1_printed": "8.953",
+   "method": "II"
+  },
+  {
+   "c": 1536,
+   "Pmax_over_c": 2.0,
+   "delta1": 171.367432,
+   "sigma": 0.0045,
+   "c_over_delta1_printed": "8.96320",
+   "method": "I"
+  },
+  {
+   "c": 1800,
+   "Pmax_over_c": 1.67,
+   "delta1": 200.464339,
+   "sigma": 0.008,
+   "c_over_delta1_printed": "8.979",
+   "method": "II"
+  },
+  {
+   "c": 2048,
+   "Pmax_over_c": 1.5,
+   "delta1": 227.7834,
+   "sigma": 0.01,
+   "c_over_delta1_printed": "8.9910",
+   "method": "I"
+  }
+ ]
+}

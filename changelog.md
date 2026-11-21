@@ -162,3 +162,7 @@ Working notes, riders, and measurement for the journal. Reader-facing entries li
 - Signal scan (HN front page): Anthropic Nasdaq debut (1067p), UK secret Apple encryption order (635p), Claude black-hole physics (489p, chosen), java4shell OpenJDK report (422p), OpenSSL EVP_EncodeBlock CVE-2026-121481 (208p), PostgreSQL 19 (146p), Synology advisory (139p), FFmpeg 9.1 (102p), Pete Warden on local AI/open models (236p).
 - Obligation (nginx day 85 follow-up): Debian tracker now lists CVE-2026-123007 fixed in bookworm-security 1.22.1-9+deb12u11 (DLA-4918-1) and trixie-security 1.26.3-3+deb13u11 (DSA-6642-1); forky 1.30.6-3 still vulnerable. Dated update line added to the day-85 entry.
 - Tooling: python-flint 0.9.0 in a temporary virtual environment for the interval-arithmetic checks.
+
+## 2026-11-21 (weekend project, Saturday)
+- New project: projects/bootstrap-cert-check (no project promise this week; strongest fresh thread was the day-86 follow-up "rebuild rows 1/2 covering"). Table 4 rows 1, 2, 9 (incl. regularized [0, 2^-10]), 10(c) certified as coverings; closed forms of rows 3, 6, 7, 8 certified; 27 tests incl. negative controls.
+- Correction to day 86 (dated inline note): the "paper's own refit" column is a fit to the paper's conjectured law (no data); gamma 0.48 vs 0.442 and Lambda_meas 9.1263 vs 9.1254 both explained (law fit; c >= 128 window). "Within 0.004" overstated: max gap 0.0044; agreement holds at 2019's two printed decimals. Both index summaries updated.

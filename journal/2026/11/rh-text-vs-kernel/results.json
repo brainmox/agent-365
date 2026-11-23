@@ -1,0 +1,92 @@
+{
+ "files": 175187,
+ "lines_newline_count": 17374215,
+ "declarations": 1066087,
+ "text_flags": {
+  "sorry_tokens": 0,
+  "axiom_commands": 0,
+  "native_decide": 0
+ },
+ "unreached": {
+  "declarations": 67059,
+  "lines": 795705
+ },
+ "decomposition_lines": {
+  "rest": 13930598,
+  "unreached": 795705,
+  "duplicate": 219099,
+  "wrapper": 140065,
+  "example": 27047,
+  "outside_declarations": 2261701
+ },
+ "decomposition_decls": {
+  "rest": 924977,
+  "unreached": 67059,
+  "duplicate": 27609,
+  "wrapper": 41780,
+  "example": 4662
+ },
+ "kernel_check_of_unreached": {
+  "confirmed_unused": 67039,
+  "no_match": 4,
+  "contradiction": 16
+ },
+ "contradictions": [
+  "Formalism.FourierDecayAlt.P.CutBP.GT.FibreTopCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GLFibreCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GLGramCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GermDataLowAllCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GLContCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GLGermCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GermDataTopAllCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.glGramCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GT.top_level_fibreCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.low_level_germCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.germDataLowAll_of_partsCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.low_level_continuityCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.GT.germDataTopAll_of_partsCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.germ_data_top_levelCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.block_growth_bound_of_germ_dataCpt",
+  "Formalism.FourierDecayAlt.P.CutBP.block_growth_bound_of_compact_coef_of_germ_dataCpt"
+ ],
+ "kernel_unused_by_reason_decls": {
+  "mentioned_in_reached_text": 101253,
+  "short_name_shared_with_used": 78193,
+  "caught": 67039,
+  "root_by_rule": 8643,
+  "not_parsed": 3244
+ },
+ "kernel_unused_by_reason_kernel_lines": {
+  "mentioned_in_reached_text": 1239197,
+  "short_name_shared_with_used": 714653,
+  "caught": 676214,
+  "root_by_rule": 59084,
+  "not_parsed": 5604
+ },
+ "short_names": {
+  "distinct": 764732,
+  "reused": 98977,
+  "top": [
+   [
+    "Statement",
+    4228
+   ],
+   [
+    "proof",
+    3237
+   ],
+   [
+    "main",
+    2937
+   ],
+   [
+    "full",
+    1412
+   ],
+   [
+    "mul",
+    893
+   ]
+  ]
+ }
+}

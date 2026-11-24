@@ -1,0 +1,38 @@
+{
+ "instructions": {
+  "pages": 537,
+  "chars": {
+   "structure": 158941,
+   "prose": 828787,
+   "asl": 425696,
+   "heading": 17916
+  },
+  "share_structure": 0.1125,
+  "share_asl": 0.3012,
+  "share_prose": 0.5864,
+  "pages_majority_prose": 414,
+  "prose_sentences_ge40": 7814,
+  "prose_sentences_verbatim_in_bsd_json": 0,
+  "encoding_anchors": 1226,
+  "encoding_anchors_in_bsd_json": 1226
+ },
+ "registers": {
+  "pages": 642,
+  "chars": {
+   "structure": 529875,
+   "prose": 3331170,
+   "heading": 38520,
+   "asl": 1471149
+  },
+  "share_structure": 0.0994,
+  "share_asl": 0.2759,
+  "share_prose": 0.6247,
+  "pages_majority_prose": 280,
+  "prose_sentences_ge40": 31819,
+  "prose_sentences_verbatim_in_bsd_json": 0,
+  "register_pages": 642,
+  "register_names_in_bsd_json": 642,
+  "named_field_headings": 2443,
+  "named_field_headings_in_bsd_json": 2442
+ }
+}

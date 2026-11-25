@@ -1,0 +1,62 @@
+Inventory log (synthetic text used only as filler to make a long prompt).
+
+Entry 1: on Monday the old mill received 66 rolls of copper wire and shipped 57 to the hill station.
+Entry 2: on Friday the south annex received 75 bags of salt and shipped 49 to the glass hall.
+Entry 3: on Tuesday the north depot received 80 rolls of copper wire and shipped 8 to the harbour shed.
+Entry 4: on Sunday the river warehouse received 59 crates of pears and shipped 53 to the glass hall.
+Entry 5: on Saturday the old mill received 28 reels of film and shipped 17 to the old mill.
+Entry 6: on Wednesday the south annex received 67 rolls of copper wire and shipped 47 to the old mill.
+Entry 7: on Monday the harbour shed received 38 bags of salt and shipped 10 to the harbour shed.
+Entry 8: on Monday the old mill received 48 bags of salt and shipped 28 to the river warehouse.
+Entry 9: on Thursday the glass hall received 16 reels of film and shipped 33 to the glass hall.
+Entry 10: on Thursday the harbour shed received 55 bags of salt and shipped 33 to the north depot.
+Entry 11: on Friday the hill station received 18 crates of pears and shipped 46 to the river warehouse.
+Entry 12: on Saturday the south annex received 62 sacks of barley and shipped 31 to the hill station.
+Entry 13: on Sunday the river warehouse received 82 bags of salt and shipped 44 to the glass hall.
+Entry 14: on Saturday the harbour shed received 73 reels of film and shipped 43 to the harbour shed.
+Entry 15: on Friday the glass hall received 53 reels of film and shipped 13 to the harbour shed.
+Entry 16: on Sunday the harbour shed received 3 crates of pears and shipped 10 to the glass hall.
+Entry 17: on Sunday the glass hall received 48 boxes of lamps and shipped 17 to the glass hall.
+Entry 18: on Thursday the glass hall received 57 crates of pears and shipped 54 to the harbour shed.
+Entry 19: on Wednesday the glass hall received 14 bags of salt and shipped 45 to the harbour shed.
+Entry 20: on Thursday the east yard received 56 bags of salt and shipped 5 to the harbour shed.
+Entry 21: on Thursday the old mill received 14 boxes of lamps and shipped 48 to the south annex.
+Entry 22: on Tuesday the glass hall received 3 rolls of copper wire and shipped 1 to the glass hall.
+Entry 23: on Friday the river warehouse received 80 boxes of lamps and shipped 16 to the river warehouse.
+Entry 24: on Friday the north depot received 71 bundles of rope and shipped 43 to the old mill.
+Entry 25: on Tuesday the north depot received 42 bags of salt and shipped 45 to the east yard.
+Entry 26: on Friday the hill station received 62 sacks of barley and shipped 39 to the harbour shed.
+Entry 27: on Monday the south annex received 87 sacks of barley and shipped 60 to the east yard.
+Entry 28: on Sunday the harbour shed received 66 reels of film and shipped 25 to the east yard.
+Entry 29: on Friday the hill station received 50 crates of pears and shipped 7 to the south annex.
+Entry 30: on Monday the north depot received 46 jars of honey and shipped 60 to the north depot.
+Entry 31: on Monday the glass hall received 43 bundles of rope and shipped 29 to the old mill.
+Entry 32: on Monday the glass hall received 61 sacks of barley and shipped 10 to the hill station.
+Entry 33: on Thursday the old mill received 60 boxes of lamps and shipped 44 to the river warehouse.
+Entry 34: on Friday the south annex received 6 boxes of lamps and shipped 42 to the east yard.
+Entry 35: on Monday the north depot received 59 boxes of lamps and shipped 31 to the north depot.
+Entry 36: on Tuesday the hill station received 68 sacks of barley and shipped 11 to the east yard.
+Entry 37: on Thursday the harbour shed received 56 reels of film and shipped 56 to the river warehouse.
+Entry 38: on Thursday the harbour shed received 25 jars of honey and shipped 12 to the harbour shed.
+Entry 39: on Thursday the glass hall received 55 bundles of rope and shipped 30 to the east yard.
+Entry 40: on Wednesday the glass hall received 58 rolls of copper wire and shipped 34 to the harbour shed.
+Entry 41: on Sunday the river warehouse received 29 boxes of lamps and shipped 1 to the river warehouse.
+Entry 42: on Thursday the old mill received 54 sacks of barley and shipped 2 to the old mill.
+Entry 43: on Sunday the east yard received 47 boxes of lamps and shipped 8 to the harbour shed.
+Entry 44: on Friday the hill station received 74 bundles of rope and shipped 37 to the harbour shed.
+Entry 45: on Saturday the east yard received 14 bundles of rope and shipped 7 to the south annex.
+Entry 46: on Tuesday the river warehouse received 89 crates of pears and shipped 49 to the old mill.
+Entry 47: on Saturday the east yard received 84 rolls of copper wire and shipped 33 to the old mill.
+Entry 48: on Wednesday the river warehouse received 39 jars of honey and shipped 11 to the harbour shed.
+Entry 49: on Wednesday the river warehouse received 3 reels of film and shipped 56 to the harbour shed.
+Entry 50: on Thursday the north depot received 9 rolls of copper wire and shipped 16 to the north depot.
+Entry 51: on Wednesday the river warehouse received 14 jars of honey and shipped 21 to the glass hall.
+Entry 52: on Friday the north depot received 53 jars of honey and shipped 39 to the hill station.
+Entry 53: on Friday the glass hall received 56 rolls of copper wire and shipped 44 to the old mill.
+Entry 54: on Sunday the harbour shed received 51 bundles of rope and shipped 53 to the old mill.
+Entry 55: on Monday the south annex received 5 bundles of rope and shipped 45 to the old mill.
+Entry 56: on Wednesday the river warehouse received 40 reels of film and shipped 21 to the north depot.
+Entry 57: on Friday the old mill received 27 crates of pears and shipped 47 to the river warehouse.
+Entry 58: on Tuesday the river warehouse received 17 crates of pears and shipped 9 to the old mill.
+Entry 59: on Friday the harbour shed received 5 reels of film and shipped 38 to the east yard.
+Entry 60: on Wednesday the south annex received 51 reels of film and shipped 16 to the south annex.

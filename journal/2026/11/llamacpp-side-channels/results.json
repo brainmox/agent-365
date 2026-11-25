@@ -1,0 +1,1042 @@
+{
+ "probe": {
+  "bf16-default": {
+   "model": "bf16.gguf",
+   "server_args": [],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     33.9,
+     137.3
+    ],
+    "prompt_ms_nowrite": [
+     39.2,
+     139.7
+    ],
+    "prompt_ms_separates": false,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.06896352767944336,
+    "max_abs_logprob_diff_nowrite": 0.059325218200683594
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     33.0,
+     34.7
+    ],
+    "prompt_ms_nowrite": [
+     38.5,
+     41.3
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.06896352767944336,
+    "max_abs_logprob_diff_nowrite": 0.059325218200683594
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     3597,
+     4311
+    ]
+   }
+  },
+  "q4km-default": {
+   "model": "q4km.gguf",
+   "server_args": [],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     22.9,
+     29.4
+    ],
+    "prompt_ms_nowrite": [
+     30.1,
+     39.6
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 1.2966487407684326,
+    "max_abs_logprob_diff_nowrite": 0.6478962898254395
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     23.3,
+     26.2
+    ],
+    "prompt_ms_nowrite": [
+     32.6,
+     36.3
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 1.2966487407684326,
+    "max_abs_logprob_diff_nowrite": 0.6478962898254395
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     4395,
+     4686
+    ]
+   }
+  },
+  "q8-cache-ram-0": {
+   "model": "q8.gguf",
+   "server_args": [
+    "--cache-ram",
+    "0"
+   ],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     25.7,
+     37.8
+    ],
+    "prompt_ms_nowrite": [
+     36.0,
+     54.9
+    ],
+    "prompt_ms_separates": false,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     25.8,
+     50.4
+    ],
+    "prompt_ms_nowrite": [
+     35.5,
+     74.5
+    ],
+    "prompt_ms_separates": false,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     4793,
+     5760
+    ]
+   }
+  },
+  "q8-default": {
+   "model": "q8.gguf",
+   "server_args": [],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     26.5,
+     155.6
+    ],
+    "prompt_ms_nowrite": [
+     35.9,
+     70.8
+    ],
+    "prompt_ms_separates": false,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     26.1,
+     33.0
+    ],
+    "prompt_ms_nowrite": [
+     38.3,
+     47.3
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     4809,
+     5287
+    ]
+   }
+  },
+  "q8-fa-off": {
+   "model": "q8.gguf",
+   "server_args": [
+    "-fa",
+    "off"
+   ],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     29.6,
+     38.8
+    ],
+    "prompt_ms_nowrite": [
+     41.7,
+     55.3
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 6,
+    "numeric_equal_alone_nowrite": 6,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.0,
+    "max_abs_logprob_diff_nowrite": 0.0
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     29.8,
+     39.1
+    ],
+    "prompt_ms_nowrite": [
+     41.2,
+     51.6
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 6,
+    "numeric_equal_alone_nowrite": 6,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.0,
+    "max_abs_logprob_diff_nowrite": 0.0
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     5231,
+     5610
+    ]
+   }
+  },
+  "q8-no-cache-prompt": {
+   "model": "q8.gguf",
+   "server_args": [
+    "--no-cache-prompt"
+   ],
+   "board_1slot": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     27.4,
+     36.9
+    ],
+    "prompt_ms_nowrite": [
+     39.0,
+     64.0
+    ],
+    "prompt_ms_separates": true,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "board_4slots": {
+    "rounds": 12,
+    "baseline_deterministic": true,
+    "cache_n_write": [
+     25,
+     27
+    ],
+    "cache_n_nowrite": [
+     14,
+     16
+    ],
+    "cache_n_separates": true,
+    "prompt_ms_write": [
+     26.7,
+     48.8
+    ],
+    "prompt_ms_nowrite": [
+     36.6,
+     75.7
+    ],
+    "prompt_ms_separates": false,
+    "bob_on_alices_slot_when_written": 6,
+    "numeric_equal_alone_write": 0,
+    "numeric_equal_alone_nowrite": 0,
+    "top1_changed_write": 0,
+    "max_abs_logprob_diff_write": 0.5644810199737549,
+    "max_abs_logprob_diff_nowrite": 0.6548094749450684
+   },
+   "step_size": {
+    "trials": 4,
+    "deterministic_alone": true,
+    "bitwise_equal_when_concurrent": 4,
+    "bob_prompt_ms": [
+     3999,
+     4206
+    ]
+   }
+  }
+ },
+ "sweep": {
+  "sweep-bf16": {
+   "server_args": [],
+   "model": "bf16.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     false,
+     0.0498
+    ],
+    [
+     125,
+     false,
+     0.0251
+    ],
+    [
+     158,
+     false,
+     0.0318
+    ],
+    [
+     229,
+     false,
+     0.0759
+    ],
+    [
+     297,
+     false,
+     0.057
+    ],
+    [
+     436,
+     false,
+     0.0375
+    ],
+    [
+     576,
+     false,
+     0.0568
+    ],
+    [
+     1133,
+     false,
+     0.0648
+    ],
+    [
+     1655,
+     false,
+     0.0606
+    ]
+   ]
+  },
+  "sweep-q4km": {
+   "server_args": [],
+   "model": "q4km.gguf",
+   "rows": [
+    [
+     27,
+     false,
+     0.3553
+    ],
+    [
+     32,
+     false,
+     0.3708
+    ],
+    [
+     39,
+     false,
+     0.5458
+    ],
+    [
+     50,
+     false,
+     0.3226
+    ],
+    [
+     57,
+     false,
+     0.6889
+    ],
+    [
+     66,
+     false,
+     0.4715
+    ],
+    [
+     75,
+     false,
+     0.9186
+    ],
+    [
+     91,
+     false,
+     0.3821
+    ],
+    [
+     125,
+     false,
+     0.5065
+    ],
+    [
+     158,
+     false,
+     0.6229
+    ],
+    [
+     229,
+     false,
+     0.5706
+    ],
+    [
+     297,
+     false,
+     0.4525
+    ],
+    [
+     436,
+     false,
+     1.0122
+    ],
+    [
+     576,
+     false,
+     0.4891
+    ],
+    [
+     1133,
+     false,
+     0.3705
+    ],
+    [
+     1655,
+     false,
+     0.4569
+    ]
+   ]
+  },
+  "sweep-q8-faoff": {
+   "server_args": [
+    "-fa",
+    "off"
+   ],
+   "model": "q8.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     true,
+     0.0
+    ],
+    [
+     125,
+     true,
+     0.0
+    ],
+    [
+     158,
+     true,
+     0.0
+    ],
+    [
+     229,
+     true,
+     0.0
+    ],
+    [
+     297,
+     true,
+     0.0
+    ],
+    [
+     436,
+     true,
+     0.0
+    ],
+    [
+     576,
+     true,
+     0.0
+    ],
+    [
+     1133,
+     true,
+     0.0
+    ],
+    [
+     1655,
+     true,
+     0.0
+    ]
+   ]
+  },
+  "sweep-q8-faon": {
+   "server_args": [
+    "-fa",
+    "on"
+   ],
+   "model": "q8.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     false,
+     0.1242
+    ],
+    [
+     125,
+     false,
+     0.2362
+    ],
+    [
+     158,
+     false,
+     0.1285
+    ],
+    [
+     229,
+     false,
+     0.263
+    ],
+    [
+     297,
+     false,
+     0.6493
+    ],
+    [
+     436,
+     false,
+     0.3725
+    ],
+    [
+     576,
+     false,
+     0.2805
+    ],
+    [
+     1133,
+     false,
+     0.1312
+    ],
+    [
+     1655,
+     false,
+     0.2981
+    ]
+   ]
+  },
+  "sweep-q8-t1": {
+   "server_args": [
+    "-t",
+    "1"
+   ],
+   "model": "q8.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     false,
+     0.1242
+    ],
+    [
+     125,
+     false,
+     0.2362
+    ],
+    [
+     158,
+     false,
+     0.1285
+    ],
+    [
+     229,
+     false,
+     0.263
+    ],
+    [
+     297,
+     false,
+     0.6493
+    ],
+    [
+     436,
+     false,
+     0.3725
+    ],
+    [
+     576,
+     false,
+     0.2805
+    ],
+    [
+     1133,
+     false,
+     0.1312
+    ],
+    [
+     1655,
+     false,
+     0.2981
+    ]
+   ]
+  },
+  "sweep-q8-ub64": {
+   "server_args": [
+    "-ub",
+    "64"
+   ],
+   "model": "q8.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     false,
+     0.1242
+    ],
+    [
+     125,
+     false,
+     0.2362
+    ],
+    [
+     158,
+     false,
+     0.1285
+    ],
+    [
+     229,
+     false,
+     0.263
+    ],
+    [
+     297,
+     false,
+     0.6493
+    ],
+    [
+     436,
+     false,
+     0.3725
+    ],
+    [
+     576,
+     false,
+     0.2805
+    ],
+    [
+     1133,
+     false,
+     0.1312
+    ],
+    [
+     1655,
+     false,
+     0.2981
+    ]
+   ]
+  },
+  "sweep-q8": {
+   "server_args": [],
+   "model": "q8.gguf",
+   "rows": [
+    [
+     27,
+     true,
+     0.0
+    ],
+    [
+     32,
+     true,
+     0.0
+    ],
+    [
+     39,
+     true,
+     0.0
+    ],
+    [
+     50,
+     true,
+     0.0
+    ],
+    [
+     57,
+     true,
+     0.0
+    ],
+    [
+     66,
+     true,
+     0.0
+    ],
+    [
+     75,
+     true,
+     0.0
+    ],
+    [
+     91,
+     false,
+     0.1242
+    ],
+    [
+     125,
+     false,
+     0.2362
+    ],
+    [
+     158,
+     false,
+     0.1285
+    ],
+    [
+     229,
+     false,
+     0.263
+    ],
+    [
+     297,
+     false,
+     0.6493
+    ],
+    [
+     436,
+     false,
+     0.3725
+    ],
+    [
+     576,
+     false,
+     0.2805
+    ],
+    [
+     1133,
+     false,
+     0.1312
+    ],
+    [
+     1655,
+     false,
+     0.2981
+    ]
+   ]
+  }
+ }
+}

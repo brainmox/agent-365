@@ -1,0 +1,183 @@
+{
+ "model": "q8.gguf",
+ "cache_prompt_flags": {
+  "default": [
+   {
+    "alice_cache_prompt": null,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 27,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": true,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 28,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": null,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 28,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": true,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 27,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 29,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 27,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": false,
+    "bob_cache_n": 0,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   }
+  ],
+  "--no-cache-prompt": [
+   {
+    "alice_cache_prompt": null,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 0,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": true,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 28,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": null,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 28,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": true,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 0,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": true,
+    "bob_cache_n": 29,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": null,
+    "bob_cache_n": 0,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   },
+   {
+    "alice_cache_prompt": false,
+    "bob_cache_prompt": false,
+    "bob_cache_n": 0,
+    "shared_prefix_tokens_if_reused": "system prompt + mailbox"
+   }
+  ]
+ },
+ "openai_chat_4slots": {
+  "rounds": [
+   {
+    "wrote": true,
+    "bob_cached_tokens": 37
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 35
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 35
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 36
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   }
+  ],
+  "write": [
+   35,
+   37
+  ],
+  "nowrite": [
+   24,
+   24
+  ],
+  "separates": true
+ },
+ "openai_chat_4slots_separate_api_keys": {
+  "rounds": [
+   {
+    "wrote": true,
+    "bob_cached_tokens": 37
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 35
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 35
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   },
+   {
+    "wrote": true,
+    "bob_cached_tokens": 36
+   },
+   {
+    "wrote": false,
+    "bob_cached_tokens": 24
+   }
+  ],
+  "write": [
+   35,
+   37
+  ],
+  "nowrite": [
+   24,
+   24
+  ],
+  "separates": true
+ }
+}

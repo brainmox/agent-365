@@ -1,0 +1,306 @@
+{
+ "llama_cpp_commit": "de30697",
+ "cpython": "3.11 (Debian 12 package)",
+ "passages": [
+  {
+   "passage": "cpp-00.txt",
+   "source": "llama.cpp src/llama-context.cpp",
+   "bytes": 187988,
+   "sha256": "eac2d16bcada7852310ffe25ceacdfc49bb24a413ad815049814e070a2d87d81"
+  },
+  {
+   "passage": "cpp-01.txt",
+   "source": "llama.cpp src/llama-moe-cache.cpp",
+   "bytes": 42517,
+   "sha256": "9c1debf8bdb0858887c0fa71781a6881f268f857e5873c8cbf1207d22472a790"
+  },
+  {
+   "passage": "cpp-02.txt",
+   "source": "llama.cpp tools/server/server-schema.cpp",
+   "bytes": 33519,
+   "sha256": "7b1e2982f11ee5c697ff0c4142b83e2da350da88a5fe608815ce985d2d8840bf"
+  },
+  {
+   "passage": "cpp-03.txt",
+   "source": "llama.cpp src/llama-grammar.cpp",
+   "bytes": 70991,
+   "sha256": "b7418ed03753aa17db23b19713c7bdbe98c39749c8be6dd481a874a7a8543fad"
+  },
+  {
+   "passage": "cpp-04.txt",
+   "source": "llama.cpp tools/server/server-http.cpp",
+   "bytes": 44592,
+   "sha256": "dc8ee409ff4c0d67d3d074c1f749ceabc52b118e514c4cb245d0fa7ec095b432"
+  },
+  {
+   "passage": "cpp-05.txt",
+   "source": "llama.cpp src/llama-memory-recurrent.cpp",
+   "bytes": 52422,
+   "sha256": "fbb7581273cd83185f3eb852727fe9dd1d6a0bc8fa1fdde909e2264d24dfed23"
+  },
+  {
+   "passage": "cpp-06.txt",
+   "source": "llama.cpp src/llama-model.cpp",
+   "bytes": 210403,
+   "sha256": "2b83fc940c13f092464d4b16f0332c44a37395ea9c69feabd5b867a8cf74c0ab"
+  },
+  {
+   "passage": "json-00.txt",
+   "source": "llama.cpp ui/lib/ui/package-lock.json",
+   "bytes": 218737,
+   "sha256": "8660b2e52820858e3c51ecb4f87012abb1fcf1df85c76b717f56ed472e8664ab"
+  },
+  {
+   "passage": "json-01.txt",
+   "source": "llama.cpp ui/lib/voice/package-lock.json",
+   "bytes": 50136,
+   "sha256": "bc590766c1dd5dddda88ec17abe14aa126a10d18d3833186fd901e8dc963ac45"
+  },
+  {
+   "passage": "json-02.txt",
+   "source": "llama.cpp benches/dgx-spark/aime25_openai__gpt-oss-120b-high_temp1.0_20251109_094547_allresults.json",
+   "bytes": 1613851,
+   "sha256": "0ce07eb00561b082aa4d0cddb32c5287a28c193825df1c7954278c5811886bf9"
+  },
+  {
+   "passage": "json-04.txt",
+   "source": "llama.cpp ui/lib/harness/package-lock.json",
+   "bytes": 39596,
+   "sha256": "a3fa41eabe4684c40220a396977e11968920cce848671ddd9ecbc79e09edb4bc"
+  },
+  {
+   "passage": "json-05.txt",
+   "source": "llama.cpp ui/apps/chat/package-lock.json",
+   "bytes": 399006,
+   "sha256": "769352ad8c3f7d4c895edd273cd7148fa0ca248e9de0b8d3a6a45052e5fb288b"
+  },
+  {
+   "passage": "md-00.txt",
+   "source": "llama.cpp docs/autoparser.md",
+   "bytes": 32301,
+   "sha256": "ae2b35d289ceefe408ae4dd45b77f0869336f2144c211a88ecea41a90af1fa11"
+  },
+  {
+   "passage": "md-01.txt",
+   "source": "llama.cpp docs/multimodal/MobileVLM.md",
+   "bytes": 18532,
+   "sha256": "1303c8e57852737429c26872ddf4b8eeab1dd703c5913ff33a1fee8d6fda39c8"
+  },
+  {
+   "passage": "md-02.txt",
+   "source": "llama.cpp docs/build.md",
+   "bytes": 46740,
+   "sha256": "af8ebb550264beb0b2fb6265d0dfb59c839cdbe57eb46bdc51027e023426c06f"
+  },
+  {
+   "passage": "md-03.txt",
+   "source": "llama.cpp docs/ops.md",
+   "bytes": 15505,
+   "sha256": "3ab13d0b42db3b32318490e871aa4a5910e9a2fd45340e7fb0e15d54bc1e128e"
+  },
+  {
+   "passage": "md-04.txt",
+   "source": "llama.cpp docs/multimodal/tts.md",
+   "bytes": 31022,
+   "sha256": "fc8afb7fdfaf9895a21d97ed7e9834546089947ce1702194d68e3b127c9d37bb"
+  },
+  {
+   "passage": "md-05.txt",
+   "source": "llama.cpp docs/backend/snapdragon/README.md",
+   "bytes": 19743,
+   "sha256": "053c97aac8f25b28653e50432029943170c4e48785e0fabde881f643789f3abe"
+  },
+  {
+   "passage": "md-06.txt",
+   "source": "llama.cpp docs/speculative.md",
+   "bytes": 27196,
+   "sha256": "461e92a6d194a65bb84f448c6200da7fa149e28f49206f76f66955bf8eb85216"
+  },
+  {
+   "passage": "py-00.txt",
+   "source": "CPython 3.11 Lib/ipaddress.py",
+   "bytes": 78284,
+   "sha256": "8fc7549ef3ea782afc6dd9215e61baa72c8cf1047399bf60c221241f5f5355e1"
+  },
+  {
+   "passage": "py-02.txt",
+   "source": "CPython 3.11 Lib/compileall.py",
+   "bytes": 20252,
+   "sha256": "859a2743805b0570286bd71d2296becc335bfba4277073b87c8b9ec3dc308a98"
+  },
+  {
+   "passage": "py-03.txt",
+   "source": "CPython 3.11 Lib/traceback.py",
+   "bytes": 38416,
+   "sha256": "99cf1e992b9e14abef6a80d108cbfad09727baa68a329953c819c513ba64989e"
+  },
+  {
+   "passage": "py-04.txt",
+   "source": "CPython 3.11 Lib/typing.py",
+   "bytes": 117090,
+   "sha256": "ed0a1062b1d0a0c846c5c794d266470b88cac646d873543e861a3720a3b830e6"
+  },
+  {
+   "passage": "py-05.txt",
+   "source": "CPython 3.11 Lib/ssl.py",
+   "bytes": 53980,
+   "sha256": "2039165d9e3d5aa7817e171e2e136e66283a0ff03040ad48f21cbe2650307551"
+  },
+  {
+   "passage": "py-06.txt",
+   "source": "CPython 3.11 Lib/_pyio.py",
+   "bytes": 94036,
+   "sha256": "f22f010af7d96fa7fc3b69e52ca2d832c9a8b83350cf36c38da39ba9a5040f72"
+  },
+  {
+   "passage": "wiki-ar-21.txt",
+   "source": "ar.wikipedia.org article \"تركيب ضوئي\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 14246,
+   "sha256": "7366152010d0f00676cf3ef88cbf7655067bb873c875b295d72e48b54f182de2"
+  },
+  {
+   "passage": "wiki-ar-22.txt",
+   "source": "ar.wikipedia.org article \"الإمبراطورية الرومانية\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 101485,
+   "sha256": "df345993bf64c4db6396ec3497dfe1c590f5a76055233d553faf64e9cef49599"
+  },
+  {
+   "passage": "wiki-ar-23.txt",
+   "source": "ar.wikipedia.org article \"بركان\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 48334,
+   "sha256": "f38347c9f000044e8279c59664ac35c38956076b5e6f608dfd3b19f362a45027"
+  },
+  {
+   "passage": "wiki-ar-24.txt",
+   "source": "ar.wikipedia.org article \"جاز\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 12870,
+   "sha256": "4d69da75cb6365cc2e16d8ba5d6744ed6a20a86514914a48a4bdc4f9ca22923e"
+  },
+  {
+   "passage": "wiki-de-10.txt",
+   "source": "de.wikipedia.org article \"Photosynthese\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 80196,
+   "sha256": "62ba16672a00581f0b070084c40caf3cbf28bdfddee06a9fcdbcc486094bb166"
+  },
+  {
+   "passage": "wiki-de-11.txt",
+   "source": "de.wikipedia.org article \"Römisches Reich\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 78489,
+   "sha256": "d50749e2b4ad811f6ed37ab4ff476175adf04a7d6fc807c31901b8b98fbb9d0b"
+  },
+  {
+   "passage": "wiki-de-12.txt",
+   "source": "de.wikipedia.org article \"Vulkan\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 21930,
+   "sha256": "591ade61611926b97d92a5ae20b9d1a5da8142e5df339d20c6c883ac8fb2accd"
+  },
+  {
+   "passage": "wiki-de-13.txt",
+   "source": "de.wikipedia.org article \"Jazz\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 33920,
+   "sha256": "52e4bc13aedaa49400b0457a96c1d0d2e29d3a03e7ea7dd05084dc7ab4b6a741"
+  },
+  {
+   "passage": "wiki-en-00.txt",
+   "source": "en.wikipedia.org article \"Photosynthesis\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 49863,
+   "sha256": "23cf88c6a54696fff045f324f72dcea2c4b49fa845402b40dfbd023d2885527c"
+  },
+  {
+   "passage": "wiki-en-01.txt",
+   "source": "en.wikipedia.org article \"Roman Empire\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 99698,
+   "sha256": "2dc39a7e98d5a63a6f6f96b571c4fb7b9360b2651271458bb2a7cd5f9b1e7594"
+  },
+  {
+   "passage": "wiki-en-02.txt",
+   "source": "en.wikipedia.org article \"Volcano\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 49169,
+   "sha256": "04499f7fb7b4eb797699ebd613582a74aa25612fb75624d7299f1606c33e3985"
+  },
+  {
+   "passage": "wiki-en-03.txt",
+   "source": "en.wikipedia.org article \"Jazz\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 99347,
+   "sha256": "ad757be85497c32bf4e6612bc3a3e70d29d4fd7b21cb25c902308149987ec18b"
+  },
+  {
+   "passage": "wiki-en-04.txt",
+   "source": "en.wikipedia.org article \"Printing press\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 38772,
+   "sha256": "6b6fbf843db936b05b392ee34a645b1ce9e7692c84771dd3d2aee1e2a49690c5"
+  },
+  {
+   "passage": "wiki-en-05.txt",
+   "source": "en.wikipedia.org article \"Coral reef\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 69180,
+   "sha256": "b8c177cf3b5271d886f46c990000cf6527fe056b0bd932b9354acb496beb6ac4"
+  },
+  {
+   "passage": "wiki-it-06.txt",
+   "source": "it.wikipedia.org article \"Fotosintesi clorofilliana\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 12545,
+   "sha256": "e0b3c594ccdd49db05e7aedd84129cb63c7af31930bb5f8a4903edb3a6350259"
+  },
+  {
+   "passage": "wiki-it-07.txt",
+   "source": "it.wikipedia.org article \"Impero romano\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 96790,
+   "sha256": "da65206e061ff1f8ac691b9d1b4f2abaead57df1aad82420cba6bc9678cb8938"
+  },
+  {
+   "passage": "wiki-it-08.txt",
+   "source": "it.wikipedia.org article \"Vulcano\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 33231,
+   "sha256": "b5eecdfec262058eb1ac125cf348ef34c2e72ce5825ff953db44d446185b7f10"
+  },
+  {
+   "passage": "wiki-it-09.txt",
+   "source": "it.wikipedia.org article \"Jazz\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 37012,
+   "sha256": "74318ec2ab32213fe259efe596339c903f1c8e5d864589640110bb6cfb9575a3"
+  },
+  {
+   "passage": "wiki-ja-17.txt",
+   "source": "ja.wikipedia.org article \"光合成\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 30925,
+   "sha256": "7c6397b82be690ad4be58d71d49a3b38e3da5ad756e720bfff9b5e1670789c69"
+  },
+  {
+   "passage": "wiki-ja-18.txt",
+   "source": "ja.wikipedia.org article \"ローマ帝国\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 43690,
+   "sha256": "d20044ad6b4c5d623c902994a96b34a61cdcf88861f621dfc3612d92832d74b6"
+  },
+  {
+   "passage": "wiki-ja-19.txt",
+   "source": "ja.wikipedia.org article \"火山\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 34661,
+   "sha256": "592c18fed7d8376678e8a8c2231bc3f19f5db1003c3062f2b7c2347e62ac97f6"
+  },
+  {
+   "passage": "wiki-ja-20.txt",
+   "source": "ja.wikipedia.org article \"ジャズ\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 59165,
+   "sha256": "0d8057a81c8e1a89fcfc1ce8dce4ff34b782ab96e91a5e7011b315036c1c30bc"
+  },
+  {
+   "passage": "wiki-ru-14.txt",
+   "source": "ru.wikipedia.org article \"Фотосинтез\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 64190,
+   "sha256": "cf59f8f3a9a6cd24a6b24bce25b2f8be773c64c24188d05e1c998e1504343c38"
+  },
+  {
+   "passage": "wiki-ru-15.txt",
+   "source": "ru.wikipedia.org article \"Римская империя\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 117104,
+   "sha256": "f8e5455b357159bc22b7b6855ce1d4c605a4dcb1e0a65d8bf2d190590e472c0e"
+  },
+  {
+   "passage": "wiki-zh-16.txt",
+   "source": "zh.wikipedia.org article \"爵士乐\", plain-text extract via the MediaWiki API (prop=extracts, explaintext=1), fetched 2026-11-26",
+   "bytes": 27981,
+   "sha256": "750bcad09b53b2f6c164348b7eac14a57e7dde926b539fcdf4bd79e4360db6cb"
+  }
+ ]
+}

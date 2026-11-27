@@ -1,0 +1,93 @@
+# https://developers.google.com/workspace/gmail/api/reference/mcp
+# before: https://web.archive.org/web/20261104055932id_/https://developers.google.com/workspace/gmail/api/reference/mcp (page says last updated 2026-07-21 UTC)
+# after:  https://developers.google.com/workspace/gmail/api/reference/mcp (page says last updated 2026-11-26 UTC)
+# Page text (c) Google, CC BY 4.0; extracted from HTML, whitespace normalized.
+--- before
++++ after
+@@ -1,3 +1,4 @@
+ 
++ Some Google Workspace MCP tools are currently rolling out and might be temporarily unavailable.
+  Home
+  Google Workspace
+@@ -8,5 +9,4 @@
+  Stay organized with collections
+  Save and categorize content based on your preferences.
+- Developer Preview: Available as part of the Google Workspace Developer Preview Program, which grants early access to certain features.
+  This is an MCP server provided by Gmail API. The server provides tools for developers to build LLM applications on top of Gmail.
+  A Model Context Protocol (MCP) server acts as a proxy between an external service that provides context, data, or capabilities to a Large Language Model (LLM) or AI application. MCP servers connect AI applications to external systems such as databases and web services, translating their responses into a format that the AI application can understand.
+@@ -14,9 +14,8 @@
+  You must configure the Gmail MCP server before use. For more information about using Google and Google Cloud remote MCP servers, see Google Cloud MCP servers overview.
+  Server Endpoints
+-An MCP service endpoint is the network address and communication interface (usually a URL) of the MCP server that an AI application (the Host for the MCP client) uses to establish a secure, standardized connection. It is the point of contact for the LLM to request context, call a tool, or access a resource. Google MCP endpoints can be global or regional.
+-The Gmail MCP API MCP server has the following global MCP endpoints:
++An MCP service endpoint is the network address and communication interface (usually a URL) of the MCP server that an AI application (the Host for the MCP client) uses to establish a secure, standardized connection. It is the point of contact for the LLM to request context, call a tool, or access a resource.
++The Gmail MCP API MCP server offers the following MCP toolset endpoints:
+  https://gmailmcp.googleapis.com/mcp/v1
+- The Gmail MCP API MCP server offers the following MCP toolset endpoints:
+- https://gmailmcp.googleapis.com/mcp/v1
++ https://gmailmcp.googleapis.com/mcp/v1self
+  MCP Tools
+ An MCP tool is a function or executable capability that an MCP server exposes to a LLM or AI application to perform an action in the real world. Toolsets are a group of tools that are useful for a specific task. Using toolsets can help your agent perform better because it decreases the number of tools available to your agent.
+@@ -30,5 +29,11 @@
+  | /mcp/v1
+  | Toolset for the Gmail MCP Server.
+- | create_draft
++ | apply_sensitive_message_label
++ apply_sensitive_thread_label
++ create_draft
++ create_filter
++ create_label
++ forward
++ get_draft
+  get_message
+  get_thread
+@@ -36,8 +41,49 @@
+  label_thread
+  list_drafts
++ list_filters
+  list_labels
++ mark_message_spam
++ mark_thread_spam
++ reply
+  search_threads
++ send_message
++ trash_message
++ trash_thread
+  unlabel_message
+  unlabel_thread
++ unmark_message_spam
++ unmark_thread_spam
++ untrash_message
++ untrash_thread
++ update_draft
++ update_label
++ update_message_labels
++ | /mcp/v1self
++ | Self-mode toolset for the Gmail MCP Server.
++ | create_draft
++ create_filter
++ create_label
++ get_draft
++ get_message
++ get_thread
++ label_message
++ label_thread
++ list_drafts
++ list_filters
++ list_labels
++ mark_message_spam
++ mark_thread_spam
++ search_threads
++ trash_message
++ trash_thread
++ unlabel_message
++ unlabel_thread
++ unmark_message_spam
++ unmark_thread_spam
++ untrash_message
++ untrash_thread
++ update_draft
++ update_label
++ update_message_labels
+  Get MCP tool specifications
+  To get the MCP tool specifications for all tools in an MCP server, use the tools/list method. The following example demonstrates how to use curl to list all tools and their specifications currently available within the MCP server.

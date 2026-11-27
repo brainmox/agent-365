@@ -1,0 +1,18 @@
+# https://developers.google.com/workspace/guides/quota-usage-tiers
+# before: https://web.archive.org/web/20261124224030id_/https://developers.google.com/workspace/guides/quota-usage-tiers (page says last updated 2026-11-24 UTC)
+# after:  https://developers.google.com/workspace/guides/quota-usage-tiers (page says last updated 2026-11-26 UTC)
+# Page text (c) Google, CC BY 4.0; extracted from HTML, whitespace normalized.
+--- before
++++ after
+@@ -1,3 +1,4 @@
+ 
++ Some Google Workspace MCP tools are currently rolling out and might be temporarily unavailable.
+  Home
+  Google Workspace
+@@ -37,5 +38,5 @@
+  | MCP requirement enforcement
+  | February 1, 2027
+- | AI agents or similar access tools accessing Google Workspace data must use MCP servers instead of REST APIs; agents calling Google Workspace REST APIs directly are limited to Standard Tier quotas, regardless of the tier selected.
++ | AI agents or similar access tools accessing Google Workspace data must use Google Workspace MCP servers or the Google Workspace CLI.
+  | Billing & quota enforcement
+  | April 1, 2027

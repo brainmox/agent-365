@@ -1,0 +1,112 @@
+# https://developers.google.com/workspace/gmail/api/guides/quotas
+# before: https://web.archive.org/web/20261126211519id_/https://developers.google.com/workspace/gmail/api/guides/quotas (page says last updated 2026-11-26 UTC)
+# after:  https://developers.google.com/workspace/gmail/api/guides/quotas (page says last updated 2026-11-27 UTC)
+# Page text (c) Google, CC BY 4.0; extracted from HTML, whitespace normalized.
+--- before
++++ after
+@@ -10,8 +10,11 @@
+  Save and categorize content based on your preferences.
+ As of May 1, 2026, the Gmail API, Google Calendar API, and Google Drive API have
+-updated usage quotas. These three APIs (and their MCP servers) also support the
+-Scaled Tier for requesting higher rate limits beyond standard quotas. Standard
+-Tier limits take effect across all projects on April 1, 2027. For rollout
+-timelines and policy details, see
++updated usage quotas. All eight generally available Google Workspace MCP
++servers follow Standard Tier and Scaled Tier quota rules, including a Standard
++Tier limit of 5,000 requests per day, per project, per product. Standard Tier
++limits and Scaled Tier billing take effect across all projects on April 1, 2027.
++Per-request billing applies initially to the Gmail API,
++Calendar API, and Drive API and their MCP servers. For
++rollout timelines and policy details, see
+ Usage tiers and quotas for
+ Google Workspace APIs and MCP servers.
+@@ -82,7 +85,6 @@
+ and Premium).
+ Note: MCP requirement enforcement starts February 1, 2027. AI agents or similar
+-access tools calling Google Workspace data must use MCP servers instead
+-of REST APIs. Starting on that date, AI agents calling REST APIs directly are
+-limited to Standard Tier quotas, regardless of tier.
++access tools calling Google Workspace data must use
++Google Workspace MCP servers or the Google Workspace CLI.
+ To learn more about tier policies, quotas, and pricing, see Usage tiers and
+ quotas for Google Workspace APIs and MCP
+@@ -104,14 +106,19 @@
+ Gmail MCP server: Scaled Tier MCP usage has no daily
+ no-charge allowance (0 billing units per day), so charges apply from the
+-first HTTP 2xx request starting April 1, 2027. Because failed
+-tools/call requests (including tool execution and argument-translation
+-errors) return HTTP 200 with isError: true in the JSON-RPC response,
+-they also count toward billing. HTTP 3xx, 4xx, and 5xx responses
+-don't count toward billing. Each tool call counts as 1 billing unit (and 1
+-request toward the Standard Tier daily limit) by default. However,
+-list_drafts and search_threads each count as 10 billing units (and 10
+-daily requests) per call because they make multiple API calls.
+-Non-billed responses—such as 304 Not Modified and 4xx or 5xx error
+-responses—still count toward 1-minute rate-limit quotas.
++first successful HTTP 2xx request starting April 1, 2027. Failed
++tools/call requests that return HTTP 200 with isError: true in the
++JSON-RPC response don't count toward Scaled Tier billing. This exclusion
++covers tool execution and argument-translation errors such as invalid
++arguments, missing resources, permission denials, and declined user
++confirmations. HTTP 3xx, 4xx, and 5xx responses also don't count
++toward billing.
++By default, each tool call counts as 1 billing unit and 1 request toward
++the Standard Tier daily limit. However, list_drafts and search_threads
++each count as 10 billing units and 10 daily requests per call because they
++make multiple API calls.
++Non-billed responses, such as 304 Not Modified and 4xx or 5xx error
++responses, still count toward 1-minute rate-limit quotas. Failed MCP
++tools/call requests also count toward 1-minute rate-limit quotas and the
++Standard Tier daily MCP limit of 5,000 requests per day, per project.
+ Gmail API quotas
+ Quotas are defined in terms of quota units, an abstract
+@@ -372,11 +379,17 @@
+  | 5,000 requests
+ Gmail MCP toolset quotas
+-The following table details the query cost, daily request cost (in billing
+-units), and billing tier
+-bucket for each
+-gmailmcp.googleapis.com toolset. list_drafts and search_threads each
+-count as 10 requests (10 billing units) per call toward the Standard Tier
+-daily limit and Scaled Tier billing, and all other listed tools count as 1
+-request (1 billing unit) per call.
++The following table details the query cost, daily request cost in billing
++units, and billing tier
++bucket for each generally
++available gmailmcp.googleapis.com tool on /mcp/v1. list_drafts and
++search_threads each count as 10 requests and 10 billing units per call toward
++the Standard Tier daily limit and Scaled Tier billing. All other listed tools
++count as 1 request and 1 billing unit per call.
++Calls to the /mcp/v1self
++fallback endpoint share the same per-tool query costs, daily request costs,
++billing tier buckets, and project-level Standard Tier and Scaled Tier limits as
++/mcp/v1. Combined usage across /mcp/v1 and /mcp/v1self counts toward the
++same per-project and per-user quotas. The /mcp/v1self endpoint exposes a
++subset of these tools and omits tools that always require interactive approval.
+ Note: These static query costs are subject to change as Gmail MCP
+ tools transition to dynamic quota charging based on item count and message
+@@ -553,6 +566,22 @@
+ and network conditions.
+ Resolve MCP server quota errors
+-If you encounter issues with MCP server quotas, see the Troubleshooting section in the
+-Configure the Google Workspace MCP servers page.
++When you exceed a per-minute MCP server quota, the server returns an HTTP
++429 Too Many Requests error. Use
++truncated exponential backoff to retry HTTP
++429 per-minute rate-limit errors. If you reach the Standard Tier
++daily limit of 5,000 requests per day, per project, wait until the quota resets
++at midnight Pacific Time or enroll in the
++Scaled Tier and
++request a quota increase.
++Don't run automatic exponential backoff retries on non-rate-limit
++tools/call failures that return HTTP 200 with
++isError: true, such as invalid arguments, missing resources,
++permission denials, or declined user confirmations. Although these failed tool
++calls don't count toward Scaled Tier billing, retrying them still consumes your
++1-minute rate-limit quotas and the Standard Tier daily limit.
++For MCP authentication and connection troubleshooting, see the
++Troubleshooting section in
++Configure the
++Google Workspace MCP servers.
+ Related topics
+ Batch requests

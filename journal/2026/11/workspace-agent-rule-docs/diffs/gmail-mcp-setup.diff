@@ -1,0 +1,82 @@
+# https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server
+# before: https://web.archive.org/web/20261126211716id_/https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server (page says last updated 2026-11-25 UTC)
+# after:  https://web.archive.org/web/20261127043338id_/https://developers.google.com/workspace/gmail/api/guides/configure-mcp-server (page says last updated 2026-11-27 UTC)
+# Page text (c) Google, CC BY 4.0; extracted from HTML, whitespace normalized.
+--- before
++++ after
+@@ -17,8 +17,14 @@
+ The Gmail MCP server provides a standardized way for AI agents
+ to:
+-Read data: Search emails, retrieve threads, and list labels.
+-Take action: Create draft emails and label messages.
++Read data: Search threads, retrieve messages and drafts, and list labels
++and filters.
++Take action: Send, reply to, and forward emails, create and update
++drafts, manage labels and filters, and move messages or threads to and from
++Trash or Spam.
+ Respect security: Inherit the same permissions and data governance
+ controls as the user.
++Note: You can also connect AI agents and interactive terminals to
++Gmail with the
++Google Workspace command-line interface (CLI), gwscli.
+ Prerequisites
+ A Google Cloud project. You can create or select a project during
+@@ -145,4 +151,6 @@
+ https://www.googleapis.com/auth/gmail.compose
+ https://www.googleapis.com/auth/gmail.modify
++https://www.googleapis.com/auth/gmail.settings.basic
++(required only when calling create_filter)
+ Click Add to Table.
+ Click Update.
+@@ -376,5 +384,11 @@
+ input and output schemas, see the
+ Gmail MCP reference:
++apply_sensitive_message_label
++apply_sensitive_thread_label
+ create_draft
++create_filter
++create_label
++forward
++get_draft
+ get_message
+ get_thread
+@@ -382,8 +396,22 @@
+ label_thread
+ list_drafts
++list_filters
+ list_labels
++mark_message_spam
++mark_thread_spam
++reply
+ search_threads
++send_message
++trash_message
++trash_thread
+ unlabel_message
+ unlabel_thread
++unmark_message_spam
++unmark_thread_spam
++untrash_message
++untrash_thread
++update_draft
++update_label
++update_message_labels
+ Important security consideration: Indirect prompt injection
+ When you expose a language model to untrusted data, there is a risk of an
+@@ -429,6 +457,7 @@
+ Administrator controls and governance
+ Google Workspace administrators can apply controls and governance to AI
+-agents that connect to Google Workspace MCP servers, including OAuth
+-app access settings, user review policies for external agents, agent
++agents that connect to Google Workspace MCP servers or the
++Google Workspace command-line interface, including
++OAuth app access settings, user review policies for external agents, agent
+ attribution, data loss prevention, and audit logging. For details, see
+ Manage AI agent access & user review in
+@@ -436,4 +465,6 @@
+ Administrator user review policies.
+ Related topics
++Use the Google Workspace command-line interface
++(CLI)
+ Handle user approvals with form elicitation
+ Configure security for Google Workspace MCP servers

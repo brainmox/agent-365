@@ -1,0 +1,80 @@
+# https://developers.google.com/workspace/guides/mcp-elicitation
+# before: https://web.archive.org/web/20261126211719id_/https://developers.google.com/workspace/guides/mcp-elicitation (page says last updated 2026-11-25 UTC)
+# after:  https://web.archive.org/web/20261127033247id_/https://developers.google.com/workspace/guides/mcp-elicitation (page says last updated 2026-11-27 UTC)
+# Page text (c) Google, CC BY 4.0; extracted from HTML, whitespace normalized.
+--- before
++++ after
+@@ -67,7 +67,14 @@
+ protocol and the approval UI recommendations in this
+ guide to connect to /mcp/v1.
++Using the Google Workspace command-line interface (CLI): If
++your agent connects to Google Workspace through the
++Google Workspace command-line interface (CLI),
++gwscli, the command-line interface handles human-in-the-loop confirmation
++prompts over standard error and standard input. You don't need to implement
++the MCP form elicitation protocol directly. For details, see
++Human-in-the-loop verification.
+ Server endpoints
+-General Availability Google Workspace MCP servers and the Universal
+-Search MCP server offer the primary /mcp/v1 endpoint and a limited
++The following generally available Google Workspace MCP servers and the
++Universal Search MCP server offer the primary /mcp/v1 endpoint and a limited
+ /mcp/v1self fallback endpoint:
+  | 
+@@ -92,4 +99,6 @@
+  Google Chat:
+  https://chatmcp.googleapis.com/mcp/v1
++ Google Tasks:
++ https://tasksmcp.googleapis.com/mcp/v1
+  Universal Search:
+  https://workspacemcp.googleapis.com/mcp/v1
+@@ -116,4 +125,6 @@
+  Chat:
+  https://chatmcp.googleapis.com/mcp/v1self
++ Tasks:
++ https://tasksmcp.googleapis.com/mcp/v1self
+  Universal Search:
+  https://workspacemcp.googleapis.com/mcp/v1self
+@@ -127,7 +138,7 @@
+  list_threads return only the subset of results accessible
+  without approval rather than prompting for full access.
+-Note: The Developer Preview People API MCP server at
+-https://people.googleapis.com/mcp/v1 only exposes the /mcp/v1 endpoint and
+-doesn't provide a /mcp/v1self endpoint.
++Note: The People API MCP server at https://people.googleapis.com/mcp/v1
++only exposes the /mcp/v1 endpoint and doesn't provide a /mcp/v1self
++endpoint.
+ Use /mcp/v1 with form elicitation whenever possible, and reserve /mcp/v1self
+ for MCP hosts where you can't add form elicitation support. If a client calls a
+@@ -135,6 +146,8 @@
+ form elicitation support, the server blocks the call and returns a
+ MissingRequiredClientCapability error.
+-To see which tools are available on /mcp/v1 and /mcp/v1self for each
+-service, check the server's tool reference overview page:
++To compare /mcp/v1 and /mcp/v1self toolsets across all generally available
++services in a single guide, see
++All Google Workspace MCP server tools. You can also
++check each server's individual tool reference overview page:
+ Gmail MCP reference
+ Drive MCP reference
+@@ -145,4 +158,5 @@
+ reference
+ Chat MCP reference
++Tasks MCP reference
+ Universal Search MCP reference
+ How form elicitation works
+@@ -1223,5 +1237,5 @@
+ - **Google Chat** (`https://chatmcp.googleapis.com/mcp/v1`):
+  - `https://www.googleapis.com/auth/chat.messages`
+-- **Google Contacts (preview)** (`https://people.googleapis.com/mcp/v1`):
++- **Google Contacts** (`https://people.googleapis.com/mcp/v1`):
+  - `https://www.googleapis.com/auth/contacts`
+ - **Google Tasks** (`https://tasksmcp.googleapis.com/mcp/v1`):
+@@ -1512,4 +1526,7 @@
+ Next steps
+ Configure Google Workspace MCP servers
++All Google Workspace MCP server tools
++Use the Google Workspace command-line interface
++(CLI)
+ Configure security for Google Workspace MCP
+ servers

@@ -1,0 +1,43 @@
+## sdk-auto-allow
+calls 2, approval challenges 1, answers 1, -32021 errors 0
+  PASS  declares_every_call
+  PASS  echoes_state
+  PASS  same_arguments
+  PASS  fields_placed
+  PASS  chooses_offered
+  PASS  stops_after_denial
+  answer latency ms: min 2.1, median 2.1, max 2.1; 1/1 under 400 ms
+  choices: ALLOW_ONCE x1
+
+## sdk-deny
+calls 2, approval challenges 1, answers 1, -32021 errors 0
+  PASS  declares_every_call
+  PASS  echoes_state
+  PASS  same_arguments
+  PASS  fields_placed
+  PASS  chooses_offered
+  PASS  stops_after_denial
+  answer latency ms: min 1.6, median 1.6, max 1.6; 1/1 under 400 ms
+  choices: DENY_ONCE x1
+
+## sdk-no-callback
+calls 1, approval challenges 0, answers 0, -32021 errors 1
+  FAIL  declares_every_call
+  PASS  echoes_state
+  PASS  same_arguments
+  PASS  fields_placed
+  PASS  chooses_offered
+  PASS  stops_after_denial
+
+## sdk-unoffered
+calls 2, approval challenges 1, answers 1, -32021 errors 0
+  PASS  declares_every_call
+  PASS  echoes_state
+  PASS  same_arguments
+  PASS  fields_placed
+  FAIL  chooses_offered
+  PASS  stops_after_denial
+  answer latency ms: min 1.4, median 1.4, max 1.4; 1/1 under 400 ms
+  choices: ALLOW_TOOL_ALWAYS x1
+
+Latency and choices are signals, not proof: the protocol carries no evidence of who answered the form.

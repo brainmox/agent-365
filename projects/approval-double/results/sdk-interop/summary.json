@@ -1,0 +1,221 @@
+{
+ "mcp_sdk_version": "2.3.0",
+ "connect_mode": "auto",
+ "messages_sent": 1,
+ "messages_trashed": 0,
+ "callback_saw": {
+  "sdk-auto-allow": [
+   {
+    "message": "**send_message**  \nbob@other.org  \n**Subject:** Quarterly numbers",
+    "schema": {
+     "type": "object",
+     "required": [
+      "approval_choice"
+     ],
+     "properties": {
+      "approval_choice": {
+       "type": "string",
+       "title": "Allow sdk-auto-allow to use send_message for these recipients?",
+       "enum": [
+        "ALLOW_ONCE",
+        "ALLOW_AUDIENCE_ALWAYS",
+        "ALLOW_TOOL_ALWAYS",
+        "DENY_ONCE"
+       ],
+       "enumNames": [
+        "Allow once",
+        "Always allow for these recipients",
+        "Always allow this tool",
+        "Don't allow"
+       ]
+      }
+     }
+    }
+   }
+  ],
+  "sdk-deny": [
+   {
+    "message": "**send_message**  \nbob@other.org  \n**Subject:** Quarterly numbers",
+    "schema": {
+     "type": "object",
+     "required": [
+      "approval_choice"
+     ],
+     "properties": {
+      "approval_choice": {
+       "type": "string",
+       "title": "Allow sdk-deny to use send_message for these recipients?",
+       "enum": [
+        "ALLOW_ONCE",
+        "ALLOW_AUDIENCE_ALWAYS",
+        "ALLOW_TOOL_ALWAYS",
+        "DENY_ONCE"
+       ],
+       "enumNames": [
+        "Allow once",
+        "Always allow for these recipients",
+        "Always allow this tool",
+        "Don't allow"
+       ]
+      }
+     }
+    }
+   }
+  ],
+  "sdk-unoffered": [
+   {
+    "message": "**trash_message**  \nm1  \n",
+    "schema": {
+     "type": "object",
+     "required": [
+      "approval_choice"
+     ],
+     "properties": {
+      "approval_choice": {
+       "type": "string",
+       "title": "Allow sdk-unoffered to use trash_message?",
+       "enum": [
+        "ALLOW_ONCE",
+        "DENY_ONCE"
+       ],
+       "enumNames": [
+        "Allow once",
+        "Don't allow"
+       ]
+      }
+     }
+    }
+   }
+  ]
+ },
+ "results": {
+  "sdk-auto-allow": {
+   "content": [
+    {
+     "type": "text",
+     "text": "Message sent to bob@other.org."
+    }
+   ],
+   "isError": false,
+   "resultType": "complete"
+  },
+  "sdk-deny": {
+   "_meta": {
+    "google.com/error": {
+     "code": 400,
+     "message": "Action canceled. The user declined the confirmation request.",
+     "status": "FAILED_PRECONDITION",
+     "details": [
+      {
+       "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+       "reason": "UserDeniedAction",
+       "domain": "mcp.googleapis.com"
+      }
+     ]
+    }
+   },
+   "content": [
+    {
+     "type": "text",
+     "text": "Action canceled. The user declined the confirmation request."
+    }
+   ],
+   "isError": true,
+   "resultType": "complete"
+  },
+  "sdk-no-callback": "MCPError: Action could not be completed. This action requires user confirmation, which this client does not support. Use a client that supports form elicitation to perform this action.",
+  "sdk-unoffered": "MCPError: approval_choice 'ALLOW_TOOL_ALWAYS' was not offered."
+ },
+ "report": {
+  "sdk-auto-allow": {
+   "calls": 2,
+   "challenges": 1,
+   "answers": 1,
+   "checks": {
+    "declares_every_call": true,
+    "echoes_state": true,
+    "same_arguments": true,
+    "fields_placed": true,
+    "chooses_offered": true,
+    "stops_after_denial": true
+   },
+   "missing_capability_errors": 0,
+   "latency_ms": {
+    "min": 2.1,
+    "median": 2.1,
+    "max": 2.1
+   },
+   "answers_under_floor": 1,
+   "choices": {
+    "ALLOW_ONCE": 1
+   },
+   "writes_after_denial": []
+  },
+  "sdk-deny": {
+   "calls": 2,
+   "challenges": 1,
+   "answers": 1,
+   "checks": {
+    "declares_every_call": true,
+    "echoes_state": true,
+    "same_arguments": true,
+    "fields_placed": true,
+    "chooses_offered": true,
+    "stops_after_denial": true
+   },
+   "missing_capability_errors": 0,
+   "latency_ms": {
+    "min": 1.6,
+    "median": 1.6,
+    "max": 1.6
+   },
+   "answers_under_floor": 1,
+   "choices": {
+    "DENY_ONCE": 1
+   },
+   "writes_after_denial": []
+  },
+  "sdk-no-callback": {
+   "calls": 1,
+   "challenges": 0,
+   "answers": 0,
+   "checks": {
+    "declares_every_call": false,
+    "echoes_state": true,
+    "same_arguments": true,
+    "fields_placed": true,
+    "chooses_offered": true,
+    "stops_after_denial": true
+   },
+   "missing_capability_errors": 1,
+   "latency_ms": null,
+   "answers_under_floor": 0,
+   "choices": {},
+   "writes_after_denial": []
+  },
+  "sdk-unoffered": {
+   "calls": 2,
+   "challenges": 1,
+   "answers": 1,
+   "checks": {
+    "declares_every_call": true,
+    "echoes_state": true,
+    "same_arguments": true,
+    "fields_placed": true,
+    "chooses_offered": false,
+    "stops_after_denial": true
+   },
+   "missing_capability_errors": 0,
+   "latency_ms": {
+    "min": 1.4,
+    "median": 1.4,
+    "max": 1.4
+   },
+   "answers_under_floor": 1,
+   "choices": {
+    "ALLOW_TOOL_ALWAYS": 1
+   },
+   "writes_after_denial": []
+  }
+ }
+}
